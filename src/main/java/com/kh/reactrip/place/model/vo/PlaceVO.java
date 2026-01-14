@@ -1,9 +1,17 @@
 package com.kh.reactrip.place.model.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@Builder // 이미지가 없을수도 있음
+@AllArgsConstructor
+@ToString
 public class PlaceVO {
 	
 	private Long travelNo; // TRAVEL_NO, 여행지순번, PK
-	private Long regionNo; // REGION_NO, 지역순번, FK
 	private String travelName; // TRAVEL_NAME, 여행지명
 	private String travelContent; // TRAVEL_CONTENT, 여행지 설명
 	private String travelImage; // TRAVLE_IMAGE, 여행지 사진
@@ -19,7 +27,6 @@ public class PlaceVO {
 record로 구현할 경우에 사용하려고 미리 작성
 public record PlaceVO(
 		Long travelNo,
-		Long region_no,
 		String travelName,
 		String travelContent,
 		String travelImage,
