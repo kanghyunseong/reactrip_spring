@@ -65,35 +65,16 @@ public class SecurityConfigure {
 
                   // 1. POST - 비로그인 허용 (회원가입/로그인, 차량/예약 등)
                   requests.requestMatchers(HttpMethod.POST,
-                          "/api/members/login",
-                          "/api/members",
-                          "/api/members/**",
-                          "/api/auth/refresh",
-                          "/api/cars/**",
-                          "/api/station/**",
-                          "/api/reserve/**"
+                          "/api/admin/members"
                   ).permitAll();
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/uploads/**",
-                          "/api/members/**",
-                          "/api/cars/**",
-                          "/api/station/**",
-                          "/api/station/search",
-                          "/api/boards",
-                          "/api/boards/search",
-                          "/api/imgBoards",
-                          "/api/imgBoards/search",
-                          "/api/notices",
-                          "/api/notices/search",
-                          "/api/comments/**",
-                          "/api/imgComments/**",
-                          "/api/reserve/**",
-                          "/api/reviews/**",
-                          "/api/main"
+                		  "/api/admin/members",
+                          "/api/station/**"
                   ).permitAll();
 
+                  
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/boards/*",
@@ -136,6 +117,7 @@ public class SecurityConfigure {
                           "/api/reviews/**"
                   ).authenticated();
 
+                  /*
                   // 7. 관리자 전용
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/admin/ranking/users",
@@ -169,6 +151,7 @@ public class SecurityConfigure {
                           "/api/admin/community/**",
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
+                  */
               })
               .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
