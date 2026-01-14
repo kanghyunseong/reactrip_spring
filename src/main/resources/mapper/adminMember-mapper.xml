@@ -38,20 +38,19 @@
         BY
            M.MEMBER_NO DESC
 </select>
-<select id="searchMember" resultType="com.kh.reactrip.admin.members.model.dto.AdminMemberDTO">
+<select id="findByMembers" resultType="com.kh.reactrip.admin.members.model.dto.AdminMemberDTO">
     SELECT 
-           M.MEMBER_NO
-         , M.MEMBER_NAME
+           M.MEMBER_NO AS memberNo
+         , M.MEMBER_NAME AS memberName
          , M.BIRTHDAY
          , M.PHONE
          , M.EMAIL
          , M.IMAGE
-         , M.MEMBER_ROLE
-         , M.ENROLL_DATE
+         , M.MEMBER_ROLE AS memberRole
+         , M.ENROLL_DATE AS enrollDate
       FROM
            TB_MEMBER M
-      LEFT 
-      JOIN
+      LEFT JOIN
            TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
      WHERE
            D.MEMBER_NO IS NULL
@@ -64,4 +63,19 @@
       </if>
      ORDER BY M.MEMBER_NO DESC
 </select>
+<update id="updateMemberRole">
+    UPDATE 
+           TB_MEMBER
+       SET 
+           MEMBER_ROLE = #{memberRole}
+     WHERE 
+           MEMBER_NO = #{memberNo}
+       AND 
+           MEMBER_NO NOT IN (
+			SELECT
+			      MEMBER_NO
+			 FROM 
+			      TB_DELETED_MEMBER)
+</update>
+
 </mapper>

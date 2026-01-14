@@ -71,7 +71,19 @@ public class SecurityConfigure {
                   // 2. GET - 비로그인 허용 (목록/조회용)
                   requests.requestMatchers(HttpMethod.GET,
                 		  "/api/admin/members",
-                          "/api/station/**"
+                		  "/api/admin/members/search"
+                  ).permitAll();
+                  
+                  requests.requestMatchers(HttpMethod.PUT,
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/admin/members/**"
+                  ).permitAll();
+                  
+                  requests.requestMatchers(HttpMethod.DELETE,
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/**"
                   ).permitAll();
 
                   
@@ -81,17 +93,11 @@ public class SecurityConfigure {
                           "/api/imgBoards/*",
                           "/api/notices/*"
                   ).authenticated();
+                  
 
                   // 4. PUT - 로그인 필요
                   requests.requestMatchers(HttpMethod.PUT,
-                          "/api/members", 
-                          "/api/members/**", 
-                          "/api/boards/**", 
-                          "/api/imgBoards/**", 
-                          "/api/comments/**", 
-                          "/api/imgComments/**",
-                          "/api/reserve/**", 
-                          "/api/reviews/**"
+                          "/api/**"
                   ).authenticated();
 
                   // 5. DELETE - 로그인 필요

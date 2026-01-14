@@ -4,6 +4,7 @@ package com.kh.reactrip.admin.members.model.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.reactrip.admin.members.model.dto.AdminMemberDTO;
@@ -17,5 +18,7 @@ public interface AdminMemberMapper {
 
 	List<AdminMemberDTO> findAllMembers(RowBounds rowBounds);
 
-	AdminMemberDTO searchMember(Long memberNo);
+	List<AdminMemberDTO> findByMembers(@Param("keyword")String keyword);
+
+	int updateMemberRole(@Param("memberNo") Long memberNo, @Param("memberRole") String memberRole);
 }

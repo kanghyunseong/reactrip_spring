@@ -42,16 +42,28 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	}
 
 	@Override
-	public AdminMemberDTO searchMember(Long memberNo) {
+	public List<AdminMemberDTO> findByMembers(String keyword) {
 		
-		AdminMemberDTO searchMember = adminMemberMapper.searchMember(memberNo);
+		List<AdminMemberDTO> findByMembers = adminMemberMapper.findByMembers(keyword);
 		
-		if(searchMember == null) {
-			log.error("User Not Found Exception : {} ", memberNo);
-			throw new UserNotFoundException("사용자 번호 " + memberNo + "에 대한 정보가 없습니다.");
+		if(findByMembers == null || findByMembers.isEmpty()) {
+			log.error("User Not Found Exception : {} ", keyword );
+			throw new UserNotFoundException("검색어 : " + keyword + "에 대한 정보가 없습니다.");
 		}
 		
-		return searchMember;
+		return findByMembers;
+	}
+
+	@Override
+	public void updateMemberRole(Long memberNo, String memberRole) {
+		
+		int updateMemberRole = adminMemberMapper.updateMemberRole(memberNo, memberRole);
+		
+		if(updateMemberRole == 0) {
+			log.error("User Not Found Exception : {} ", memberNo);
+			throw new UserNotFoundException("권한 부여 실패" + memberNo + "에 해당하는 사용자가 없습니다.");
+		}
+		
 	}
 
 }

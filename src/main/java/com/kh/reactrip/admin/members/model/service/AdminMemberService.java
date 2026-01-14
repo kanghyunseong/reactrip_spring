@@ -1,5 +1,7 @@
 package com.kh.reactrip.admin.members.model.service;
 
+import java.util.List;
+
 import com.kh.reactrip.admin.members.model.dto.AdminMemberDTO;
 import com.kh.reactrip.admin.members.model.dto.AdminPageResponseDTO;
 
@@ -7,7 +9,9 @@ public interface AdminMemberService {
 	
 	AdminPageResponseDTO findAllMember(int page);
 
-	AdminMemberDTO searchMember(Long memberNo);
+	List<AdminMemberDTO> findByMembers(String keyword);
+
+	void updateMemberRole(Long memberNo, String memberRole);
 	
 	
 

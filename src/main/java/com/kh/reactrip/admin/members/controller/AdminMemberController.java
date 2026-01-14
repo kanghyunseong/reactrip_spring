@@ -1,11 +1,11 @@
 package com.kh.reactrip.admin.members.controller;
 
-import org.apache.ibatis.annotations.Delete;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.reactrip.admin.members.model.dto.AdminMemberDTO;
 import com.kh.reactrip.admin.members.model.dto.AdminPageResponseDTO;
 import com.kh.reactrip.admin.members.model.service.AdminMemberService;
-import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.common.ResponseData;
 
 import lombok.RequiredArgsConstructor;
@@ -43,13 +42,25 @@ public class AdminMemberController {
 	}
 	*/
 	// 회원 검색어로 조회 
-	public ResponseEntity<ResponseData<AdminMemberDTO>> searchMembers(@PathVariable(name="memberNo") Long memberNo) {
-		
-		AdminMemberDTO searchMember = memberService.searchMember(memberNo);
-		
-		return ResponseData.ok(searchMember, "검색어로 조회 성공 ");
+	// 회원 검색어로 조회 (URL: /api/admin/members/search?keyword=현성)
+	@GetMapping("/search")
+	public ResponseEntity<ResponseData<List<AdminMemberDTO>>> findByMembers(
+	        @RequestParam(name = "keyword", required = false) String keyword) {
+	    
+	    // 1. 검색 결과는 여러 명일 수 있으므로 List로 선언
+	    List<AdminMemberDTO> list = memberService.findByMembers(keyword);
+	    
+	    return ResponseData.ok(list, "검색어로 조회 성공");
 	}
 	
 	// 회원 정보 변경 -> 권한 부여하기 
+	@PutMapping("/update-role/{memberNo}")
+	public ResponseEntity<ResponseData<Void>> updateMemberRole(@PathVariable(name = "memberNo") Long memberNo, @RequestParam(name = "memberRole") String memberRole) {
+		
+		 memberService.updateMemberRole(memberNo, memberRole);
+		
+		return ResponseData.ok(null, "검색된 유저의 권한 부여 성공");
+		
+	}
 	
 }
