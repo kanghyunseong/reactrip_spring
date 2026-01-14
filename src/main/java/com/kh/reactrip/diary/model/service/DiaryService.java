@@ -1,5 +1,12 @@
 package com.kh.reactrip.diary.model.service;
 
-public class DiaryService {
+import java.util.Map;
+
+public interface DiaryService {
+
+	Map<String, Object> findAllDiary(int pageNo, int size);
+
+
+
 
 }
