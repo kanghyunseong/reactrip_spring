@@ -20,4 +20,6 @@ public interface AdminNoticeMapper {
 
 	int updateNotice(AdminNoticeDTO adminNoticeDTO);
 
+	int deleteNotice(Long noticeNo);
+
 }

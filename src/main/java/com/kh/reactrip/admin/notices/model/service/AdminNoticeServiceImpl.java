@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO;
@@ -33,6 +34,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	private static final int PAGE_LIMIT = 5;
 
 	@Override
+	@Transactional
 	public void insertNotice(AdminNoticeDTO adminNoticeDTO, MultipartFile file) {
 		
 		if(adminNoticeDTO.getNoticeTitle() == null || adminNoticeDTO.getNoticeTitle().isEmpty()) {
@@ -59,6 +61,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	}
 
 	@Override
+	@Transactional
 	public PageResponseDTO<AdminNoticeDTO> findAllNotice(int page) {
 		
 		int totalCount = adminNoticeMapper.getTotalCount();
@@ -78,6 +81,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	}
 
 	@Override
+	@Transactional
 	public void updateNotice(Long noticeNo, MultipartFile file, AdminNoticeDTO adminNoticeDTO) {
 		
 		AdminNoticeDTO origin = adminNoticeMapper.selectNoticeDetail(noticeNo);
@@ -104,5 +108,25 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 			throw new RuntimeException("공지사항 수정 실패 ");
 		}
 
+	}
+	
+	public void deleteNotice(Long noticeNo) {
+		AdminNoticeDTO origin = adminNoticeMapper.selectNoticeDetail(noticeNo);
+		
+		if(origin == null ) {
+			throw new RuntimeException("삭제할 게시글을 찾지 못함");
+		}
+		
+		int result = adminNoticeMapper.deleteNotice(noticeNo);
+		
+		if(result > 0) {
+			if(origin.getImage() != null) {
+				fileService.delete(origin.getImage());
+			}
+		} else {
+			throw new RuntimeException("삭제 처리 실패");
+		}
+		
+		
 	}
 }

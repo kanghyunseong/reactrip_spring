@@ -1,6 +1,7 @@
 package com.kh.reactrip.admin.notices.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,14 @@ public class AdminNoticeController {
 		adminNoticeService.updateNotice(noticeNo, file, adminNoticeDTO);
 		
 		return ResponseData.ok("공지사항 수정 완료 ", null);
+	}
+	
+	@DeleteMapping("/{noticeNO}")
+	public ResponseEntity<ResponseData<AdminNoticeDTO>> deleteNotice(@PathVariable(name="noticeNo")Long noticeNo) {
+		
+		adminNoticeService.deleteNotice(noticeNo);
+		
+		return ResponseData.noContent();
 	}
 
 }

@@ -13,4 +13,6 @@ public interface AdminNoticeService {
 
 	void updateNotice(Long noticeNo, MultipartFile file, AdminNoticeDTO adminNoticeDTO);
 
+	void deleteNotice(Long noticeNo);
+
 }

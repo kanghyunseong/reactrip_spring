@@ -94,5 +94,13 @@
     WHERE
           NOTICE_NO = #{noticeNo}
 </update>
+<update id="deleteNotice">
+	UPDATE
+	       TB_NOTICE
+	   SET
+	       NOTICE_STATUS = 'N'
+     WHERE
+           NOTICE_NO = #{noticeNO}
+</update>
 
 </mapper>
