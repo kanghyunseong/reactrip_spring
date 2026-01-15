@@ -3,7 +3,9 @@ package com.kh.reactrip.admin.notices.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,17 @@ public class AdminNoticeController {
 		PageResponseDTO<AdminNoticeDTO> list = adminNoticeService.findAllNotice(page);
 		
 		return ResponseData.ok("공지사항 목록 조회 성공", list);
+	}
+	
+	@PutMapping("/update/{noticeNo}")
+	public ResponseEntity<ResponseData<AdminNoticeDTO>> updateNotice(
+			@PathVariable(name = "noticeNo")Long noticeNo,
+			@RequestParam(value="file", required = false)MultipartFile file,
+			@ModelAttribute AdminNoticeDTO adminNoticeDTO) {
+		
+		adminNoticeService.updateNotice(noticeNo, file, adminNoticeDTO);
+		
+		return ResponseData.ok("공지사항 수정 완료 ", null);
 	}
 
 }

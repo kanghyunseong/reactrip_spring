@@ -15,5 +15,9 @@ public interface AdminNoticeMapper {
 	int getTotalCount();
 
 	List<AdminNoticeDTO> findAllNotice(RowBounds rowBounds);
+	
+	AdminNoticeDTO selectNoticeDetail(Long noticeNo);
+
+	int updateNotice(AdminNoticeDTO adminNoticeDTO);
 
 }

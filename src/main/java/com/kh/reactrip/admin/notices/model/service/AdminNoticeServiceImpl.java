@@ -64,7 +64,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 		int totalCount = adminNoticeMapper.getTotalCount();
 		
 		
-		PageInfo pi = pagenation.getPageInfo(page, page, page, page);
+		PageInfo pi = pagenation.getPageInfo(totalCount, page, BOARD_LIMIT, PAGE_LIMIT);
 		RowBounds rowBounds = createRowBounds(pi);
 		
 		List<AdminNoticeDTO> notice = adminNoticeMapper.findAllNotice(rowBounds);
@@ -75,5 +75,34 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	private RowBounds createRowBounds(PageInfo pi) {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		return new RowBounds(offset, pi.getBoardLimit());
+	}
+
+	@Override
+	public void updateNotice(Long noticeNo, MultipartFile file, AdminNoticeDTO adminNoticeDTO) {
+		
+		AdminNoticeDTO origin = adminNoticeMapper.selectNoticeDetail(noticeNo);
+		
+		if(origin == null) {
+			throw new RuntimeException("게시글을 찾을 수 없음");
+		}
+		
+		adminNoticeDTO.setNoticeNo(noticeNo);
+		
+		if(file != null && !file.isEmpty()) {
+			if(origin.getImage() != null) {
+				fileService.delete(origin.getImage());
+			}
+			String imgUrl = fileService.store(file);
+			adminNoticeDTO.setImage(imgUrl);
+		} else {
+			adminNoticeDTO.setImage(origin.getImage());
+		}
+		
+		int result = adminNoticeMapper.updateNotice(adminNoticeDTO);
+		
+		if(result < 0 ) {
+			throw new RuntimeException("공지사항 수정 실패 ");
+		}
+
 	}
 }

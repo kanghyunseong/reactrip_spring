@@ -60,6 +60,39 @@
          BY 
             N.NOTICE_NO DESC
 </select>
-
+<select id="selectNoticeDetail" resultType="com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO">
+    SELECT 
+           NOTICE_NO
+         , MEMBER_NO
+         , NOTICE_TITLE
+         , NOTICE_CONTENT
+         , IMAGE
+         , CREATED_DATE
+         , COUNT
+      FROM 
+           TB_NOTICE
+     WHERE 
+           NOTICE_NO = #{noticeNo}
+       AND 
+           NOTICE_STATUS = 'Y' 
+</select>
+<update id="updateNotice">
+	UPDATE 
+	       TB_NOTICE
+	 <set>
+		   <if test="noticeTitle != null and noticeTitle != '' ">
+		   NOTICE_TITLE = #{noticeTitle},
+		   </if>
+		   <if test="noticeContent != null and noticeContent !='' ">
+		   NOTICE_CONTENT = #{noticeContent},
+		   </if>
+		   <if test="image != null">
+		   IMAGE = #{image},
+		   </if>
+		   UPDATED_DATE = SYSDATE
+    </set>
+    WHERE
+          NOTICE_NO = #{noticeNo}
+</update>
 
 </mapper>

@@ -11,4 +11,6 @@ public interface AdminNoticeService {
 
 	PageResponseDTO<AdminNoticeDTO> findAllNotice(int page);
 
+	void updateNotice(Long noticeNo, MultipartFile file, AdminNoticeDTO adminNoticeDTO);
+
 }
