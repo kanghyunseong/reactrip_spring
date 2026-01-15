@@ -76,22 +76,7 @@ public class SecurityConfigure {
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/uploads/**",
-                          "/api/members/**",
-                          "/api/cars/**",
-                          "/api/station/**",
-                          "/api/station/search",
-                          "/api/boards",
-                          "/api/boards/search",
-                          "/api/imgBoards",
-                          "/api/imgBoards/search",
-                          "/api/notices",
-                          "/api/notices/search",
-                          "/api/comments/**",
-                          "/api/imgComments/**",
-                          "/api/reserve/**",
-                          "/api/reviews/**",
-                          "/api/main"
+                          "/api/diarys"
                   ).permitAll();
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
