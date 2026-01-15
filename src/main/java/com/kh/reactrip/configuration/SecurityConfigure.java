@@ -65,13 +65,16 @@ public class SecurityConfigure {
 
                   // 1. POST - 비로그인 허용 (회원가입/로그인, 차량/예약 등)
                   requests.requestMatchers(HttpMethod.POST,
-                          "/api/admin/members"
+                          "/api/admin/members",
+                          "/api/admin/**"
                   ).permitAll();
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
                   requests.requestMatchers(HttpMethod.GET,
                 		  "/api/admin/members",
-                		  "/api/admin/members/search"
+                		  "/api/admin/members/search",
+                		  "/api/admin/**"
+                
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.PUT,

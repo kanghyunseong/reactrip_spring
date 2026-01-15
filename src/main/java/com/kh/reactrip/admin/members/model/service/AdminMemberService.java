@@ -3,11 +3,11 @@ package com.kh.reactrip.admin.members.model.service;
 import java.util.List;
 
 import com.kh.reactrip.admin.members.model.dto.AdminMemberDTO;
-import com.kh.reactrip.admin.members.model.dto.AdminPageResponseDTO;
+import com.kh.reactrip.common.PageResponseDTO;
 
 public interface AdminMemberService {
 	
-	AdminPageResponseDTO findAllMember(int page);
+	PageResponseDTO<AdminMemberDTO> findAllMember(int page);
 
 	List<AdminMemberDTO> findByMembers(String keyword);
 

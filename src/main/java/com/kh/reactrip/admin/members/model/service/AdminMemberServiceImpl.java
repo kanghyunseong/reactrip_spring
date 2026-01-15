@@ -2,13 +2,12 @@ package com.kh.reactrip.admin.members.model.service;
 
 import java.util.List;
 
-
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.admin.members.model.dto.AdminMemberDTO;
-import com.kh.reactrip.admin.members.model.dto.AdminPageResponseDTO;
 import com.kh.reactrip.admin.members.model.mapper.AdminMemberMapper;
+import com.kh.reactrip.common.PageResponseDTO;
 import com.kh.reactrip.exception.UserNotFoundException;
 import com.kh.reactrip.file.service.S3Service;
 import com.kh.reactrip.util.PageInfo;
@@ -32,7 +31,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	private static final int PAGE_LIMIT = 5;
 
 	@Override
-	public AdminPageResponseDTO findAllMember(int page) {
+	public PageResponseDTO<AdminMemberDTO> findAllMember(int page) {
 
 		int totalCount = adminMemberMapper.getTotalCount();
 
@@ -42,7 +41,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		
 		List<AdminMemberDTO> members = adminMemberMapper.findAllMembers(rowBounds);
 
-		return new AdminPageResponseDTO(pi, members);
+		return new PageResponseDTO<>(pi, members);
 	}
 	
 	private RowBounds createRowBounds(PageInfo pi) {
