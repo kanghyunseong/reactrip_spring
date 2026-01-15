@@ -21,4 +21,8 @@ public interface AdminMemberMapper {
 	List<AdminMemberDTO> findByMembers(@Param("keyword")String keyword);
 
 	int updateMemberRole(@Param("memberNo") Long memberNo, @Param("memberRole") String memberRole);
+
+	int deleteMember(Long memberNo);
+	
+	AdminMemberDTO findMemberByNo(Long MemberNo);
 }

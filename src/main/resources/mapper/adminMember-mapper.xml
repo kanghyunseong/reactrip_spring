@@ -78,4 +78,15 @@
 			      TB_DELETED_MEMBER)
 </update>
 
+<select id="findByMemberNo">
+	SELECT
+	       MEMBER_NO AS memberNo
+	     , MEMBER_NAME AS memberName
+	     , IMAGE AS image
+	  FROM
+	       TB_MEMBER
+	 WHERE
+	       MEMBER_NO = #{memberNo}
+</select>
+
 </mapper>

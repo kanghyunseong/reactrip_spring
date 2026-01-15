@@ -22,5 +22,6 @@ public class AdminMemberDTO {
 	private String email;
 	private Date enrollDate;
 	private String memberRole;
+	private String image;
 
 }

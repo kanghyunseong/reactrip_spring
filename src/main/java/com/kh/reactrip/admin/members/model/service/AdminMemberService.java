@@ -12,6 +12,8 @@ public interface AdminMemberService {
 	List<AdminMemberDTO> findByMembers(String keyword);
 
 	void updateMemberRole(Long memberNo, String memberRole);
+
+	void deleteMember(Long memberNo);
 	
 	
 
