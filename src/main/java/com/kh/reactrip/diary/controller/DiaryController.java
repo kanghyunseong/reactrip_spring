@@ -1,5 +1,8 @@
 package com.kh.reactrip.diary.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +26,14 @@ public class DiaryController {
 	
 	
 	// 목록 전체 조회
-	@GetMapping("")
-	public ResponseEntity<?> findAllDiary(@RequestParam(name="pageNo", defaultValue = "1")int pageNo) {
+	@GetMapping("/diarys")
+	public ResponseEntity<Map<String, Object>> findAllDiary(
+			@RequestParam(name="pageNo", defaultValue = "1") int pageNo,	// 한 페이지에
+			@RequestParam(name="size", defaultValue = "5") int size) {		// 게시글 5개 보여줘
 
+		Map<String, Object> map = diaryService.findAllDiary(pageNo, size);
 		
-		return null;
+		return ResponseEntity.ok(map);
 	}
 	
 }
