@@ -1,5 +1,57 @@
 package com.kh.reactrip.place.model.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.RowBounds;
+import org.springframework.stereotype.Service;
+
+import com.kh.reactrip.place.model.dao.PlaceMapper;
+import com.kh.reactrip.place.model.dto.PlaceDTO;
+import com.kh.reactrip.util.PageInfo;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
 public class PlaceServiceImpl implements PlaceService {
+	
+	private static final Integer OFFSET = 10;
+	private final PlaceMapper placeMapper;
+	
+	// RowBounds용 상수
+	
+	public List<PlaceDTO> findAllPlace(String keyword, String theme, String region, Integer page, Integer size, String sort) {
+		
+		PageInfo pi = new PageInfo();
+		pi.setCurrentPage(page);
+		pi.setBoardLimit(size);
+		
+		RowBounds rb = getRowBounds(pi);
+		
+		Map<String, Object> query = new HashMap();
+		query.put("keyword", keyword);
+		query.put("theme", theme);
+		query.put("region", region);
+		query.put("sort", sort);
+		
+		List<PlaceDTO> places = placeMapper.findAllPlace(query, rb);
+		
+		return places;
+		
+	}
+	
+	// RowBounds
+	private RowBounds getRowBounds(PageInfo pi) {
+		
+		RowBounds rb = new RowBounds(OFFSET * pi.getCurrentPage(), pi.getBoardLimit());
+		return rb;
+		
+	}
+	
+	// 전체 여행지 개수 조회
 
 }

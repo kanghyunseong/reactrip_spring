@@ -29,12 +29,12 @@ public class PlaceController {
 			@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) String theme,
 			@RequestParam(required = false) String region,
-			@RequestParam(defaultValue="0", required = false) Integer page,
-			@RequestParam(defaultValue="10", required = false) Integer size,
+			@RequestParam(defaultValue="0", required = false) Integer page, // 페이지 번호, PageInfo의 currentPage
+			@RequestParam(defaultValue="10", required = false) Integer size, // 페이지 크기, PageInfo의 boardLimit
 			@RequestParam(required = false) String sort
 			) {
 		
-		List<PlaceDTO> places = placeService.findAllPlace(page);
+		List<PlaceDTO> places = placeService.findAllPlace(keyword, theme, region, page, size, sort);
 		
 	}
 
