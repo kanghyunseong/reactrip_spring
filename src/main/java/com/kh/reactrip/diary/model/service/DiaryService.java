@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface DiaryService {
 
-	Map<String, Object> findAllDiary(int pageNo, int size);
+	Map<String, Object> findAllDiary(int page, int size);
 
 
 

@@ -68,21 +68,16 @@ public class SecurityConfigure {
                           "/api/members/login",
                           "/api/members",
                           "/api/members/**",
-                          "/api/auth/refresh",
-                          "/api/cars/**",
-                          "/api/station/**",
-                          "/api/reserve/**"
+                          "/api/auth/refresh"
                   ).permitAll();
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/diarys"
+                          "/api/diarys/**"
                   ).permitAll();
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/boards/*",
-                          "/api/imgBoards/*",
                           "/api/notices/*"
                   ).authenticated();
 
@@ -90,12 +85,7 @@ public class SecurityConfigure {
                   requests.requestMatchers(HttpMethod.PUT,
                           "/api/members", 
                           "/api/members/**", 
-                          "/api/boards/**", 
-                          "/api/imgBoards/**", 
-                          "/api/comments/**", 
-                          "/api/imgComments/**",
-                          "/api/reserve/**", 
-                          "/api/reviews/**"
+                          "/api/comments/**" 
                   ).authenticated();
 
                   // 5. DELETE - 로그인 필요
