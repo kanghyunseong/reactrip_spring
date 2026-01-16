@@ -29,12 +29,12 @@ public class PlaceController {
 			@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) String theme,
 			@RequestParam(required = false) String region,
-			@RequestParam(defaultValue="0", required = false) Integer pageNo,
+			@RequestParam(defaultValue="0", required = false) Integer page,
 			@RequestParam(defaultValue="10", required = false) Integer size,
 			@RequestParam(required = false) String sort
 			) {
 		
-		
+		List<PlaceDTO> places = placeService.findAllPlace(page);
 		
 	}
 
