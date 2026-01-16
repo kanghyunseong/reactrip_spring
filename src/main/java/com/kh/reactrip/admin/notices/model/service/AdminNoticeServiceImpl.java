@@ -10,11 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO;
 import com.kh.reactrip.admin.notices.model.mapper.AdminNoticeMapper;
+import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.common.PageResponseDTO;
 import com.kh.reactrip.file.service.FileService;
 import com.kh.reactrip.util.PageInfo;
 import com.kh.reactrip.util.Pagenation;
-
+import com.kh.reactrip.util.Validator;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class AdminNoticeServiceImpl implements AdminNoticeService {
+
+    private final Validator validator;
 
     private final Pagenation pagenation;
 	
@@ -35,15 +38,12 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
 	@Override
 	@Transactional
-	public void insertNotice(AdminNoticeDTO adminNoticeDTO, MultipartFile file) {
+	public void insertNotice(AdminNoticeDTO adminNoticeDTO, MultipartFile file, CustomUserDetails user) {
 		
-		if(adminNoticeDTO.getNoticeTitle() == null || adminNoticeDTO.getNoticeTitle().isEmpty()) {
-			throw new IllegalArgumentException("공지사항 제목은 필수입니다. ");
-		}
+		adminNoticeDTO.setMemberNo(user.getMemberNo());
 		
-		if(adminNoticeDTO.getNoticeContent() == null || adminNoticeDTO.getNoticeContent().isEmpty()) {
-			throw new IllegalArgumentException("공지사항 내용은 필수 입니다.");
-		}
+		Validator.ValidateNoticeinsert(adminNoticeDTO);
+		
 		
 		try {
 			if(file != null && !file.isEmpty()) {
@@ -84,33 +84,29 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	@Transactional
 	public void updateNotice(Long noticeNo, MultipartFile file, AdminNoticeDTO adminNoticeDTO) {
 		
+		Validator.validateNo(noticeNo, "수정할 게시글 번호가 올바르지 않습니다.");
+		
 		AdminNoticeDTO origin = adminNoticeMapper.selectNoticeDetail(noticeNo);
 		
-		if(origin == null) {
-			throw new RuntimeException("게시글을 찾을 수 없음");
-		}
+		Validator.validateExist(origin.getNoticeNo(), "수정할 게시글을 찾을 수 없습니다.");
+		
+		String finalImgUrl = fileService.updateFile(file, origin.getImage());
 		
 		adminNoticeDTO.setNoticeNo(noticeNo);
-		
-		if(file != null && !file.isEmpty()) {
-			if(origin.getImage() != null) {
-				fileService.delete(origin.getImage());
-			}
-			String imgUrl = fileService.store(file);
-			adminNoticeDTO.setImage(imgUrl);
-		} else {
-			adminNoticeDTO.setImage(origin.getImage());
-		}
+		adminNoticeDTO.setImage(finalImgUrl);
 		
 		int result = adminNoticeMapper.updateNotice(adminNoticeDTO);
 		
-		if(result < 0 ) {
-			throw new RuntimeException("공지사항 수정 실패 ");
-		}
+		Validator.validateResult(result, "공지사항 수정 실패");
 
 	}
 	
+	@Override
+	@Transactional
 	public void deleteNotice(Long noticeNo) {
+		
+		Validator.validateNo(noticeNo, "삭제할 번호가 올바르지 않습니다. ");
+		
 		AdminNoticeDTO origin = adminNoticeMapper.selectNoticeDetail(noticeNo);
 		
 		if(origin == null ) {
