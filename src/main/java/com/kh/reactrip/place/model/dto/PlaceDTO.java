@@ -1,5 +1,16 @@
 package com.kh.reactrip.place.model.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class PlaceDTO {
 	
 	private Long travelNo; // TRAVEL_NO, 여행지순번, PK
