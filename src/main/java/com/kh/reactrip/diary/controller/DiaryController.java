@@ -33,7 +33,9 @@ public class DiaryController {
 			@RequestParam(name="size", defaultValue = "5") int size) {		// 게시글 5개 보여줘
 
 		// Map<String, Object> map = diaryService.findAllDiary(page, size);
-		log.info("{}", diaryService.findAllDiary(1, size));
+		//log.info("{}", diaryService.findAllDiary(1, size));
+		log.info("컨트롤러 page --> " + page);
+		log.info("소스 수정~!!!");
 		
 		return ResponseEntity.ok(diaryService.findAllDiary(page, size));
 	}

@@ -3,18 +3,18 @@
 
 <mapper namespace="com.kh.reactrip.diary.model.dao.DiaryMapper">
 
-
 <!-- 전체 목록 조회-->
 <select id="findAllDiary" resultType="com.kh.reactrip.diary.model.dto.DiaryDTO">
 	SELECT
 		   D.DIARY_NO AS diaryNo
 		 , D.DIARY_TITLE AS diaryTitle
-		 , D.DIARY_CONTENT AS diaryContent
+		 , SUBSTR( D.DIARY_CONTENT,0 ,40)||'...' AS diaryContent
 		 , D.DIARY_STATUS AS diaryStatus
-		 , D.CREATED_DATE AS createdDate
+		 , TO_CHAR( D.CREATED_DATE,'YYYY.MM.DD') AS createdDate
 		 , D.UPDATED_DATE AS updatedDate
 		 , D.COUNT AS count
 		 , M.MEMBER_NO AS memberNo
+		 , m.member_name as writeName
 		 , S.SCHEDULE_NO AS scheduleNo
 		 , T.TRAVEL_NO AS travelNo
 	 FROM
