@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.kh.reactrip.admin.community.comment.model.mapper.AdminCommentMapper">
+<select id="getTotalCount" resultType="_int">
+	SELECT 
+	       COUNT(*)
+	  FROM     
+	       TB_COMMENT
+	 WHERE
+	       COMMENT_STATUS = 'N'	  
+</select>
+
+<select id="findAllComment" resultType="com.kh.reactrip.admin.community.comment.model.vo.AdminCommentVO">
+        SELECT 
+               C.COMMENT_NO       AS commentNo
+             , C.COMMENT_STATUS   AS commentStatus
+             , C.COMMENT_CONTENT  AS commentContent
+             , C.CREATED_DATE     AS createdDate
+             , C.UPDATED_DATE     AS updatedDate 
+             , C.DIARY_NO         AS diaryNo
+             , C.MEMBER_NO        AS memberNo
+             , M.MEMBER_NAME      AS memberName FROM
+               TB_COMMENT C
+          JOIN
+               TB_MEMBER M ON (C.MEMBER_NO = M.MEMBER_NO)
+         ORDER BY 
+               C.COMMENT_NO DESC
+    </select>
+
+</mapper>

@@ -66,18 +66,11 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 		
 		int totalCount = adminNoticeMapper.getTotalCount();
 		
+		PageInfo pi = pagenation.getPageInfo(totalCount, page);
 		
-		PageInfo pi = pagenation.getPageInfo(totalCount, page, BOARD_LIMIT, PAGE_LIMIT);
-		RowBounds rowBounds = createRowBounds(pi);
-		
-		List<AdminNoticeDTO> notice = adminNoticeMapper.findAllNotice(rowBounds);
+		List<AdminNoticeDTO> notice = adminNoticeMapper.findAllNotice(pagenation.createRowBounds(pi));
 		
 		return new PageResponseDTO<>(pi, notice);
-	}
-	
-	private RowBounds createRowBounds(PageInfo pi) {
-		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
-		return new RowBounds(offset, pi.getBoardLimit());
 	}
 
 	@Override

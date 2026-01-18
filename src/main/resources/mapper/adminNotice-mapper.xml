@@ -36,7 +36,7 @@
     FROM 
          TB_NOTICE
    WHERE
-         NOTICE_STATUS = 'Y'
+         NOTICE_STATUS = 'N'
 </select>
 
 <select id="findAllNotice" resultType="com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO">
@@ -55,7 +55,7 @@
        JOIN 
             TB_MEMBER M ON (N.MEMBER_NO = M.MEMBER_NO)
       WHERE 
-            N.NOTICE_STATUS = 'Y'
+            N.NOTICE_STATUS = 'N'
       ORDER
          BY 
             N.NOTICE_NO DESC
@@ -74,7 +74,7 @@
      WHERE 
            NOTICE_NO = #{noticeNo}
        AND 
-           NOTICE_STATUS = 'Y' 
+           NOTICE_STATUS = 'N' 
 </select>
 <update id="updateNotice">
 	UPDATE 
@@ -98,7 +98,7 @@
 	UPDATE
 	       TB_NOTICE
 	   SET
-	       NOTICE_STATUS = 'N'
+	       NOTICE_STATUS = 'Y'
      WHERE
            NOTICE_NO = #{noticeNO}
 </update>

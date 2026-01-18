@@ -203,5 +203,4 @@ public class GlobalExceptionHandler {
    public ResponseEntity<ResponseData<Object>> pageNotFoundExceptionHandler(PageNotFoundException e) {
 	   return ResponseData.failure(e.getMessage(),HttpStatus.NOT_FOUND);
    }
-
 }

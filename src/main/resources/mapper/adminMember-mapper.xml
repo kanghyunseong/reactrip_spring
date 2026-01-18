@@ -8,13 +8,14 @@
 
 <select id="getTotalCount" resultType="_int">
     SELECT 
-        COUNT(*)
-    FROM 
-        TB_MEMBER M
-    LEFT JOIN 
-        TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
-    WHERE 
-        D.MEMBER_NO IS NULL
+           COUNT(*)
+      FROM 
+           TB_MEMBER M
+      LEFT
+      JOIN 
+           TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
+     WHERE 
+           D.MEMBER_NO IS NULL
 </select>
 
 <select id="findAllMembers" resultType="com.kh.reactrip.admin.members.model.dto.AdminMemberDTO">
@@ -50,7 +51,8 @@
          , M.ENROLL_DATE AS enrollDate
       FROM
            TB_MEMBER M
-      LEFT JOIN
+      LEFT
+      JOIN
            TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
      WHERE
            D.MEMBER_NO IS NULL

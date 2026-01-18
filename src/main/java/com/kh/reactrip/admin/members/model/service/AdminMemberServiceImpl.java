@@ -25,28 +25,17 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	private final AdminMemberMapper adminMemberMapper;
 	private final S3Service s3Service;
 	
-	// 페이징 관련 상수뺴기
-	// 상수로 빼면 장점 -> 나중에 유지보수 쉬움 왜? 숫자만 바꾸면 됨 
-	private static final int BOARD_LIMIT = 10;
-	private static final int PAGE_LIMIT = 5;
 
 	@Override
 	public PageResponseDTO<AdminMemberDTO> findAllMember(int page) {
 
 		int totalCount = adminMemberMapper.getTotalCount();
 
-		PageInfo pi = pagenation.getPageInfo(totalCount, page, BOARD_LIMIT, PAGE_LIMIT);
+		PageInfo pi = pagenation.getPageInfo(totalCount, page);
 		
-		RowBounds rowBounds = createRowBounds(pi);
-		
-		List<AdminMemberDTO> members = adminMemberMapper.findAllMembers(rowBounds);
+		List<AdminMemberDTO> members = adminMemberMapper.findAllMembers(pagenation.createRowBounds(pi));
 
 		return new PageResponseDTO<>(pi, members);
-	}
-	
-	private RowBounds createRowBounds(PageInfo pi) {
-		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
-		return new RowBounds(offset, pi.getBoardLimit());
 	}
 
 	@Override

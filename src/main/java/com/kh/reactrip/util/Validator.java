@@ -41,4 +41,18 @@ public class Validator {
 			
 		}
 	}
+	// Validator.java
+
+	public static void validatePage(int page, int maxPage) {
+	    // 데이터가 하나도 없는 경우(maxPage 0) 1페이지 요청은 허용하거나, 
+	    // 혹은 데이터가 있을 때만 엄격하게 검사하도록 설정
+	    if (maxPage > 0 && (page <= 0 || page > maxPage)) {
+	        throw new PageNotFoundException("존재하지 않는 페이지입니당.");
+	    }
+	    
+	    // 페이지 번호 자체가 음수인 경우 방지
+	    if (page <= 0) {
+	        throw new PageNotFoundException("페이지 번호는 1보다 작을 수 없습니당.");
+	    }
+	}
 }
