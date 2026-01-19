@@ -11,9 +11,12 @@ import org.springframework.stereotype.Service;
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.exception.CustomAuthenticationException;
+import com.kh.reactrip.exception.LogoutFailureException;
 import com.kh.reactrip.member.model.vo.AuthMember;
+import com.kh.reactrip.token.model.dao.TokenMapper;
 import com.kh.reactrip.token.model.service.TokenService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +31,6 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public Map<String, String> login(MemberLoginDTO member) {
 
-		log.info("memberDTO : {} ", member);
 		CustomUserDetails user = getCustomUserDetails(member);
 
 		//log.info("로그인성공! ");
@@ -66,6 +68,18 @@ public class AuthServiceImpl implements AuthService {
 		
 		return loginResponse;
 
+	}
+
+	@Override
+	public void logout(@Valid MemberLoginDTO member) {
+		
+		int result = TokenMapper.deleteTokenForLogout(member);
+		
+		if(result == 1) {
+			return;
+		} else {
+			throw new LogoutFailureException("로그아웃 오류 발생, 관리자에게 문의해주세요");
+		}
 	}
 
 }

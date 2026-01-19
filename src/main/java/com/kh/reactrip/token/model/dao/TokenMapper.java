@@ -5,7 +5,10 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
 import com.kh.reactrip.token.model.vo.RefreshToken;
+
+import jakarta.validation.Valid;
 
 @Mapper
 public interface TokenMapper {
@@ -23,4 +26,8 @@ public interface TokenMapper {
     @Select("SELECT TOKEN_NO as tokenNo, TOKEN as token, AUTH_NO as authNo, EXPIRATION as expiration " +
             "FROM TB_TOKEN WHERE TOKEN = #{token}")
     RefreshToken findByToken(String token);
+
+    @Delete("DELETE FROM TB_TOKEN WHERE MEMBER_ID = #{memberId} AND TOKEN = #{refreshToken}")
+	int deleteTokenForLogout(@Valid MemberLoginDTO member);
+	
 }
