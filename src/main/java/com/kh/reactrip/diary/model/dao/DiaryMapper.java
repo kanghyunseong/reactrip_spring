@@ -17,6 +17,6 @@ public interface DiaryMapper {
 	DiaryDTO findByDiaryNo(int diaryNo);
 
 	
-	
+	 
 	
 }

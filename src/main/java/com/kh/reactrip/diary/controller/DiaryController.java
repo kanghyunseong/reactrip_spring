@@ -50,7 +50,7 @@ public class DiaryController {
 
     	DiaryDTO diary = diaryService.findByDiaryNo(diaryNo);
     	
-        return ResponseEntity.ok(diary);
+        return ResponseEntity.ok(diary); 
     }
 	
 }

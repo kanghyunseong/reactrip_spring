@@ -38,10 +38,8 @@ public class DiaryServiceImpl implements DiaryService {
 		} 
 		
 		int offset = (page - 1) * size;
-		log.info("offset --> "+ offset );  
+
 		List<DiaryDTO> diaryList = diaryMapper.findAllDiary(size, offset);
-		
-		log.info("결과 1번째거 :  " + diaryList.get(0).toString());
 		
 		int totalCount = diaryMapper.findDiaryCount();
 
@@ -70,7 +68,7 @@ public class DiaryServiceImpl implements DiaryService {
 		
 		log.info("상세조회 : {}", diary);
 		
-		return null;
+		return diary;
 	}
 
 
