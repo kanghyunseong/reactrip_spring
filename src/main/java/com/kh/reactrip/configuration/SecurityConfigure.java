@@ -68,6 +68,7 @@ public class SecurityConfigure {
                           "/api/members/login",
                           "/api/members",
                           "/api/members/**",
+                          "/api/diarys/**",
                           "/api/auth/refresh"
                   ).permitAll();
 

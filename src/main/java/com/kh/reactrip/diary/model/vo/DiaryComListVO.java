@@ -1,4 +1,4 @@
-package com.kh.reactrip.diary.model.dto;
+package com.kh.reactrip.diary.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class DiaryCommentDTO{
+public class DiaryComListVO{
 
 	private int commentNo;
 	private char commentStatus;
@@ -20,6 +20,6 @@ public class DiaryCommentDTO{
 	private String updatedDate;
 	private int diaryNo;
 	private int memberNo;
-	private String memberName;
+	private String commentWriteName; //댓글작성자명
 	
 }

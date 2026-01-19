@@ -48,7 +48,7 @@
 
 
 <!-- 상세 조회 -->
-<select id="findByDiaryNo" parameterType="int" resultType="DiaryDTO">
+<select id="findByDiaryNo" parameterType="int" resultType="com.kh.reactrip.diary.model.dto.DiaryDTO">
 	 SELECT
 	        D.DIARY_NO AS diaryNo
 	      , D.DIARY_TITLE AS diaryTitle
@@ -67,7 +67,7 @@
 
 
 <!-- 댓글 조회 -->
-<select id="findByComments" parameterType="int" resultType="DiaryCommentDTO">
+<select id="findByComments" parameterType="int" resultType="com.kh.reactrip.diary.model.dto.DiaryCommentDTO">
     SELECT
 	       C.COMMENT_NO AS commentNo
 	     , D.DIARY_NO AS diaryNo
