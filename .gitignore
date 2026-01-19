@@ -1,4 +1,3 @@
-HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -16,9 +15,6 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-application.yml
-application-private.yml
-*.yml
 
 ### IntelliJ IDEA ###
 .idea
@@ -36,9 +32,12 @@ out/
 /nbdist/
 /.nb-gradle/
 
+application.yml
+application-private.yml
+*.application.yml
+*.application-private.yml
+
 ### VS Code ###
 .vscode/
-
-# gitignore에 추가 Eclipse 설정 파일들은 보통 Git에 올리지 않습니다.
-.metadata/
-
+*.metadata
+.metadata
