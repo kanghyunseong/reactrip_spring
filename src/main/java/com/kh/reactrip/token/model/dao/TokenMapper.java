@@ -11,16 +11,16 @@ import com.kh.reactrip.token.model.vo.RefreshToken;
 public interface TokenMapper {
 
 	  
-    @Delete("DELETE FROM TB_TOKEN WHERE USER_NO = #{userNo}")
-    void deleteTokenByUserNo(Long userNo);
+    @Delete("DELETE FROM TB_TOKEN WHERE AUTH_NO = #{authNo}")
+    void deleteTokenByUserNo(Long authNo);
     
   
-    @Insert("INSERT INTO TB_TOKEN (TOKEN, USER_NO, EXPIRATION) " +
-            "VALUES (#{token}, #{userNo}, #{expiration})")
+    @Insert("INSERT INTO TB_TOKEN (TOKEN_NO, TOKEN, AUTH_NO, EXPIRATION) " +
+            "VALUES (SEQ_TOKEN_NO.NEXTVAL, #{token}, #{authNo}, #{expiration})")
     void saveToken(RefreshToken refreshToken);
     
    
-    @Select("SELECT TOKEN as token, USER_NO as userNo, EXPIRATION as expiration " +
+    @Select("SELECT TOKEN_NO as tokenNo, TOKEN as token, AUTH_NO as authNo, EXPIRATION as expiration " +
             "FROM TB_TOKEN WHERE TOKEN = #{token}")
     RefreshToken findByToken(String token);
 }

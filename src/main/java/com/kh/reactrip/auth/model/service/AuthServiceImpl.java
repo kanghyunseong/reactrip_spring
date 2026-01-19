@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.exception.CustomAuthenticationException;
+import com.kh.reactrip.member.model.vo.AuthMember;
 import com.kh.reactrip.token.model.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,15 +28,13 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public Map<String, String> login(MemberLoginDTO member) {
 
-		//log.info("memberDTO : {} ", member);
-
+		log.info("memberDTO : {} ", member);
 		CustomUserDetails user = getCustomUserDetails(member);
 
 		//log.info("로그인성공! ");
 		//log.info("인증에 성공한 사용자의 정보 : {} ", user);
 
 		Map<String, String> loginResponse = getLoginResponse(user);
-
 		return loginResponse;
 
 	}
@@ -57,17 +56,14 @@ public class AuthServiceImpl implements AuthService {
 	private Map<String, String> getLoginResponse(CustomUserDetails user) {
 
 		String role = user.getAuthorities().stream().findFirst().get().getAuthority();
-
-		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getUserNo(), role);
-		loginResponse.put("userNo", String.valueOf(user.getUserNo()));
+		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getAuthNo(), role);
+		loginResponse.put("userNo", String.valueOf(user.getMemberNo()));
 		loginResponse.put("userId", user.getUsername());
 		loginResponse.put("birthDay", user.getBirthDay());
-		loginResponse.put("userName", user.getRealName());
 		loginResponse.put("email", user.getEmail());
 		loginResponse.put("phone", user.getPhone());
 		loginResponse.put("role", user.getAuthorities().toString());
-		loginResponse.put("licenseUrl", user.getLicenseUrl());
-
+		
 		return loginResponse;
 
 	}

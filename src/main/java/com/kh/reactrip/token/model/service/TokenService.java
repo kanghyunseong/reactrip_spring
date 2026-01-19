@@ -22,7 +22,6 @@ public class TokenService {
 	
 	private final JwtUtil tokenUtil;
 	private final TokenMapper tokenMapper;
-	
 	/**
 	 * 토큰 생성 및 저장
 	 * @param username 사용자 ID
@@ -30,12 +29,12 @@ public class TokenService {
 	 * @return AccessToken, RefreshToken을 담은 Map
 	 */
 	@Transactional
-	public Map<String, String> generateToken(String username, Long userNo, String role) {
+	public Map<String, String> generateToken(String username, Long authNo, String role) {
 		// 1. Access Token, Refresh Token 생성
 		Map<String, String> tokens = createTokens(username, role);
 		
 		// 2. Refresh Token DB에 저장
-		saveToken(tokens.get("refreshToken"), userNo);
+		saveToken(tokens.get("refreshToken"), authNo);
 		
 		return tokens;
 	}
@@ -62,25 +61,25 @@ public class TokenService {
 	 * 기존 토큰이 있으면 삭제 후 저장
 	 */
 	@Transactional
-	private void saveToken(String refreshToken, Long userNo) {
+	private void saveToken(String refreshToken, Long authNo) {
 		// Refresh Token 만료 시간 계산 (7일)
 		
 		
 		RefreshToken token = RefreshToken.builder()
 				.token(refreshToken)
-				.userNo(userNo) 
-				.expiration(System.currentTimeMillis() + 36000000L & 72) 
+				.authNo(authNo) 
+				.expiration(System.currentTimeMillis() + 36000000L * 72) 
 				.build();
-		
+		log.info("token: {} ", token);
 		// 기존 토큰 삭제 후 새 토큰 저장
 		try {
-			tokenMapper.deleteTokenByUserNo(userNo);
+			tokenMapper.deleteTokenByUserNo(authNo);
 		} catch (Exception e) {
 			log.debug("기존 토큰 없음 (정상)");
 		}
 		
 		tokenMapper.saveToken(token);
-		log.info("Refresh Token 저장 완료 - userNo: {}", userNo);
+		log.info("Refresh Token 저장 완료 - userNo: {}", authNo);
 	}
 	
 	/**
