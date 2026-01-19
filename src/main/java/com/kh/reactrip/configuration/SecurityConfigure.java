@@ -103,7 +103,7 @@ public class SecurityConfigure {
 
                   // 6. POST - 게시글/댓글/공지 작성 (로그인 필요)
                   requests.requestMatchers(HttpMethod.POST,
-                          "/api/boards/**",
+                          "/api/diarys/**",
                           "/api/imgBoards/**",
                           "/api/comments/**",
                           "/api/imgComments/**",

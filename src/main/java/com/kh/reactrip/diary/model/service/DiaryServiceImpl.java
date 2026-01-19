@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.diary.model.dao.DiaryMapper;
@@ -34,10 +35,10 @@ public class DiaryServiceImpl implements DiaryService {
 		// 페이지 처리 유효성 검사
 		if(page < 1) {
 			throw new InvalidParameterException("잘못된 페이지 요청입니다.");
-		}
+		} 
 		
 		int offset = (page - 1) * size;
-		log.info("offset --> "+ offset );
+		log.info("offset --> "+ offset );  
 		List<DiaryDTO> diaryList = diaryMapper.findAllDiary(size, offset);
 		
 		log.info("결과 1번째거 :  " + diaryList.get(0).toString());
@@ -55,4 +56,26 @@ public class DiaryServiceImpl implements DiaryService {
 		
 		return map;
 	}
+
+
+	// 상세 조회
+	@Override
+	public DiaryDTO findByDiaryNo(int diaryNo) {
+		
+		if(diaryNo <= 0) {
+			throw new InvalidParameterException("잘못된 다이어리 번호입니다.");
+		}
+		
+		DiaryDTO diary = diaryMapper.findByDiaryNo(diaryNo);
+		
+		log.info("상세조회 : {}", diary);
+		
+		return null;
+	}
+
+
+
+
+
+
 }
