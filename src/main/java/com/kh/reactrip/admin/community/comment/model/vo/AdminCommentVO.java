@@ -31,7 +31,6 @@ public class AdminCommentVO {
 	
 	public AdminCommentVO(AdminCommentDTO dto) {
 	    this.commentNo = dto.getCommentNo();
-	    this.commentStatus = dto.getCommentStatus();
 	    this.commentContent = dto.getCommentContent();
 	    this.createdDate = dto.getCreatedDate();
 	    this.memberName = dto.getMemberName();
@@ -40,6 +39,7 @@ public class AdminCommentVO {
 	        this.updatedDate = detail.getUpdatedDate();
 	        this.diaryNo = detail.getDiaryNo();
 	        this.memberNo = detail.getMemberNo();
+	        this.commentStatus = detail.getCommentStatus();
 	    }
 	}
 

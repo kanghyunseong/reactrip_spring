@@ -17,18 +17,94 @@
 <select id="findAllComment" resultType="com.kh.reactrip.admin.community.comment.model.vo.AdminCommentVO">
         SELECT 
                C.COMMENT_NO       AS commentNo
-             , C.COMMENT_STATUS   AS commentStatus
              , C.COMMENT_CONTENT  AS commentContent
              , C.CREATED_DATE     AS createdDate
-             , C.UPDATED_DATE     AS updatedDate 
              , C.DIARY_NO         AS diaryNo
              , C.MEMBER_NO        AS memberNo
-             , M.MEMBER_NAME      AS memberName FROM
+             , M.MEMBER_NAME      AS memberName
+          FROM
                TB_COMMENT C
           JOIN
                TB_MEMBER M ON (C.MEMBER_NO = M.MEMBER_NO)
-         ORDER BY 
+         WHERE 
+               COMMENT_STATUS = 'N' 
+         ORDER
+            BY 
                C.COMMENT_NO DESC
-    </select>
+</select>
 
+<select id="findByCommentNo" resultType="com.kh.reactrip.admin.community.comment.model.vo.AdminCommentVO">
+	SELECT
+	       C.COMMENT_NO      AS commentNo
+	     , C.COMMENT_STATUS  AS commentStatus
+	     , C.COMMENT_CONTENT AS commentContent
+	     , C.DIARY_NO        AS diaryNo
+	     , C.MEMBER_NO       AS memberNo
+	     , M.MEMBER_NAME     AS memberName
+	     , C.CREATED_DATE    AS createdDate
+	     , C.UPDATED_DATE    AS updatedDate
+	  FROM 
+           TB_COMMENT C
+      JOIN
+           TB_MEMBER M ON (C.MEMBER_NO = M.MEMBER_NO)
+	 WHERE
+	       C.COMMENT_NO = #{commentNo}       
+</select>
+
+<update id="deleteStatus">
+
+	UPDATE
+	       TB_COMMENT
+	   SET
+	       COMMENT_STATUS = 'Y'
+	     , UPDATED_DATE = SYSDATE 
+	 WHERE
+	       COMMENT_NO = #{commentNo}
+	       
+</update>
+
+<select id="getSearchCount" resultType="_int">
+    SELECT
+           COUNT(*)
+      FROM
+           TB_COMMENT C
+      JOIN
+           TB_MEMBER M ON C.MEMBER_NO = M.MEMBER_NO
+     WHERE
+           C.COMMENT_STATUS = 'N'
+        <if test="keyword != null and keyword != ''">
+       AND (
+           C.COMMENT_CONTENT LIKE '%' || #{keyword} || '%'
+        OR M.MEMBER_NAME    LIKE '%' || #{keyword} || '%' )
+       </if> 
+</select>
+
+<select id="findBySearch" resultType="com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO">
+    SELECT 
+           C.COMMENT_NO       AS commentNo
+         , C.COMMENT_CONTENT  AS commentContent
+         , C.CREATED_DATE     AS createdDate 
+         , M.MEMBER_NAME      AS memberName 
+         , D.DIARY_NO         AS diaryNo    
+      FROM
+           TB_COMMENT C  
+      JOIN
+           TB_MEMBER M ON C.MEMBER_NO = M.MEMBER_NO
+      JOIN
+           TB_DIARY D ON C.DIARY_NO = D.DIARY_NO
+     WHERE 
+           C.COMMENT_STATUS = 'N' 
+       <if test="keyword != null and keyword != ''">
+       AND (
+           C.COMMENT_CONTENT LIKE '%' || #{keyword} || '%'
+        OR
+           M.MEMBER_NAME    LIKE '%' || #{keyword} || '%'
+        OR
+           D.DIARY_TITLE    LIKE '%' || #{keyword} || '%'
+           )
+       </if>	       
+     ORDER
+        BY
+           C.COMMENT_NO DESC
+</select>
 </mapper>

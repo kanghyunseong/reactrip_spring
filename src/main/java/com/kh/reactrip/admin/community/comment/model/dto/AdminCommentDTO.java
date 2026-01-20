@@ -18,16 +18,13 @@ import lombok.ToString;
 public class AdminCommentDTO {
 	
 	private Long commentNo;
-	private String commentStatus;
 	private String commentContent;
 	private LocalDateTime createdDate;
 	private Long diaryNo;
-	
 	private String memberName;
 	
 	public AdminCommentDTO(AdminCommentVO vo) {
 		this.commentNo = vo.getCommentNo();
-		this.commentStatus = vo.getCommentStatus();
 		this.commentContent = vo.getCommentContent();
 		this.createdDate = vo.getCreatedDate();
 		this.diaryNo = vo.getDiaryNo();

@@ -17,6 +17,24 @@
      WHERE 
            D.MEMBER_NO IS NULL
 </select>
+<select id="getSearchCount" resultType="_int">
+    SELECT 
+           COUNT(*)
+      FROM 
+           TB_MEMBER M
+      LEFT
+      JOIN 
+           TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
+     WHERE 
+           D.MEMBER_NO IS NULL
+      <if test="keyword != null and keyword != ''">
+           AND (
+               M.MEMBER_NAME LIKE '%' || #{keyword} || '%'
+            OR 
+               M.EMAIL LIKE '%' || #{keyword} || '%'
+           )
+      </if>
+</select>
 
 <select id="findAllMembers" resultType="com.kh.reactrip.admin.members.model.dto.AdminMemberDTO">
     SELECT 

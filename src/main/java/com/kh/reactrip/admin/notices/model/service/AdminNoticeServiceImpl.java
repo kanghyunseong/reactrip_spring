@@ -1,9 +1,9 @@
 package com.kh.reactrip.admin.notices.model.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,10 +12,12 @@ import com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO;
 import com.kh.reactrip.admin.notices.model.mapper.AdminNoticeMapper;
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.common.PageResponseDTO;
+import com.kh.reactrip.exception.NoticeNotFoundException;
 import com.kh.reactrip.file.service.FileService;
 import com.kh.reactrip.util.PageInfo;
 import com.kh.reactrip.util.Pagenation;
 import com.kh.reactrip.util.Validator;
+
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +35,6 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	private final AdminNoticeMapper adminNoticeMapper;
 	private final FileService fileService;
 	
-	private static final int BOARD_LIMIT = 10;
-	private static final int PAGE_LIMIT = 5;
 
 	@Override
 	@Transactional
@@ -115,7 +115,26 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 		} else {
 			throw new RuntimeException("삭제 처리 실패");
 		}
+	}
+
+	@Override
+	public PageResponseDTO<AdminNoticeDTO> findByNotice(String keyword, int page) {
+
+		if(keyword == null || keyword.trim().isEmpty()) {
+			return new PageResponseDTO<>(new PageInfo(), new ArrayList<>());
+		}
 		
+		int totalCount = adminNoticeMapper.getSearchCount(keyword);
 		
+ 		if(totalCount == 0) {
+ 			log.error("Notice Not Found Exception : {} ", keyword);
+ 			throw new RuntimeException(keyword);
+ 		}
+ 		
+ 		PageInfo pi = pagenation.getPageInfo(totalCount, page);
+ 		
+ 		List<AdminNoticeDTO> list = adminNoticeMapper.findByNotice(keyword, pagenation.createRowBounds(pi));
+		
+		return new PageResponseDTO<>(pi, list);
 	}
 }

@@ -103,4 +103,41 @@
            NOTICE_NO = #{noticeNO}
 </update>
 
+<select id="getSearchCount" resultType="_int">
+    SELECT 
+           COUNT(*)
+      FROM 
+           TB_NOTICE
+     WHERE 
+           NOTICE_STATUS = 'N'
+      <if test="keyword != null and keyword != ''">
+           AND (
+               NOTICE_TITLE   LIKE '%' || #{keyword} || '%'
+            OR 
+               NOTICE_CONTENT LIKE '%' || #{keyword} || '%'
+           )
+      </if>
+</select>
+<select id="findByNotice" resultType="AdminNoticeDTO">
+    SELECT 
+           N.NOTICE_NO      AS noticeNo
+         , N.MEMBER_NO      AS memberNo
+         , N.NOTICE_TITLE   AS noticeTitle
+         , N.NOTICE_CONTENT AS noticeContent
+         , N.IMAGE          AS image
+         , N.CREATED_DATE   AS createdDate
+         , N.COUNT          AS count
+      FROM 
+           TB_NOTICE N
+     WHERE 
+           NOTICE_STATUS = 'N'
+      <if test="keyword != null and keyword != ''">
+           AND (
+               NOTICE_TITLE   LIKE '%' || #{keyword} || '%'
+            OR 
+               NOTICE_CONTENT LIKE '%' || #{keyword} || '%'
+           )
+      </if>
+     ORDER BY NOTICE_NO DESC
+</select>
 </mapper>

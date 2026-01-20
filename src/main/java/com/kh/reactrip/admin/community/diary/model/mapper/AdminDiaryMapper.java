@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO;
+import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDetailDTO;
 import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryImageVO;
 import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryVO;
 
@@ -18,8 +19,12 @@ public interface AdminDiaryMapper {
 
 	AdminDiaryVO findByDiaryNo(Long diaryNo);
 	
-	int updateDiaryStatus(AdminDiaryVO vo);
+	int deleteStatus(AdminDiaryVO vo);
 
 	List<AdminDiaryImageVO> findImagesByDiaryNo(Long diaryNo);
+
+	int getSearchCount(String keyword);
+
+	List<AdminDiaryDetailDTO> findByDiarySearch(String keyword, RowBounds rowBounds);
 
 }

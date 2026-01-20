@@ -10,7 +10,9 @@ public interface AdminDiaryService {
 
 	AdminDiaryDetailDTO findByDiaryNo(Long diaryNo);
 
-	AdminDiaryDTO updateDiaryStatus(Long diaryNo, AdminDiaryDTO dto);
+	AdminDiaryDTO deleteStatus(Long diaryNo, AdminDiaryDTO dto);
+
+	PageResponseDTO<AdminDiaryDetailDTO> findByDiarySearch(String keyword, int page);
 
 
 }

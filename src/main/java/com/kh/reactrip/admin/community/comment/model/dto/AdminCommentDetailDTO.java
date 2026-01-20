@@ -13,13 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AdminCommentDetailDTO extends AdminCommentDTO {
     private Long memberNo;
-    private Long diaryNo;
     private LocalDateTime updatedDate;
+    private String commentStatus;
 
     public AdminCommentDetailDTO(AdminCommentVO vo) {
-        super(vo); // 공통 필드는 부모가 처리
+        super(vo);
         this.memberNo = vo.getMemberNo();
-        this.diaryNo = vo.getDiaryNo();
         this.updatedDate = vo.getUpdatedDate();
+        this.commentStatus = vo.getCommentStatus();
     }
 }

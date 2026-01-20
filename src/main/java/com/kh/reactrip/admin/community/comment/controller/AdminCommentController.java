@@ -1,8 +1,10 @@
 package com.kh.reactrip.admin.community.comment.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,5 +43,27 @@ public class AdminCommentController {
 		
 		return ResponseData.ok("상세조회 성공하였습니다.", detailDTO);
 	}
+	
+	@DeleteMapping("/{commentNo}")
+	public ResponseEntity<ResponseData<AdminCommentDetailDTO>> deleteComment(
+			@PathVariable(name = "commentNo") Long commentNo,
+			@RequestBody AdminCommentDetailDTO dto) {
+		
+		AdminCommentDetailDTO detailDTO = adminCommentService.deleteComment(commentNo, dto);
+		
+		return ResponseData.noContent();
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<ResponseData<PageResponseDTO<AdminCommentDetailDTO>>> findBySearch(
+			@RequestParam(name = "keyword")String keyword,
+			@RequestParam(name = "page") int page
+			) {
+		
+		PageResponseDTO<AdminCommentDetailDTO> dtoList = adminCommentService.findBySearch(keyword, page);
+		
+		return ResponseData.ok("검색 조회 성공 하였습니다.", dtoList);
+	}
+	
 	 
 }

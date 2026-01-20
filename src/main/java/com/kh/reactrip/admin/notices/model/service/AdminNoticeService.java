@@ -16,4 +16,6 @@ public interface AdminNoticeService {
 
 	void deleteNotice(Long noticeNo);
 
+	PageResponseDTO<AdminNoticeDTO> findByNotice(String keyword, int page);
+
 }

@@ -3,6 +3,7 @@ package com.kh.reactrip.util;
 import org.springframework.stereotype.Component;
 
 import com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO;
+import com.kh.reactrip.admin.travel.model.dto.AdminTravelDTO;
 import com.kh.reactrip.exception.PageNotFoundException;
 
 @Component
@@ -41,7 +42,6 @@ public class Validator {
 			
 		}
 	}
-	// Validator.java
 
 	public static void validatePage(int page, int maxPage) {
 	    // 데이터가 하나도 없는 경우(maxPage 0) 1페이지 요청은 허용하거나, 
@@ -54,5 +54,17 @@ public class Validator {
 	    if (page <= 0) {
 	        throw new PageNotFoundException("페이지 번호는 1보다 작을 수 없습니당.");
 	    }
+	}
+	
+public static void ValidateTravelInsert(AdminTravelDTO adminTravelDTO) {
+		
+		if(adminTravelDTO.getTravelName() == null || adminTravelDTO.getTravelName().trim().isEmpty()) {
+			throw new IllegalArgumentException("여행지 제목은 필수입니다. ");
+		}
+		
+		if(adminTravelDTO.getTravelContent() == null || adminTravelDTO.getTravelContent().trim().isEmpty()) {
+			throw new IllegalArgumentException("여행지 내용은 필수 입니다.");
+		}
+		
 	}
 }

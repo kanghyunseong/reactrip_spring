@@ -1,8 +1,8 @@
 package com.kh.reactrip.admin.members.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.admin.members.model.dto.AdminMemberDTO;
@@ -39,16 +39,24 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	}
 
 	@Override
-	public List<AdminMemberDTO> findByMembers(String keyword) {
+	public PageResponseDTO<AdminMemberDTO> findByMembers(String keyword, int page) {
 		
-		List<AdminMemberDTO> findByMembers = adminMemberMapper.findByMembers(keyword);
-		
-		if(findByMembers == null || findByMembers.isEmpty()) {
-			log.error("User Not Found Exception : {} ", keyword );
-			throw new UserNotFoundException("검색어 : " + keyword + "에 대한 정보가 없습니다.");
+		if(keyword == null || keyword.trim().isEmpty()) {
+			return new PageResponseDTO<>(new PageInfo(), new ArrayList<>());
 		}
 		
-		return findByMembers;
+		int totalCount = adminMemberMapper.getSearchCount(keyword);
+		
+		if(totalCount == 0) {
+			log.error("user Not Found Exception : {} ", keyword);
+			throw new UserNotFoundException(keyword);
+		}
+		
+		PageInfo pi = pagenation.getPageInfo(totalCount, page);
+		
+		List<AdminMemberDTO> members = adminMemberMapper.findByMembers(keyword, pagenation.createRowBounds(pi));
+		
+		return new PageResponseDTO<>(pi, members);
 	}
 
 	@Override

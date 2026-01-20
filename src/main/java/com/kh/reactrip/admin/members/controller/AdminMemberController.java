@@ -52,10 +52,11 @@ public class AdminMemberController {
     
     // 3. 회원 검색 (검색결과도 페이징이 필요하다면 PageResponseDTO를 써야 하지만, 일단 List로 유지)
     @GetMapping("/search")
-    public ResponseEntity<ResponseData<List<AdminMemberDTO>>> findByMembers(
-            @RequestParam(name = "keyword", required = false) String keyword) {
+    public ResponseEntity<ResponseData<PageResponseDTO<AdminMemberDTO>>> findByMembers(
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "page")int page) {
         
-        List<AdminMemberDTO> list = memberService.findByMembers(keyword);
+    	PageResponseDTO<AdminMemberDTO> list = memberService.findByMembers(keyword, page);
         
         // ★ ResponseData.ok(메시지, 데이터) 순서 맞춤
         return ResponseData.ok("검색어로 조회 성공", list);

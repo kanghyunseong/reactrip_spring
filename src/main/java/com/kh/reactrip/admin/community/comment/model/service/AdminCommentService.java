@@ -10,4 +10,8 @@ public interface AdminCommentService {
 
 	AdminCommentDetailDTO findByCommentNo(Long commentNo);
 
+	AdminCommentDetailDTO deleteComment(Long commentNo, AdminCommentDetailDTO dto);
+
+	PageResponseDTO<AdminCommentDetailDTO> findBySearch(String keyword, int page);
+
 }

@@ -22,4 +22,8 @@ public interface AdminNoticeMapper {
 
 	int deleteNotice(Long noticeNo);
 
+	int getSearchCount(String keyword);
+
+	List<AdminNoticeDTO> findByNotice(String keyword, RowBounds rowBounds);
+
 }

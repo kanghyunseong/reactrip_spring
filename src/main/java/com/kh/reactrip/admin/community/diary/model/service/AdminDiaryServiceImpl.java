@@ -1,5 +1,6 @@
 package com.kh.reactrip.admin.community.diary.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,7 +10,9 @@ import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDetailDTO;
 import com.kh.reactrip.admin.community.diary.model.mapper.AdminDiaryMapper;
 import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryImageVO;
 import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryVO;
+import com.kh.reactrip.admin.members.model.mapper.AdminMemberMapper;
 import com.kh.reactrip.common.PageResponseDTO;
+import com.kh.reactrip.exception.NoticeNotFoundException;
 import com.kh.reactrip.util.PageInfo;
 import com.kh.reactrip.util.Pagenation;
 import com.kh.reactrip.util.Validator;
@@ -54,17 +57,40 @@ public class AdminDiaryServiceImpl implements AdminDiaryService {
 	}
 
 	@Override
-	public AdminDiaryDTO updateDiaryStatus(Long diaryNo, AdminDiaryDTO dto) {
-		
-		dto.setDiaryNo(diaryNo);
+	public AdminDiaryDTO deleteStatus(Long diaryNo, AdminDiaryDTO dto) {
 		
 		Validator.validateNo(diaryNo, "변경할 일기 번호가 잘못되었습니당.");
 		
+		dto.setDiaryNo(diaryNo);
+		
 		AdminDiaryVO vo = new AdminDiaryVO(dto);
 		
-		int result = adminDiaryMapper.updateDiaryStatus(vo);
+		int result = adminDiaryMapper.deleteStatus(vo);
+		
+		Validator.validateExist(vo, "해당 일기의 상태를 변경할 수 없습니다. ");
 		
 		return findByDiaryNo(diaryNo);
+	}
+
+	@Override
+	public PageResponseDTO<AdminDiaryDetailDTO> findByDiarySearch(String keyword, int page) {
+		
+		if(keyword == null || keyword.trim().isEmpty()) {
+			return new PageResponseDTO<>(new PageInfo(), new ArrayList<>());
+		}
+		
+		int totalCount = adminDiaryMapper.getSearchCount(keyword);
+		
+		if(totalCount == 0) {
+			log.error("Diary Not Found Exception : {}", keyword);
+			throw new NoticeNotFoundException(keyword);
+		}
+		
+		PageInfo pi = pagenation.getPageInfo(totalCount, page);
+		
+		List<AdminDiaryDetailDTO> list = adminDiaryMapper.findByDiarySearch(keyword, pagenation.createRowBounds(pi));
+
+		return new PageResponseDTO<>(pi, list);
 	}
 
 	

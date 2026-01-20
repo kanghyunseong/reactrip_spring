@@ -40,11 +40,22 @@ public class AdminDiaryController {
 	}
 	
 	@DeleteMapping("/{diaryNo}")
-	public ResponseEntity<ResponseData<AdminDiaryDTO>> updateDiaryStatus(
+	public ResponseEntity<ResponseData<AdminDiaryDTO>> deleteStatus(
 			@PathVariable(name = "diaryNo")Long diaryNo
 		  , @RequestBody AdminDiaryDTO dto) {
-		AdminDiaryDTO status = adminDiaryService.updateDiaryStatus(diaryNo, dto);
+		AdminDiaryDTO status = adminDiaryService.deleteStatus(diaryNo, dto);
 		return ResponseData.noContent();
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<ResponseData<PageResponseDTO<AdminDiaryDetailDTO>>> findByDiarySearch(
+			@RequestParam(name = "keyword", required = false)String keyword,
+			@RequestParam(name = "page") int page
+			) {
+		
+		PageResponseDTO<AdminDiaryDetailDTO> list = adminDiaryService.findByDiarySearch(keyword, page);
+		
+		return ResponseData.ok("검색어로 조회 성공", list);
 	}
 
 }
