@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component //클래스를 빈으로 등록하는것이다. 즉 spring제어하게 만드는 것객체를 생성안해도됨 
 public class Pagenation {
 
-	private static final int DEFAULT_BOARD_LIMIT = 10;
+	private static final int DEFAULT_BOARD_LIMIT = 5;
     private static final int DEFAULT_PAGE_LIMIT = 5;
 
 	public PageInfo getPageInfo(int listCount

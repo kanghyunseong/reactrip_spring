@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,9 +29,6 @@ public class DiaryDetailDTO {
 	private int regionNo;
 	private String regionName;
 	private int themeNo;
-	private String themeName;	
-	List<DiaryImageDTO> dimg;		// 이미지 리스트
-	List<DiaryCommentDTO> dcom;		// 댓글 리스트
-	List<DiaryLikeDTO> dlike;		// 좋아요 리스트
+	private String themeName;
 
 }

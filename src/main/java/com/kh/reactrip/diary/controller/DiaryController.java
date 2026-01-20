@@ -1,5 +1,6 @@
 package com.kh.reactrip.diary.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
+import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
 import com.kh.reactrip.diary.model.service.DiaryService;
+import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 import com.kh.reactrip.diary.model.vo.DiaryDetailVO;
 
 import lombok.RequiredArgsConstructor;
@@ -53,17 +56,25 @@ public class DiaryController {
 	 
 	// 상세 조회
     @PostMapping("/diarys/detail")
-    public ResponseEntity<DiaryDetailVO> findByDiaryNo(@RequestBody DiaryDetailVO in) {
-    	log.info("상세조회 : " + in);
-    	DiaryDTO diary = diaryService.findByDiaryNo(in.getDiaryNo());
+    public ResponseEntity<DiaryDetailDTO> findByDiaryNo(@RequestBody DiaryDetailVO ddVO) {
     	
-    	in.setDiaryTitle(diary.getDiaryTitle()); //제목
-    	in.setDiaryContent(diary.getDiaryContent());  //내용
-    	in.setMemberNo(diary.getMemberNo()); //작성자번호
-    	in.setMemberName(diary.getMemberName());  // 글작성자명 
+    	// log.info("상세조회 : " + ddVO );
     	
+    	DiaryDetailDTO diary = diaryService.findByDiaryNo(ddVO.getDiaryNo());
     	
-        return ResponseEntity.ok(in); 
+    	// log.info("diaryNo = {}", diary.getDiaryNo());
+    	
+        return ResponseEntity.ok(diary); 
     }
-	
+    
+    
+    // 댓글 목록 조회
+    @PostMapping("/{diaryNo}/comments")
+    public Map<String, Object> getComments(@PathVariable("diaryNo") int diaryNo, @RequestParam(name = "page", defaultValue = "1") int page) {
+    	
+    	
+    	return diaryService.findByComments(diaryNo, page);
+    }
+    
+    
 }

@@ -48,7 +48,7 @@
 
 
 <!-- 상세 조회 -->
-<select id="findByDiaryNo" parameterType="int" resultType="com.kh.reactrip.diary.model.dto.DiaryDTO">
+<select id="findByDiaryNo" parameterType="int" resultType="com.kh.reactrip.diary.model.dto.DiaryDetailDTO">
 	 SELECT
 	        D.DIARY_NO AS diaryNo
 	      , D.DIARY_TITLE AS diaryTitle
@@ -73,11 +73,14 @@
 	     , D.DIARY_NO AS diaryNo
 	     , C.COMMENT_CONTENT AS commentContent
 	     , M.MEMBER_NAME AS memberName
-	     , CREATED_DATE  AS createdDate
+	     , C.CREATED_DATE  AS createdDate
       FROM 
      	   TB_COMMENT C
       JOIN
       	   TB_DIARY D ON (C.DIARY_NO = D.DIARY_NO)
+      LEFT
+      JOIN
+      	   TB_MEMBER M ON (M.MEMBER_NO = C.MEMBER_NO)
      WHERE 
      	   D.DIARY_NO = #{diaryNo}
      ORDER

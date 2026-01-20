@@ -10,8 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.diary.model.dao.DiaryMapper;
+import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
+import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
 import com.kh.reactrip.util.PageInfo;
+import com.kh.reactrip.util.Pagenation;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +28,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 	@Autowired
 	private final DiaryMapper diaryMapper;
-	
+	private final Pagenation pagenation;
 	
 	
 	// 전체 목록 조회
@@ -54,22 +57,33 @@ public class DiaryServiceImpl implements DiaryService {
 		
 		return map;
 	}
-
+ 
 
 	// 상세 조회
 	@Override
-	public DiaryDTO findByDiaryNo(int diaryNo) {
+	public DiaryDetailDTO findByDiaryNo(int diaryNo) {
 		
 		if(diaryNo <= 0) {
 			throw new InvalidParameterException("잘못된 다이어리 번호입니다.");
 		}
 		
-		DiaryDTO diary = diaryMapper.findByDiaryNo(diaryNo);
+		DiaryDetailDTO ddDTO = diaryMapper.findByDiaryNo(diaryNo);
 		
-		log.info("상세조회 : {}", diary);
+		log.info("상세조회 : {}", ddDTO);
 		
-		return diary;
+		
+		return diaryMapper.findByDiaryNo(diaryNo);
 	}
+
+
+	@Override
+	public Map<String, Object> findByComments(int diaryNo, int page) {
+		
+		DiaryCommentDTO dcDTO = diaryMapper.findByComments(diaryNo, page);
+		
+		return null;
+	}
+
 
 
 
