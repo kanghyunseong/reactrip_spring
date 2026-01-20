@@ -1,5 +1,7 @@
 package com.kh.reactrip.place.model.dto;
 
+import com.kh.reactrip.location.Location;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +25,13 @@ public class PlaceDTO {
 	
 	// 지역 JOIN
 	private Long regionNo; // REGION_NO, 지역번호, PK, Travel 테이블의 FK
-	private String regionTitle; // REGION_NAME, 지역이름
+	private String regionName; // REGION_NAME, 지역이름
 	
 	// 테마 JOIN
 	private Long themeNo; // THEME_NO, 테마번호, PK, Travel 테이블의 FK 아님
-	private String themeTitle; // THEME_NAME, 테마이름
+	private String themeName; // THEME_NAME, 테마이름
+	
+	// Locaion 객체도 가져야함
+	private Location location;
 
 }

@@ -91,7 +91,8 @@ public class SecurityConfigure {
                           "/api/imgComments/**",
                           "/api/reserve/**",
                           "/api/reviews/**",
-                          "/api/main"
+                          "/api/main",
+                          "/api/places"
                   ).permitAll();
 
                   // 3. GET - 로그인 필요 (상세 페이지들)

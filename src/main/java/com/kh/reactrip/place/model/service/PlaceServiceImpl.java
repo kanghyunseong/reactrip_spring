@@ -19,12 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PlaceServiceImpl implements PlaceService {
 	
-	private static final Integer OFFSET = 10;
 	private final PlaceMapper placeMapper;
 	
 	// RowBounds용 상수
+	private static final Integer OFFSET = 10;
 	
-	public List<PlaceDTO> findAllPlace(String keyword, String theme, String region, Integer page, Integer size, String sort) {
+	public List<PlaceDTO> findAllPlace(String keyword, Long themeNo, Long regionNo, Integer page, Integer size, String sort) {
 		
 		PageInfo pi = new PageInfo();
 		pi.setCurrentPage(page);
@@ -34,8 +34,8 @@ public class PlaceServiceImpl implements PlaceService {
 		
 		Map<String, Object> query = new HashMap();
 		query.put("keyword", keyword);
-		query.put("theme", theme);
-		query.put("region", region);
+		query.put("themeNo", themeNo);
+		query.put("regionNo", regionNo);
 		query.put("sort", sort);
 		
 		List<PlaceDTO> places = placeMapper.findAllPlace(query, rb);

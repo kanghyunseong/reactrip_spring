@@ -26,15 +26,16 @@ public class PlaceController {
 		
 	@GetMapping
 	public ResponseEntity<List<PlaceDTO>> findAllPlace(
-			@RequestParam(required = false) String keyword,
-			@RequestParam(required = false) String theme,
-			@RequestParam(required = false) String region,
-			@RequestParam(defaultValue="0", required = false) Integer page, // 페이지 번호, PageInfo의 currentPage
-			@RequestParam(defaultValue="10", required = false) Integer size, // 페이지 크기, PageInfo의 boardLimit
-			@RequestParam(required = false) String sort
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@RequestParam(value = "themeNo", required = false) Long themeNo,
+			@RequestParam(value = "regionNo", required = false) Long regionNo,
+			@RequestParam(value = "page", defaultValue="0", required = false) Integer page, // 페이지 번호, PageInfo의 currentPage
+			@RequestParam(value = "size", defaultValue="10", required = false) Integer size, // 페이지 크기, PageInfo의 boardLimit
+			@RequestParam(value = "sort", required = false) String sort
 			) {
 		
-		List<PlaceDTO> places = placeService.findAllPlace(keyword, theme, region, page, size, sort);
+		List<PlaceDTO> places = placeService.findAllPlace(keyword, themeNo, regionNo, page, size, sort);
+		return ResponseEntity.ok(places);
 		
 	}
 
