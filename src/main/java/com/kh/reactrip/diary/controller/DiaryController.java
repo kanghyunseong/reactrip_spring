@@ -22,6 +22,7 @@ import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
 import com.kh.reactrip.diary.model.service.DiaryService;
 import com.kh.reactrip.diary.model.vo.DiaryComListVO;
+import com.kh.reactrip.diary.model.vo.DiaryComVO;
 import com.kh.reactrip.diary.model.vo.DiaryDetailVO;
 
 import lombok.RequiredArgsConstructor;
@@ -69,11 +70,12 @@ public class DiaryController {
     
     
     // 댓글 목록 조회
-    @PostMapping("/{diaryNo}/comments")
-    public Map<String, Object> getComments(@PathVariable("diaryNo") int diaryNo, @RequestParam(name = "page", defaultValue = "1") int page) {
-    	
-    	
-    	return diaryService.findByComments(diaryNo, page);
+    @PostMapping("/diarys/commentList")
+    public ResponseEntity<DiaryComVO> getComments(@RequestBody DiaryComVO in) {
+    	log.info("댓글 가져오기 : " + in );
+    	List<DiaryComListVO> cList = diaryService.findByComments(in.getDiaryNo(), 10);
+    	in.setCommentList(cList);
+    	return ResponseEntity.ok(in);  
     }
     
     

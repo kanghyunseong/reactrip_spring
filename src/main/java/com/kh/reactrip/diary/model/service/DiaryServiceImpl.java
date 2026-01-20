@@ -1,7 +1,9 @@
 package com.kh.reactrip.diary.model.service;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ import com.kh.reactrip.diary.model.dao.DiaryMapper;
 import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
+import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 import com.kh.reactrip.util.PageInfo;
 import com.kh.reactrip.util.Pagenation;
 
@@ -77,11 +80,23 @@ public class DiaryServiceImpl implements DiaryService {
 
 
 	@Override
-	public Map<String, Object> findByComments(int diaryNo, int page) {
+	public List<DiaryComListVO> findByComments(int diaryNo, int page) {
+		log.info("개시글 번호ㅣ: " + diaryNo);
+		List<DiaryComListVO> listVo = new ArrayList<DiaryComListVO>(); 
+		List<DiaryCommentDTO> comList = diaryMapper.findByComments(diaryNo);
 		
-		DiaryCommentDTO dcDTO = diaryMapper.findByComments(diaryNo, page);
+		if(comList != null && comList.size() > 0 ) {
+			for( DiaryCommentDTO items :  comList) {
+				DiaryComListVO setItem = new DiaryComListVO();
+				setItem.setCommentNo(items.getCommentNo()); // 댓글 key번호
+				setItem.setCommentContent(items.getCommentContent()); //댓글내용
+				setItem.setCreatedDate(items.getCreatedDate());  // 댓글작성일자
+				setItem.setCommentWriteName(items.getMemberName()); // 댓글 작성자명
+				listVo.add(setItem);
+			}
+		} 
 		
-		return null;
+		return listVo;
 	}
 
 

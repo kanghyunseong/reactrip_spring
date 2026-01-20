@@ -1,5 +1,6 @@
 package com.kh.reactrip.diary.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
+import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 
 public interface DiaryService {
 
@@ -14,13 +16,6 @@ public interface DiaryService {
 
 	DiaryDetailDTO findByDiaryNo(int diaryNo);
 
-	Map<String, Object> findByComments(int diaryNo, int page);
-
-
-
-
-
-
-
+	List<DiaryComListVO> findByComments(int diaryNo, int page);
 
 }

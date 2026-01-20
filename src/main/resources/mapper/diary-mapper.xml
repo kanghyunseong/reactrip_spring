@@ -73,7 +73,7 @@
 	     , D.DIARY_NO AS diaryNo
 	     , C.COMMENT_CONTENT AS commentContent
 	     , M.MEMBER_NAME AS memberName
-	     , C.CREATED_DATE  AS createdDate
+	     , to_char( C.CREATED_DATE, 'yyyy.mm.dd')  AS createdDate
       FROM 
      	   TB_COMMENT C
       JOIN
