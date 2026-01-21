@@ -65,7 +65,7 @@
 	  		D.DIARY_NO = #{diaryNo}
 </select>
 
-
+ 
 <!-- 댓글 조회 -->
 <select id="findByComments" parameterType="int" resultType="com.kh.reactrip.diary.model.dto.DiaryCommentDTO">
     SELECT
