@@ -12,6 +12,6 @@ import com.kh.reactrip.place.model.dto.PlaceDTO;
 @Mapper
 public interface PlaceMapper {
 	
-	List<PlaceDTO> findAllPlace(@Param("query") Map<String, Object> query, RowBounds rb);
+	List<PlaceDTO> findAllPlace(Map<String, Object> query, RowBounds rb);
 
 }
