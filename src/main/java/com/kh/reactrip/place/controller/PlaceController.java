@@ -1,5 +1,6 @@
 package com.kh.reactrip.place.controller;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.reactrip.place.model.dto.PlaceDTO;
 import com.kh.reactrip.place.model.service.PlaceService;
 
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +34,7 @@ public class PlaceController {
 			@RequestParam(value = "keyword", required = false) String keyword,
 			@RequestParam(value = "themeNo", required = false) Long themeNo,
 			@RequestParam(value = "regionNo", required = false) Long regionNo,
-			@RequestParam(value = "page", defaultValue="0", required = false) Integer page, // 페이지 번호, PageInfo의 currentPage
+			@RequestParam(value = "page", defaultValue="1", required = false) @Min(value=1, message="유효하지 않은 값입니다.") Integer page, // 페이지 번호, PageInfo의 currentPage -> 0에서 1로 수정, @Min 추가
 			@RequestParam(value = "size", defaultValue="10", required = false) Integer size, // 페이지 크기, PageInfo의 boardLimit
 			@RequestParam(value = "sort", required = false) String sort
 			) {
@@ -41,9 +45,13 @@ public class PlaceController {
 	}
 	
 	@GetMapping("/{travelNo}")
-	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") Long travelNo) {
+	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") @Validated @Pattern(regexp="^[0-9]+$", message="유효하지 않은 접근입니다.") String travelNo) {
+		 
+		if(Long.parseLong(travelNo) < 1) {
+			throw new InvalidParameterException("유효하지 않은 접근입니다."); // 커스텀 예외 아님, 값이 0 또는 음수일 경우
+		}
 		
-		PlaceDTO place = placeService.findByTravelNo(travelNo);
+		PlaceDTO place = placeService.findByTravelNo(Long.parseLong(travelNo));
 		return ResponseEntity.ok(place);
 		
 	}

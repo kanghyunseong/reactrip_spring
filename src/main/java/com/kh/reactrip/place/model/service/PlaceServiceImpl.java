@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
+import com.kh.reactrip.exception.PlaceNotFoundException;
 import com.kh.reactrip.place.model.dao.PlaceMapper;
 import com.kh.reactrip.place.model.dto.PlaceDTO;
 import com.kh.reactrip.util.PageInfo;
@@ -40,6 +41,10 @@ public class PlaceServiceImpl implements PlaceService {
 		
 		List<PlaceDTO> places = placeMapper.findAllPlace(query, rb);
 		
+		if(places == null) {
+			throw new PlaceNotFoundException("조회된 여행지가 없습니다.");
+		}
+		
 		return places;
 		
 	}
@@ -55,6 +60,11 @@ public class PlaceServiceImpl implements PlaceService {
 	public PlaceDTO findByTravelNo(Long travelNo) {
 		
 		PlaceDTO place = placeMapper.findByTravelNo(travelNo);
+		
+		if(place == null) {
+			throw new PlaceNotFoundException("조회된 여행지가 없습니다.");
+		}
+		
 		return place;
 		
 	}
