@@ -91,9 +91,6 @@
 
 <!-- 게시글 작성 -->
 <insert id="insertDiary" useGeneratedKeys="true" keyProperty="diaryNo">
-	INSERT
-	  INTO  TB_DIARY (
-	  	   DIARY_
 
 </insert>
 
