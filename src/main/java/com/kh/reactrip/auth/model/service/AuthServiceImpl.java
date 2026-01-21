@@ -65,7 +65,13 @@ public class AuthServiceImpl implements AuthService {
 		loginResponse.put("email", user.getEmail());
 		loginResponse.put("phone", user.getPhone());
 		loginResponse.put("role", user.getAuthorities().toString());
-		
+		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getMemberNo(), role);
+		loginResponse.put("userNo", String.valueOf(user.getMemberNo()));
+		loginResponse.put("userId", user.getUsername());
+		loginResponse.put("birthDay", user.getBirthday());
+		loginResponse.put("email", user.getEmail());
+		loginResponse.put("phone", user.getPhone());
+		loginResponse.put("role", user.getAuthorities().toString());
 		return loginResponse;
 
 	}
