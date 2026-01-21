@@ -53,9 +53,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-// MyBatis 파라미터 이름 인식 설정
-// 이 설정이 없으면 @Param 어노테이션을 모든 메서드 파라미터에 추가해야 함
-tasks.withType(JavaCompile) {
-	options.compilerArgs += ['-parameters']
-}
