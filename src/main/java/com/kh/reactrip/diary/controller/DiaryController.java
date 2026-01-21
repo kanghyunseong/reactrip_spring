@@ -5,19 +5,17 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.kh.reactrip.auth.model.vo.CustomUserDetails;
-import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
 import com.kh.reactrip.diary.model.service.DiaryService;
@@ -25,7 +23,6 @@ import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 import com.kh.reactrip.diary.model.vo.DiaryComVO;
 import com.kh.reactrip.diary.model.vo.DiaryDetailVO;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -81,6 +78,19 @@ public class DiaryController {
     	
     	return ResponseEntity.ok(in);  
     }
+    
+    
+    // 게시글 작성
+    @PostMapping(value = "/diarys/insert", consumes = "multipart/form-data")
+    public ResponseEntity<?> insertDiary(
+        @RequestPart("data") DiaryDTO dto,
+        @RequestPart(value = "images", required = false) List<MultipartFile> images
+    ) {
+
+        diaryService.insertDiary(dto, images);
+        return ResponseEntity.ok().build();
+    }
+
     
     
 }

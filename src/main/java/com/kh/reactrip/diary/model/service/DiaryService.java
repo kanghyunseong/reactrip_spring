@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
@@ -17,6 +18,8 @@ public interface DiaryService {
 	DiaryDetailDTO findByDiaryNo(int diaryNo);
 
 	List<DiaryComListVO> findByComments(int diaryNo, int page);
+
+	void insertDiary(DiaryDTO dto, List<MultipartFile> images);
 
 
 }

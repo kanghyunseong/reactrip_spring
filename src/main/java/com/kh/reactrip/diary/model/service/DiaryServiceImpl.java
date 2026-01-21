@@ -10,12 +10,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reactrip.diary.model.dao.DiaryMapper;
 import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
 import com.kh.reactrip.diary.model.vo.DiaryComListVO;
+import com.kh.reactrip.file.service.S3Service;
 import com.kh.reactrip.util.PageInfo;
 import com.kh.reactrip.util.Pagenation;
 
@@ -32,6 +34,7 @@ public class DiaryServiceImpl implements DiaryService {
 	@Autowired
 	private final DiaryMapper diaryMapper;
 	private final Pagenation pagenation;
+	private final S3Service s3Service;
 	
 	
 	// 전체 목록 조회
@@ -100,6 +103,28 @@ public class DiaryServiceImpl implements DiaryService {
 		} 
 		
 		return listVo;
+	}
+
+	@Transactional
+	@Override
+	public void insertDiary(DiaryDTO dto, List<MultipartFile> images) {
+		
+		diaryMapper.insertDiary(dto);
+		
+		int diaryNo = dto.getDiaryNo();
+		
+		// 이미지 파일
+		if(images == null || images.isEmpty()) {
+			throw new IllegalArgumentException("이미지는 최소 1장 이상 등록해야 합니다.");
+		}
+		
+		int order = 1;
+	
+		for(MultipartFile file : images) {
+			String imageUrl = s3Service.fileSave(file);
+			diaryMapper.insertDiaryImage(diaryNo, imageUrl, order++);
+		}
+		
 	}
 
 

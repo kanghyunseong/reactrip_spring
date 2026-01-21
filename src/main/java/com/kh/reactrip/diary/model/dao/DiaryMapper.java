@@ -20,6 +20,10 @@ public interface DiaryMapper {
 
 	List<DiaryCommentDTO> findByComments(int diaryNo);
 
+	void insertDiary(DiaryDTO dto);
+
+	void insertDiaryImage(int diaryNo, String imageUrl, int i);
+
 
 	 
 	

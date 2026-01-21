@@ -32,5 +32,4 @@ public class DiaryDTO {
 	
 	private int totalCount;
 	
-	private List<DiaryImageDTO> imageDTO;
 }
