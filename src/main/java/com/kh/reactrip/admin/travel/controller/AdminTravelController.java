@@ -1,6 +1,7 @@
 package com.kh.reactrip.admin.travel.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +36,12 @@ public class AdminTravelController {
 		
 		return ResponseData.ok(response, "여행지 목록 조회 성공. ");
 		
+	}
+	
+	@GetMapping("/regions")
+	public ResponseEntity<ResponseData<List<Map<String, Object>>>> findAllRegions() {
+		List<Map<String, Object>> regions = adminTravelService.findAllRegions();
+		return ResponseData.ok("지역 목록 조회 성공", regions);
 	}
 	
 	@DeleteMapping("/{travelNo}")
@@ -83,5 +90,16 @@ public class AdminTravelController {
 		
 		return ResponseData.ok(list, "");
 		
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<ResponseData<PageResponseDTO<AdminTravelDTO>>> findBySearch(
+			@RequestParam(name = "keyword", required = false) String keyword,
+			@RequestParam(name = "page") int page
+			) {
+		
+		PageResponseDTO<AdminTravelDTO> list = adminTravelService.findBySearch(keyword, page);
+		
+		return ResponseData.ok("검색어로 조회 성공",list);
 	}
 }

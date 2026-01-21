@@ -1,6 +1,7 @@
 package com.kh.reactrip.admin.travel.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,10 @@ public interface AdminTravelService {
 	void fetchAndSaveApiData();
 
 	List<AdminTravelDTO> getOrSyncNearbyTravels(double mapX, double mapY);
+
+	PageResponseDTO<AdminTravelDTO> findBySearch(String keyword, int page);
+	
+	List<Map<String, Object>> findAllRegions();
 	
 
 }
