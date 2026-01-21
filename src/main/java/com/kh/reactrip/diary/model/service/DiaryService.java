@@ -16,7 +16,7 @@ public interface DiaryService {
 	Map<String, Object> findAllDiary(int page, int size);
 
 	DiaryDetailDTO findByDiaryNo(int diaryNo);
-
+  
 	List<DiaryComListVO> findByComments(int diaryNo, int page);
 
 	void insertDiary(DiaryDTO dto, List<MultipartFile> images);

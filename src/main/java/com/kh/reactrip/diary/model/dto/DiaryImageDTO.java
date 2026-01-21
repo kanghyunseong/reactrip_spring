@@ -16,7 +16,7 @@ public class DiaryImageDTO {
 	private int imageNo;
 	private String imageUrl;
 	private String originalName;
-	private int sortOrder;
+	private int sortOrder;  
 	private String createDate;
 	private int diaryNo;
 	

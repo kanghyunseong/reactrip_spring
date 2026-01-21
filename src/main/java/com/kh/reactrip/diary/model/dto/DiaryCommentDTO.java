@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString  
 public class DiaryCommentDTO{
 
 	private int commentNo;

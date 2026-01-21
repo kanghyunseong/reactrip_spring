@@ -23,3 +23,4 @@ public class DiaryComListVO{
 	private int memberNo;
 	private String commentWriteName; //댓글작성자명
 }
+  

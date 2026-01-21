@@ -19,3 +19,4 @@ public class DiaryComVO{
 	private List<DiaryComListVO> commentList;
 	
 }
+  

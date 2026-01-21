@@ -9,7 +9,7 @@ import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
 
-@Mapper
+@Mapper  
 public interface DiaryMapper {
 
 	List<DiaryDTO> findAllDiary(@Param("size") int size, @Param("offset") int offset);

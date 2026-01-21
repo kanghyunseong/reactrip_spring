@@ -16,6 +16,6 @@ public class DiaryLikeDTO {
 	private int likeNo;
 	private String createdDate;
 	private int memberNo;
-	private int diaryNo;
+	private int diaryNo;  
 	
 }

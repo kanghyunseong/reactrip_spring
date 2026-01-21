@@ -116,7 +116,7 @@ public class DiaryServiceImpl implements DiaryService {
 		// 이미지 파일
 		if(images == null || images.isEmpty()) {
 			throw new IllegalArgumentException("이미지는 최소 1장 이상 등록해야 합니다.");
-		}
+		}  
 		
 		int order = 1;
 	

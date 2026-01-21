@@ -13,7 +13,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor  
 @AllArgsConstructor
 @ToString
 public class DiaryDTO {

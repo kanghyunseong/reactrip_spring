@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString
 public class DiaryDetailVO {
 
-	private int diaryNo;			// 게시글 고유번호
+	private int diaryNo;			// 게시글 고유번호  
 	private String diaryTitle; 		// 게시글 제목
 	private String diaryContent;	// 게시글 내용
 	private String createdDate; 	// 게시글 등록일

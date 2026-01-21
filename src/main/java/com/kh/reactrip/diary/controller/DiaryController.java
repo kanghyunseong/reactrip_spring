@@ -65,7 +65,7 @@ public class DiaryController {
         return ResponseEntity.ok(diary); 
     }
     
-    
+      
     // 댓글 목록 조회
     @PostMapping("/diarys/commentList")
     public ResponseEntity<DiaryComVO> getComments(@RequestBody DiaryComVO in) {
