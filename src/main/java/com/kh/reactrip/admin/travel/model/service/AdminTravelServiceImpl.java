@@ -63,8 +63,10 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 	@Override
 	@Transactional
 	public void insertTravel(AdminTravelDTO adminTravelDTO, MultipartFile file) {
-		if (file != null && !file.isEmpty())
+		if (file != null && !file.isEmpty()) {
 			adminTravelDTO.setTravelImage(fileService.store(file));
+		}
+		
 		adminTravelMapper.insertTravel(new AdminTravelVO(adminTravelDTO));
 	}
 
@@ -73,7 +75,16 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 	public void updateTravel(Long travelNo, MultipartFile file, AdminTravelDTO adminTravelDTO) {
 		AdminTravelDTO origin = adminTravelMapper.selectTravelDetail(travelNo);
 		adminTravelDTO.setTravelNo(travelNo);
-		adminTravelDTO.setTravelImage(fileService.updateFile(file, origin.getTravelImage()));
+		
+		if(file != null && !file.isEmpty()) {
+			adminTravelDTO.setTravelImage(fileService.updateFile(file, origin.getTravelImage()));
+		} else {
+			if(origin.getTravelImage() != null && !origin.getTravelImage().isEmpty()) {
+				fileService.delete(origin.getTravelImage());
+			}
+			adminTravelDTO.setTravelImage("");
+		}
+		
 		adminTravelMapper.updateTravel(adminTravelDTO);
 	}
 
