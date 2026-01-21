@@ -44,7 +44,7 @@
            TB_REGION R ON T.REGION_NO = R.REGION_NO
      ORDER
         BY
-           T.TRAVEL_NO DESC
+           T.TRAVEL_NO ASC
 </select>
 <update id="updateTravelStatus">
     UPDATE 
@@ -76,7 +76,7 @@
      WHERE 
            T.TRAVEL_NO = #{travelNo}
 </select>
-<insert id="insertTravel" parameterType="AdminTravelVO">
+<insert id="insertTravel" parameterType="AdminTravelVO" useGeneratedKeys="true" keyProperty="travelNo" keyColumn="TRAVEL_NO">
     INSERT
       INTO
            TB_TRAVEL
@@ -94,16 +94,16 @@
     ) 
    VALUES 
         (
-        SEQ_TRAVEL.NEXTVAL
-        ,  #{regionNo}
-        ,  #{travelName}
-        ,  #{travelContent}
-        ,  #{travelAddress}
-        ,  #{mapX}
-        ,  #{mapY}
-        ,  #{travelImage}
-        ,  'N'
-        ,   0    
+          SEQ_TRAVEL.NEXTVAL
+        , #{regionNo}
+        , #{travelName}
+        , #{travelContent}
+        , #{travelAddress}
+        , #{mapX}
+        , #{mapY}
+        , #{travelImage}
+        , 'N'
+        , 0    
         )
 </insert>
 <select id="selectTravelDetail" resultType="com.kh.reactrip.admin.travel.model.dto.AdminTravelDTO">
@@ -133,8 +133,23 @@
 	   	<if test="travelContent != null and travelContent != ''">
 	   	TRAVEL_CONTENT = #{travelContent},
 	   	</if>
+	   	<if test="travelAddress != null and travelAddress != ''">
+	   	TRAVEL_ADDRESS = #{travelAddress},
+	   	</if>
+	   	<if test="mapX != null">
+	   	MAP_X = #{mapX},
+	   	</if>
+	   	<if test="mapY != null">
+	   	MAP_Y = #{mapY},
+	   	</if>
+	   	<if test="regionNo != null">
+	   	REGION_NO = #{regionNo},
+	   	</if>
 	   	<if test="travelImage != null">
-	   	TRAVEL_IMAGE = #{travelImage}
+	   	TRAVEL_IMAGE = #{travelImage},
+	   	</if>
+	   	<if test="travelStatus != null and travelStatus != ''">
+	   	TRAVEL_STATUS = #{travelStatus}
 	   	</if>
 	   </set>
 	WHERE
@@ -165,5 +180,79 @@
            TB_TRAVEL
      WHERE
            TRAVEL_NAME = #{title}
+</select>
+<select id="getSearchCount">
+	SELECT 
+	       COUNT(*)
+	  FROM
+	       TB_TRAVEL
+	 WHERE
+	       TRAVEL_STATUS = 'N'
+	    <if test="keyword != null and keyword != ''">
+	  AND
+	      (
+		  TRAVEL_NAME LIKE '%' || #{keyword} || '%'
+	   OR
+	      TRAVEL_ADDRESS LIKE '%' || #{keyword} || '%'
+		  )
+	    </if>
+</select>
+<select id="findBySearch" resultType="AdminTravelDTO">
+	SELECT
+	       T.TRAVEL_NO      AS travelNo
+         , T.REGION_NO      AS regionNo
+         , T.TRAVEL_NAME    AS travelName
+         , T.TRAVEL_CONTENT AS travelContent
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X          AS mapX
+         , T.MAP_Y          AS mapY
+         , T.TRAVEL_IMAGE   AS travelImage
+         , T.TRAVEL_STATUS  AS travelStatus
+         , T.COUNT          AS count
+         , R.REGION_NAME    AS regionName 
+      FROM 
+           TB_TRAVEL T
+      LEFT
+      JOIN
+           TB_REGION R ON T.REGION_NO = R.REGION_NO 
+     WHERE
+	       T.TRAVEL_STATUS = 'N'
+	    <if test="keyword != null and keyword != ''">
+	  AND
+	      (
+		  T.TRAVEL_NAME LIKE '%' || #{keyword} || '%'
+	   OR
+	      T.TRAVEL_ADDRESS LIKE '%' || #{keyword} || '%'
+		  )
+	    </if> 
+	ORDER
+	   BY
+	      T.TRAVEL_NO ASC
+</select>
+<insert id="insertTravelTheme">
+    INSERT 
+      INTO
+           TB_REG_THEME 
+           (
+		   THEME_NO
+         , TRAVEL_NO
+         , CREATE_DATE
+           )
+    VALUES 
+           (
+		   #{themeNo}
+		 , #{travelNo}
+		 , SYSDATE
+		   )
+</insert>
+<select id="findAllRegions" resultType="map">
+    SELECT 
+           REGION_NO AS regionNo
+         , REGION_NAME AS regionName
+      FROM
+           TB_REGION
+     ORDER
+        BY
+           REGION_NO ASC
 </select>
 </mapper>

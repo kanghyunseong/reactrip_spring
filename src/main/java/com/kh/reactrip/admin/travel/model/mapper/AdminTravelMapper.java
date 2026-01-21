@@ -28,4 +28,12 @@ public interface AdminTravelMapper {
 	List<AdminTravelVO> findNearbyTravels(Map<String, Double> params);
 	int existsByTitle(String title);
 
+	int getSearchCount(String keyword);
+
+	List<AdminTravelDTO> findBySearch(String keyword, RowBounds rowBounds);
+
+	void insertTravelTheme(Map<String, Object> themeMap);
+	
+	List<Map<String, Object>> findAllRegions();
+	
 }

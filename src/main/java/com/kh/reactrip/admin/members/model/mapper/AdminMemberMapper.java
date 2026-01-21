@@ -18,7 +18,7 @@ public interface AdminMemberMapper {
 
 	List<AdminMemberDTO> findAllMembers(RowBounds rowBounds);
 
-	int getSearchCount(@Param("keyword") String keyword);
+	int getSearchCount(String keyword);
 
 	List<AdminMemberDTO> findByMembers(@Param("keyword") String keyword, RowBounds rowBounds);
 
