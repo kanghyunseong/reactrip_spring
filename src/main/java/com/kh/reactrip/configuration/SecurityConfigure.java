@@ -65,13 +65,8 @@ public class SecurityConfigure {
 
                   // 1. POST - 비로그인 허용 (회원가입/로그인, 차량/예약 등)
                   requests.requestMatchers(HttpMethod.POST,
-                          "/api/members/login",
-                          "/api/members",
-                          "/api/members/**",
-                          "/api/auth/refresh",
-                          "/api/cars/**",
-                          "/api/station/**",
-                          "/api/reserve/**"
+                          "/api/admin/members",
+                          "/api/admin/**"
                   ).permitAll();
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
@@ -93,25 +88,36 @@ public class SecurityConfigure {
                           "/api/reviews/**",
                           "/api/main",
                           "/api/places/**"
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/admin/**"
+                
+                  ).permitAll();
+                  
+                  requests.requestMatchers(HttpMethod.PUT,
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/admin/members/**"
+                  ).permitAll();
+                  
+                  requests.requestMatchers(HttpMethod.DELETE,
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/**"
                   ).permitAll();
 
+                  
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/boards/*",
                           "/api/imgBoards/*",
                           "/api/notices/*"
                   ).authenticated();
+                  
 
                   // 4. PUT - 로그인 필요
                   requests.requestMatchers(HttpMethod.PUT,
-                          "/api/members", 
-                          "/api/members/**", 
-                          "/api/boards/**", 
-                          "/api/imgBoards/**", 
-                          "/api/comments/**", 
-                          "/api/imgComments/**",
-                          "/api/reserve/**", 
-                          "/api/reviews/**"
+                          "/api/**"
                   ).authenticated();
 
                   // 5. DELETE - 로그인 필요
@@ -137,6 +143,7 @@ public class SecurityConfigure {
                           "/api/reviews/**"
                   ).authenticated();
 
+                  /*
                   // 7. 관리자 전용
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/admin/ranking/users",
@@ -170,6 +177,7 @@ public class SecurityConfigure {
                           "/api/admin/community/**",
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
+                  */
               })
               .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
