@@ -8,18 +8,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.Builder;
 import lombok.Value;
 
+
 @Value
 @Builder
 public class CustomUserDetails implements UserDetails {
 
-	private Long userNo;
-	private String username; // ID
+	private Collection<? extends GrantedAuthority> authorities;
+	private Long memberNo;
+	private String username;
 	private String password;
-	private String realName; // 실명
-	private String birthDay;
+	private String birthday;
 	private String email;
 	private String phone;
-	private String licenseUrl;
-	private Collection<? extends GrantedAuthority> authorities;
-
 }
