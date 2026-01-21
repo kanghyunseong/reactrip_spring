@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +37,16 @@ public class PlaceController {
 		
 		List<PlaceDTO> places = placeService.findAllPlace(keyword, themeNo, regionNo, page, size, sort);
 		return ResponseEntity.ok(places);
+		
+	}
+	
+	@GetMapping("/{travelNo}")
+	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") Long travelNo) {
+		
+		log.info("컨트롤러 진입하나요?");
+		
+		PlaceDTO place = placeService.findByTravelNo(travelNo);
+		return ResponseEntity.ok(place);
 		
 	}
 

@@ -52,6 +52,13 @@ public class PlaceServiceImpl implements PlaceService {
 		
 	}
 	
-	// 전체 여행지 개수 조회
+	public PlaceDTO findByTravelNo(Long travelNo) {
+		
+		log.info("서비스 진입하나요?");
+		
+		PlaceDTO place = placeMapper.findByTravelNo(travelNo);
+		return place;
+		
+	}
 
 }

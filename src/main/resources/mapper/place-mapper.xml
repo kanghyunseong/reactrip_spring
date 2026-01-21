@@ -65,5 +65,42 @@
 		    BY
 		       TR.COUNT DESC
 	</select>
+	
+	<select id="findByTravelNo"
+			resultMap="placeResultSet"
+			parameterType="long">
+		SELECT
+		       TR.TRAVEL_NO travelNo
+		     , TR.TRAVEL_NAME travelName
+		     , TR.TRAVEL_CONTENT travelContent
+		     , TR.TRAVEL_IMAGE travelImage
+		     , TR.TRAVEL_STATUS travelStatus
+		     , TR.TRAVEL_ADDRESS travelAddress
+		     , TR.MAP_X longitude
+		     , TR.MAP_Y latitude
+		     , TR.COUNT count
+		     , RE.REGION_NO regionNo
+		     , RE.REGION_NAME regionName
+		     , TH.THEME_NO themeNo
+		     , TH.THEME_NAME themeTitle
+		  FROM
+		       TB_TRAVEL TR
+		  LEFT
+		  JOIN
+		       TB_REGION RE ON TR.REGION_NO = RE.REGION_NO
+		  LEFT
+		  JOIN
+		       TB_REG_THEME TRT ON TRT.TRAVEL_NO = TR.TRAVEL_NO
+		  LEFT
+		  JOIN
+		       TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
+		 WHERE
+		       TR.TRAVEL_STATUS = 'N'
+		   AND
+		       TR.TRAVEL_NO = #{travelNo}
+		 ORDER
+		    BY
+		       TR.COUNT DESC
+	</select>
 
 </mapper>

@@ -12,5 +12,7 @@ import com.kh.reactrip.place.model.dto.PlaceDTO;
 public interface PlaceMapper {
 	
 	List<PlaceDTO> findAllPlace(Map<String, Object> query, RowBounds rb);
+	
+	PlaceDTO findByTravelNo(Long travelNo);
 
 }
