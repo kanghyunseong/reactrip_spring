@@ -32,7 +32,7 @@ public class AdminNoticeController {
 	@PostMapping("/insert")
 	public ResponseEntity<ResponseData<String>> insertNotice(
 			@ModelAttribute AdminNoticeDTO adminNoticeDTO,
-			@RequestParam(value = "file", required = true) MultipartFile file,
+			@RequestParam(value = "file", required = false) MultipartFile file,
 			@AuthenticationPrincipal CustomUserDetails user) {
 
 		adminNoticeService.insertNotice(adminNoticeDTO, file, user);

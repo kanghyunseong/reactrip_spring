@@ -56,7 +56,7 @@ public class AdminTravelController {
 	@PostMapping("/insert")
 	public ResponseEntity<ResponseData<String>> insertTravel(
 			@ModelAttribute AdminTravelDTO adminTravelDTO,
-			@RequestParam(value = "file", required = true)MultipartFile file
+			@RequestParam(value = "file", required = false)MultipartFile file
 			) {
 		adminTravelService.insertTravel(adminTravelDTO, file);
 		
