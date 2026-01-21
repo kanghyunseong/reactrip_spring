@@ -43,8 +43,6 @@ public class PlaceController {
 	@GetMapping("/{travelNo}")
 	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") Long travelNo) {
 		
-		log.info("컨트롤러 진입하나요?");
-		
 		PlaceDTO place = placeService.findByTravelNo(travelNo);
 		return ResponseEntity.ok(place);
 		

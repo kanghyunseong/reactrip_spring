@@ -22,7 +22,7 @@ public class PlaceVO {
 }
 
 /*
-record로 구현할 경우에 사용하려고 미리 작성
+record로 구현할 경우에 사용
 public record PlaceVO(
 		Long travelNo,
 		String travelName,

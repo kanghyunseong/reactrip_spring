@@ -54,8 +54,6 @@ public class PlaceServiceImpl implements PlaceService {
 	
 	public PlaceDTO findByTravelNo(Long travelNo) {
 		
-		log.info("서비스 진입하나요?");
-		
 		PlaceDTO place = placeMapper.findByTravelNo(travelNo);
 		return place;
 		

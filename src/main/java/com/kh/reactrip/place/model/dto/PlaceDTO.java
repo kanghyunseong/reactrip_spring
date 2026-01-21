@@ -31,7 +31,7 @@ public class PlaceDTO {
 	private Long themeNo; // THEME_NO, 테마번호, PK, Travel 테이블의 FK 아님
 	private String themeName; // THEME_NAME, 테마이름
 	
-	// Locaion 객체도 가져야함
+	// Locaion 객체
 	private Location location;
 
 }
