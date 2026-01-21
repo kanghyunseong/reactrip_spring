@@ -69,7 +69,9 @@ public class SecurityConfigure {
                           "/api/members",
                           "/api/members/**",
                           "/api/diarys/**",
-                          "/api/auth/refresh"
+                          "/api/auth/refresh",
+                          "/api/admin/members",
+                          "/api/admin/**"
                   ).permitAll();
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
@@ -87,7 +89,37 @@ public class SecurityConfigure {
                   requests.requestMatchers(HttpMethod.PUT,
                           "/api/members", 
                           "/api/members/**", 
-                          "/api/comments/**" 
+                          "/api/comments/**" ,
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/admin/**"
+                
+                  ).permitAll();
+                  
+                  requests.requestMatchers(HttpMethod.PUT,
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/admin/members/**"
+                  ).permitAll();
+                  
+                  requests.requestMatchers(HttpMethod.DELETE,
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/**"
+                  ).permitAll();
+
+                  
+                  // 3. GET - 로그인 필요 (상세 페이지들)
+                  requests.requestMatchers(HttpMethod.GET,
+                          "/api/boards/*",
+                          "/api/imgBoards/*",
+                          "/api/notices/*"
+                  ).authenticated();
+                  
+
+                  // 4. PUT - 로그인 필요
+                  requests.requestMatchers(HttpMethod.PUT,
+                          "/api/**"
                   ).authenticated();
 
                   // 5. DELETE - 로그인 필요
@@ -106,12 +138,17 @@ public class SecurityConfigure {
                   // 6. POST - 게시글/댓글/공지 작성 (로그인 필요)
                   requests.requestMatchers(HttpMethod.POST,
                           "/api/diarys/**",
+                          "/api/boards/**",
                           "/api/imgBoards/**",
                           "/api/comments/**",
                           "/api/imgComments/**",
                           "/api/notices/**",
                           "/api/reviews/**"
                   ).authenticated();
+
+
+
+                  /*
 
                   // 7. 관리자 전용
                   requests.requestMatchers(HttpMethod.GET,
@@ -146,6 +183,9 @@ public class SecurityConfigure {
                           "/api/admin/community/**",
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
+
+                  */
+
               })
               .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

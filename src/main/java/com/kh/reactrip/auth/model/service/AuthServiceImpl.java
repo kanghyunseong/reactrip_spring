@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
@@ -57,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
 
 		String role = user.getAuthorities().stream().findFirst().get().getAuthority();
 
+<<<<<<< HEAD
 		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getUserNo(), role);
 		loginResponse.put("userNo", String.valueOf(user.getUserNo()));
 		loginResponse.put("userId", user.getUsername());
@@ -66,6 +68,15 @@ public class AuthServiceImpl implements AuthService {
 		loginResponse.put("phone", user.getPhone());
 		loginResponse.put("role", user.getAuthorities().toString());
 		loginResponse.put("licenseUrl", user.getLicenseUrl());
+=======
+		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getMemberNo(), role);
+		loginResponse.put("userNo", String.valueOf(user.getMemberNo()));
+		loginResponse.put("userId", user.getUsername());
+		loginResponse.put("birthDay", user.getBirthday());
+		loginResponse.put("email", user.getEmail());
+		loginResponse.put("phone", user.getPhone());
+		loginResponse.put("role", user.getAuthorities().toString());
+>>>>>>> ca13de0094dcfac63fdb48f33ff610972c014184
 
 		return loginResponse;
 
