@@ -3,6 +3,7 @@ package com.kh.reactrip.diary.model.dto;
 
 import java.sql.Clob;
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,4 +32,5 @@ public class DiaryDTO {
 	
 	private int totalCount;
 	
+	private List<DiaryImageDTO> imageDTO;
 }

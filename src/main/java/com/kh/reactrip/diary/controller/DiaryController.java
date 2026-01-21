@@ -48,7 +48,7 @@ public class DiaryController {
 			@RequestParam(name="size", defaultValue = "5") int size) {		// 게시글 5개 보여줘
 
 		// Map<String, Object> map = diaryService.findAllDiary(page, size);
-		//log.info("{}", diaryService.findAllDiary(1, size));
+		// log.info("{}", diaryService.findAllDiary(1, size));
 		log.info("컨트롤러 page --> " + page);
 		
 		return ResponseEntity.ok(diaryService.findAllDiary(page, size));
@@ -72,9 +72,13 @@ public class DiaryController {
     // 댓글 목록 조회
     @PostMapping("/diarys/commentList")
     public ResponseEntity<DiaryComVO> getComments(@RequestBody DiaryComVO in) {
+    	
     	log.info("댓글 가져오기 : " + in );
+    	
     	List<DiaryComListVO> cList = diaryService.findByComments(in.getDiaryNo(), 10);
+    	
     	in.setCommentList(cList);
+    	
     	return ResponseEntity.ok(in);  
     }
     

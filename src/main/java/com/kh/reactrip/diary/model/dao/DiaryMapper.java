@@ -17,7 +17,7 @@ public interface DiaryMapper {
 	int findDiaryCount();
 
 	DiaryDetailDTO findByDiaryNo(int diaryNo);
-	//
+
 	List<DiaryCommentDTO> findByComments(int diaryNo);
 
 

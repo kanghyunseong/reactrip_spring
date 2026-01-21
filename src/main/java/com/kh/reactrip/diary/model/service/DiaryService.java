@@ -18,4 +18,5 @@ public interface DiaryService {
 
 	List<DiaryComListVO> findByComments(int diaryNo, int page);
 
+
 }

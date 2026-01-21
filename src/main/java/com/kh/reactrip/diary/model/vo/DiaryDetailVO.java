@@ -3,6 +3,8 @@ package com.kh.reactrip.diary.model.vo;
 import java.sql.Date;
 import java.util.List;
 
+import com.kh.reactrip.diary.model.dto.DiaryImageDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,8 @@ public class DiaryDetailVO {
 	private int regionNo;
 	private String regionName;
 	private int themeNo;
-	private String themeName;	
+	private String themeName;
+	
+	private List<DiaryImageDTO> diaryImageDTO;
 
 }

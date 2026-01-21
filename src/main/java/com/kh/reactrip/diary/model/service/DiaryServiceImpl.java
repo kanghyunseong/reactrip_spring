@@ -79,10 +79,13 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 
+	// 댓글 목록 조회
 	@Override
 	public List<DiaryComListVO> findByComments(int diaryNo, int page) {
 		log.info("개시글 번호ㅣ: " + diaryNo);
+		
 		List<DiaryComListVO> listVo = new ArrayList<DiaryComListVO>(); 
+		
 		List<DiaryCommentDTO> comList = diaryMapper.findByComments(diaryNo);
 		
 		if(comList != null && comList.size() > 0 ) {
