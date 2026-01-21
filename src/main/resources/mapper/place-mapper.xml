@@ -24,8 +24,7 @@
 		</association>
 	</resultMap>
 	
-	<select id="findAllPlace"
-			resultMap="placeResultSet">
+	<sql id="travelColumn">
 		SELECT
 		       TR.TRAVEL_NO travelNo
 		     , TR.TRAVEL_NAME travelName
@@ -40,6 +39,11 @@
 		     , RE.REGION_NAME regionName
 		     , TH.THEME_NO themeNo
 		     , TH.THEME_NAME themeTitle
+	</sql>
+	
+	<select id="findAllPlace"
+			resultMap="placeResultSet">
+		<include refid="travelColumn" />
 		  FROM
 		       TB_TRAVEL TR
 		  LEFT
@@ -69,20 +73,7 @@
 	<select id="findByTravelNo"
 			resultMap="placeResultSet"
 			parameterType="long">
-		SELECT
-		       TR.TRAVEL_NO travelNo
-		     , TR.TRAVEL_NAME travelName
-		     , TR.TRAVEL_CONTENT travelContent
-		     , TR.TRAVEL_IMAGE travelImage
-		     , TR.TRAVEL_STATUS travelStatus
-		     , TR.TRAVEL_ADDRESS travelAddress
-		     , TR.MAP_X longitude
-		     , TR.MAP_Y latitude
-		     , TR.COUNT count
-		     , RE.REGION_NO regionNo
-		     , RE.REGION_NAME regionName
-		     , TH.THEME_NO themeNo
-		     , TH.THEME_NAME themeTitle
+		<include refid="travelColumn" />
 		  FROM
 		       TB_TRAVEL TR
 		  LEFT

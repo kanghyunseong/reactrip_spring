@@ -87,7 +87,7 @@ public class SecurityConfigure {
                           "/api/reserve/**",
                           "/api/reviews/**",
                           "/api/main",
-                          "/api/places/**"
+                          "/api/places/**",
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
                 		  "/api/admin/**"
