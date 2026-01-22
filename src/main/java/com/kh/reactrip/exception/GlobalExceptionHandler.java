@@ -52,6 +52,13 @@ public class GlobalExceptionHandler {
       log.warn("로그인 실패: {}", e.getMessage());
       return ResponseData.failure(e.getMessage(), null);
    }
+   
+   @ExceptionHandler(UserNotFoundException.class) 
+   public ResponseEntity<ResponseData<Object>> handleUserNotFoundException(UserNotFoundException e) {
+	   log.error("검색된 유저를 찾을 수 없습니다 : {} ", e.getMessage());
+	   return ResponseData.failure(e.getMessage(), HttpStatus.NOT_FOUND);
+   }
+	 
 
    
 
