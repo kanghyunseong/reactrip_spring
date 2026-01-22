@@ -2,6 +2,9 @@ package com.kh.reactrip.common;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import com.kh.reactrip.member.model.dto.MemberDTO;
+
 import lombok.Builder;
 import lombok.Data;
 

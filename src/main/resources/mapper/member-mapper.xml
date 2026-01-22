@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.reactrip.member.model.dao.MemberMapper">
-	
 	<sql id="countMember">
 		SELECT 
 		       COUNT(*)
@@ -141,4 +140,13 @@
 	    WHERE a.MEMBER_ID = #{memberId}
 	      AND NVL(d.DELETE_STATUS, 'N') = 'N'
 	</select>
+	
+	<update id="updateMemberName">
+		UPDATE
+		       TB_MEMBER
+		   SET
+		       MEMBER_NAME = #{memberName}
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	</update>
 </mapper>

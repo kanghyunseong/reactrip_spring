@@ -31,4 +31,7 @@ public interface MemberMapper {
 	
 	// 로그인 메소드
 	MemberLoginDTO loadUser(String username);
+	// 
+	AuthMember selectByMemberId(String memberId);
+	void updateMemberName(Long memberNo, String memberName);
 }

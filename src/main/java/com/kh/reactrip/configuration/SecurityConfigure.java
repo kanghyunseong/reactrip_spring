@@ -99,6 +99,7 @@ public class SecurityConfigure {
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
+                		  "/api/members/mypage",
                           "/api/boards/*",
                           "/api/imgBoards/*",
                           "/api/notices/*"
