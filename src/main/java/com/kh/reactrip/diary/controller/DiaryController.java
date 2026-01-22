@@ -23,23 +23,20 @@ import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 import com.kh.reactrip.diary.model.vo.DiaryComVO;
 import com.kh.reactrip.diary.model.vo.DiaryDetailVO;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Validated
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api")
+@RequiredArgsConstructor
+@RequestMapping("/api/diarys")
 public class DiaryController {
 
 	private final DiaryService diaryService;
 	
-	public DiaryController(@Qualifier("diaryServiceImpl") DiaryService diaryService) {
-		    this.diaryService = diaryService;
-	}
-	 
 	// 목록 전체 조회
-	@GetMapping("/diarys")
+	@GetMapping("")
 	public ResponseEntity<Map<String, Object>> findAllDiary(
 			@RequestParam(name="page", defaultValue = "1") int page,	// 한 페이지에
 			@RequestParam(name="size", defaultValue = "5") int size) {		// 게시글 5개 보여줘
@@ -50,10 +47,10 @@ public class DiaryController {
 		
 		return ResponseEntity.ok(diaryService.findAllDiary(page, size));
 	}
-	  
+	   
 	 
 	// 상세 조회
-    @PostMapping("/diarys/detail")
+    @PostMapping("/detail")
     public ResponseEntity<DiaryDetailDTO> findByDiaryNo(@RequestBody DiaryDetailVO ddVO) {
     	
     	// log.info("상세조회 : " + ddVO );
@@ -67,7 +64,7 @@ public class DiaryController {
     
       
     // 댓글 목록 조회
-    @PostMapping("/diarys/commentList")
+    @PostMapping("/commentList")
     public ResponseEntity<DiaryComVO> getComments(@RequestBody DiaryComVO in) {
     	
     	log.info("댓글 가져오기 : " + in );
@@ -81,7 +78,7 @@ public class DiaryController {
     
     
     // 게시글 작성
-    @PostMapping(value = "/diarys/insert", consumes = "multipart/form-data")
+    @PostMapping(value="insert", consumes = "multipart/form-data")
     public ResponseEntity<?> insertDiary(
         @RequestPart("data") DiaryDTO dto,
         @RequestPart(value = "images", required = false) List<MultipartFile> images
@@ -89,7 +86,7 @@ public class DiaryController {
 
         diaryService.insertDiary(dto, images);
         return ResponseEntity.ok().build();
-    }
+    } 
 
     
     
