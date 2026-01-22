@@ -64,14 +64,19 @@ public class DiaryController {
 
 	// 댓글 목록 조회
 	@GetMapping("/{diaryNo}/comments")
-	public ResponseEntity<List<DiaryComListVO>> getComments(@PathVariable("diaryNo") int diaryNo,
-			@RequestParam(name = "page", defaultValue = "1") int page) {
+	public ResponseEntity<Map<String, Object>> getComments(@PathVariable("diaryNo") int diaryNo,
+			@RequestParam(name="page", defaultValue = "1") int page,
+			@RequestParam(name="size", defaultValue = "5") int size) {
 
 		log.info("댓글 가져오기 : " + diaryNo);
-
-		return ResponseEntity.ok(diaryService.findByComments(diaryNo, page));
+		
+		Map<String, Object> result = diaryService.findByComments(diaryNo, page, size);
+		
+		return ResponseEntity.ok(diaryService.findByComments(diaryNo, page, size));
 	}
+
  
+	
 	// 게시글 작성
 	@PostMapping
 	public ResponseEntity<?> insertDiary(@RequestPart("data") DiaryDTO dto,

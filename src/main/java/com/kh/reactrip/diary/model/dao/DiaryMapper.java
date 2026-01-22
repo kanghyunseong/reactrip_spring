@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
+import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 
 @Mapper  
 public interface DiaryMapper {
@@ -18,11 +19,14 @@ public interface DiaryMapper {
 
 	DiaryDetailDTO findByDiaryNo(int diaryNo);
 
-	List<DiaryCommentDTO> findByComments(@Param("diaryNo") int diaryNo, @Param("page") int page);
+	List<DiaryComListVO> findByComments(@Param("diaryNo") int diaryNo, @Param("startRow") int size, @Param("endRow") int offset);
 
+	int countByComments(@Param("diaryNo") int diaryNo);
+	
 	void insertDiary(DiaryDTO dto);
 
 	void insertDiaryImage(int diaryNo, String imageUrl, int i);
+
 
 
 	 

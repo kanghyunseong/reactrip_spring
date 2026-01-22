@@ -56,6 +56,8 @@ public class DiaryServiceImpl implements DiaryService {
 
 		log.info("전제페이지 :  " + totalCount);
 		
+		log.info("page={}, size={}, offset={}", page, size, offset);
+		
 		Map<String, Object> map = new HashMap();
 		
 		map.put("diary", diaryList);
@@ -86,26 +88,31 @@ public class DiaryServiceImpl implements DiaryService {
 
 	// 댓글 목록 조회
 	@Override
-	public List<DiaryComListVO> findByComments(int diaryNo, int page) {
+	public Map<String, Object> findByComments(int diaryNo, int page, int size) {
 		
-		log.info("개시글 번호ㅣ: " + diaryNo);
+		log.info("게시글 번호 : " + diaryNo);
 		
-		List<DiaryComListVO> listVo = new ArrayList<DiaryComListVO>(); 
+		int startRow = (page - 1) * size + 1;
 		
-		List<DiaryCommentDTO> comList = diaryMapper.findByComments(diaryNo, page);
+		int endRow = page * size;
 		
-			for( DiaryCommentDTO items :  comList) {
-				DiaryComListVO setItem = new DiaryComListVO();
-				setItem.setCommentNo(items.getCommentNo()); // 댓글 key번호
-				setItem.setCommentContent(items.getCommentContent()); //댓글내용
-				setItem.setCreatedDate(items.getCreatedDate());  // 댓글작성일자
-				setItem.setCommentWriteName(items.getMemberName()); // 댓글 작성자명
-				listVo.add(setItem);
-			}
+		List<DiaryComListVO> listVo = diaryMapper.findByComments(diaryNo, startRow, endRow);
 		
-		return listVo;
-	}
- 
+		int totalCount = diaryMapper.countByComments(diaryNo);
+		
+		int totalPage = (int) Math.ceil((double) totalCount / size);
+		
+		Map<String, Object> result = new HashMap<>();
+		    result.put("listVo", listVo);
+		    result.put("page", page);
+		    result.put("size", size);
+		    result.put("totalCount", totalCount);
+		    result.put("totalPage", totalPage);
+
+		    return result;
+		}
+	
+	// 게시글 작성
 	@Transactional
 	@Override
 	public void insertDiary(DiaryDTO dto, List<MultipartFile> images) {
@@ -127,6 +134,7 @@ public class DiaryServiceImpl implements DiaryService {
 		}
 		
 	}
+
 
 
 
