@@ -32,7 +32,7 @@ public class AdminCommentController {
 		
 		PageResponseDTO<AdminCommentDTO> list = adminCommentService.findAllComment(page);
 		
-		return ResponseData.ok("목록 조회 성공", list);
+		return ResponseData.ok(list, "목록 조회 성공");
 	}
 	
 	@GetMapping("/{commentNo}")
@@ -41,7 +41,7 @@ public class AdminCommentController {
 		
 		AdminCommentDetailDTO detailDTO = adminCommentService.findByCommentNo(commentNo);
 		
-		return ResponseData.ok("상세조회 성공하였습니다.", detailDTO);
+		return ResponseData.ok(detailDTO, "상세조회 성공하였습니다.");
 	}
 	
 	@DeleteMapping("/{commentNo}")
@@ -62,7 +62,7 @@ public class AdminCommentController {
 		
 		PageResponseDTO<AdminCommentDetailDTO> dtoList = adminCommentService.findBySearch(keyword, page);
 		
-		return ResponseData.ok("검색 조회 성공 하였습니다.", dtoList);
+		return ResponseData.ok(dtoList, "검색 조회 성공 하였습니다.");
 	}
 	
 	 

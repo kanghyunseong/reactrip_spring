@@ -34,14 +34,14 @@ public class AdminTravelController {
 
 		PageResponseDTO<AdminTravelDTO> response = adminTravelService.findAllTravel(page);
 		
-		return ResponseData.ok("여행지 목록 조회 성공. ", response);
+		return ResponseData.ok(response, "여행지 목록 조회 성공. ");
 		
 	}
 	
-	@GetMapping("/regions")
+	@GetMapping("/region")
 	public ResponseEntity<ResponseData<List<Map<String, Object>>>> findAllRegions() {
 		List<Map<String, Object>> regions = adminTravelService.findAllRegions();
-		return ResponseData.ok("지역 목록 조회 성공", regions);
+		return ResponseData.ok(regions, "지역 목록 조회 성공");
 	}
 	
 	@DeleteMapping("/{travelNo}")
@@ -51,9 +51,9 @@ public class AdminTravelController {
         
         AdminTravelDTO response = adminTravelService.updateTravelStatus(travelNo, status);
         
-        return ResponseData.ok("여행지 상태 변경 성공", response);
+        return ResponseData.ok(response, "여행지 상태 변경 성공");
     }
-	@PostMapping("/insert")
+	@PostMapping
 	public ResponseEntity<ResponseData<String>> insertTravel(
 			@ModelAttribute AdminTravelDTO adminTravelDTO,
 			@RequestParam(value = "file", required = false)MultipartFile file
@@ -71,7 +71,7 @@ public class AdminTravelController {
 		
 		adminTravelService.updateTravel(travelNo, file, adminTravelDTO);
 		
-		return ResponseData.ok("여행지 수정 완료.", null);
+		return ResponseData.ok(null, "여행지 수정 완료.");
 	}
 	
 	@PostMapping("/api-sync")
@@ -88,7 +88,7 @@ public class AdminTravelController {
 		
 		List<AdminTravelDTO> list = adminTravelService.getOrSyncNearbyTravels(mapX, mapY);
 		
-		return ResponseData.ok("", list);
+		return ResponseData.ok(list, "");
 		
 	}
 	
@@ -100,6 +100,6 @@ public class AdminTravelController {
 		
 		PageResponseDTO<AdminTravelDTO> list = adminTravelService.findBySearch(keyword, page);
 		
-		return ResponseData.ok("검색어로 조회 성공",list);
+		return ResponseData.ok(list, "검색어로 조회 성공");
 	}
 }

@@ -47,9 +47,11 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		
 		int totalCount = adminMemberMapper.getSearchCount(keyword);
 		
+		// 검색 결과가 0건이면 예외를 던지지 말고 "빈 리스트"를 정상 응답으로 내려준다.
+		// (프론트에서 404로 인식되어 실패 처리되는 문제 방지)
 		if(totalCount == 0) {
-			log.error("user Not Found Exception : {} ", keyword);
-			throw new UserNotFoundException(keyword);
+			PageInfo pi = pagenation.getPageInfo(0, page);
+			return new PageResponseDTO<>(pi, new ArrayList<>());
 		}
 		
 		PageInfo pi = pagenation.getPageInfo(totalCount, page);

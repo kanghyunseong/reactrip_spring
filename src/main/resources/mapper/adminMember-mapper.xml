@@ -32,6 +32,8 @@
                M.MEMBER_NAME LIKE '%' || #{keyword} || '%'
             OR 
                M.EMAIL LIKE '%' || #{keyword} || '%'
+            OR
+               M.PHONE LIKE '%' || #{keyword} || '%'
            )
       </if>
 </select>
@@ -79,6 +81,8 @@
                M.MEMBER_NAME LIKE '%' || #{keyword} || '%'
             OR 
                M.EMAIL LIKE '%' || #{keyword} || '%'
+            OR
+               M.PHONE LIKE '%' || #{keyword} || '%'
            )
       </if>
      ORDER BY M.MEMBER_NO DESC
@@ -98,7 +102,7 @@
 			      TB_DELETED_MEMBER)
 </update>
 
-<select id="findByMemberNo">
+<select id="findMemberByNo">
 	SELECT
 	       MEMBER_NO AS memberNo
 	     , MEMBER_NAME AS memberName
@@ -108,5 +112,10 @@
 	 WHERE
 	       MEMBER_NO = #{memberNo}
 </select>
+
+<insert id="deleteMember">
+	INSERT INTO TB_DELETED_MEMBER (MEMBER_NO)
+	VALUES (#{memberNo})
+</insert>
 
 </mapper>

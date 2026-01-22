@@ -30,13 +30,13 @@ public class AdminDiaryController {
 		
 		PageResponseDTO<AdminDiaryDTO> list = adminDiaryService.findAllDiary(page);
 		
-		return ResponseData.ok("목록 조회 성공", list);
+		return ResponseData.ok(list,"목록 조회 성공");
 	}
 	
 	@GetMapping("/{diaryNo}")
 	public ResponseEntity<ResponseData<AdminDiaryDetailDTO>> findByDiaryNo(@PathVariable(name = "diaryNo")Long diaryNo) { 
 		AdminDiaryDetailDTO detail = adminDiaryService.findByDiaryNo(diaryNo);
-	    return ResponseData.ok("상세 조회 성공", detail);
+	    return ResponseData.ok(detail, "상세 조회 성공");
 	}
 	
 	@DeleteMapping("/{diaryNo}")
@@ -55,7 +55,7 @@ public class AdminDiaryController {
 		
 		PageResponseDTO<AdminDiaryDetailDTO> list = adminDiaryService.findByDiarySearch(keyword, page);
 		
-		return ResponseData.ok("검색어로 조회 성공", list);
+		return ResponseData.ok(list, "검색어로 조회 성공");
 	}
 
 }

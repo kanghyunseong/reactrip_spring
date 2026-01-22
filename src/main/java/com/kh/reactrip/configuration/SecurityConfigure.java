@@ -80,8 +80,8 @@ public class SecurityConfigure {
                   requests.requestMatchers(HttpMethod.GET,
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
-                		  "/api/admin/**"
-                
+                		  "/api/admin/**",
+                		  "/api/**"
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.PUT,

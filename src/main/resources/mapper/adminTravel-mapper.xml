@@ -42,6 +42,8 @@
       LEFT
       JOIN
            TB_REGION R ON T.REGION_NO = R.REGION_NO
+     WHERE
+           TRAVEL_STATUS = 'N'
      ORDER
         BY
            T.TRAVEL_NO ASC

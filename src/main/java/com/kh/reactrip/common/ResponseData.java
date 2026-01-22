@@ -23,12 +23,12 @@ public class ResponseData<T> {
 	}
 
 	// 성공 응답
-	public static <T> ResponseEntity<ResponseData<T>> ok(String message) {
-		return ResponseEntity.ok(new ResponseData<T>(message, null, "요청성공"));
+	public static <T> ResponseEntity<ResponseData<T>> ok(T data) {
+		return ResponseEntity.ok(new ResponseData<T>(null, data, "요청성공"));
 	}
 
-	public static <T> ResponseEntity<ResponseData<T>> ok(String message, T data) {
-		return ResponseEntity.ok(new ResponseData<T>(message, data, "요청성공"));
+	public static <T> ResponseEntity<ResponseData<T>> ok(T data, String message) {
+		return ResponseEntity.ok(new ResponseData<T>(message, data, "등록 성공"));
 	}
 
 	// 실패응답
