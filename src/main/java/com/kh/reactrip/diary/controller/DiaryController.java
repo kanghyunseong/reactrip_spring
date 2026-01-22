@@ -37,7 +37,7 @@ public class DiaryController {
 	private final DiaryService diaryService;
 
 	// 목록 전체 조회
-	@GetMapping("")
+	@GetMapping
 	public ResponseEntity<Map<String, Object>> findAllDiary(@RequestParam(name = "page", defaultValue = "1") int page, // 한
 																														// 페이지에
 			@RequestParam(name = "size", defaultValue = "5") int size) { // 게시글 5개 보여줘
@@ -50,7 +50,7 @@ public class DiaryController {
 	}
 
 	// 상세 조회
-	@GetMapping("/detail/{diaryNo}")
+	@GetMapping("/{diaryNo}")
 	public ResponseEntity<DiaryDetailDTO> findByDiaryNo(@PathVariable(name="diaryNo") int diaryNo) {
 
 		// log.info("상세조회 : " + ddVO );
@@ -71,9 +71,9 @@ public class DiaryController {
 
 		return ResponseEntity.ok(diaryService.findByComments(diaryNo, page));
 	}
-
+ 
 	// 게시글 작성
-	@PostMapping("/insert")
+	@PostMapping
 	public ResponseEntity<?> insertDiary(@RequestPart("data") DiaryDTO dto,
 			@RequestPart(value = "images", required = false) List<MultipartFile> images) {
 
