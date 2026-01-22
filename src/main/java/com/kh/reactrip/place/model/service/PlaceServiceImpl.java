@@ -1,5 +1,6 @@
 package com.kh.reactrip.place.model.service;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,9 +58,15 @@ public class PlaceServiceImpl implements PlaceService {
 		
 	}
 	
-	public PlaceDTO findByTravelNo(Long travelNo) {
+	public PlaceDTO findByTravelNo(String travelNo) {
 		
-		PlaceDTO place = placeMapper.findByTravelNo(travelNo);
+		Long parsedTravelNo = Long.parseLong(travelNo);
+		
+		if(parsedTravelNo < 1) {
+			throw new InvalidParameterException("유효하지 않은 접근입니다."); // 커스텀 예외 아님, 값이 0 또는 음수일 경우
+		}
+		
+		PlaceDTO place = placeMapper.findByTravelNo(parsedTravelNo);
 		
 		if(place == null) {
 			throw new PlaceNotFoundException("조회된 여행지가 없습니다.");

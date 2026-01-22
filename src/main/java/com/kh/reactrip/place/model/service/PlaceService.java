@@ -8,6 +8,6 @@ public interface PlaceService {
 	
 	List<PlaceDTO> findAllPlace(String keyword, Long themeNo, Long regionNo, Integer page, Integer size, String sort);
 	
-	PlaceDTO findByTravelNo(Long travelNo);
+	PlaceDTO findByTravelNo(String travelNo);
 
 }
