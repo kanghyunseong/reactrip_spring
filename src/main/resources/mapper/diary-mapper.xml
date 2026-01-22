@@ -87,7 +87,7 @@
      ORDER
         BY C.CREATED_DATE DESC
 </select>
-
+ 
 
 <!-- 게시글 작성 -->
 <insert id="insertDiary" useGeneratedKeys="true" keyProperty="diaryNo">

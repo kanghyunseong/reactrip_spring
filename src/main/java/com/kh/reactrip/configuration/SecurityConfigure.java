@@ -82,7 +82,9 @@ public class SecurityConfigure {
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/notices/*"
+                          "/api/notices/*",
+                          "/api/diarys/**" 
+                		  
                   ).authenticated();
 
                   // 4. PUT - 로그인 필요

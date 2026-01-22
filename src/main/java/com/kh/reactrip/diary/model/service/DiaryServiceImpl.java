@@ -87,13 +87,13 @@ public class DiaryServiceImpl implements DiaryService {
 	// 댓글 목록 조회
 	@Override
 	public List<DiaryComListVO> findByComments(int diaryNo, int page) {
+		
 		log.info("개시글 번호ㅣ: " + diaryNo);
 		
 		List<DiaryComListVO> listVo = new ArrayList<DiaryComListVO>(); 
 		
-		List<DiaryCommentDTO> comList = diaryMapper.findByComments(diaryNo);
+		List<DiaryCommentDTO> comList = diaryMapper.findByComments(diaryNo, page);
 		
-		if(comList != null && comList.size() > 0 ) {
 			for( DiaryCommentDTO items :  comList) {
 				DiaryComListVO setItem = new DiaryComListVO();
 				setItem.setCommentNo(items.getCommentNo()); // 댓글 key번호
@@ -102,11 +102,10 @@ public class DiaryServiceImpl implements DiaryService {
 				setItem.setCommentWriteName(items.getMemberName()); // 댓글 작성자명
 				listVo.add(setItem);
 			}
-		} 
 		
 		return listVo;
 	}
-
+ 
 	@Transactional
 	@Override
 	public void insertDiary(DiaryDTO dto, List<MultipartFile> images) {

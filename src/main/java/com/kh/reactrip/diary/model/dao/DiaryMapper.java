@@ -18,7 +18,7 @@ public interface DiaryMapper {
 
 	DiaryDetailDTO findByDiaryNo(int diaryNo);
 
-	List<DiaryCommentDTO> findByComments(int diaryNo);
+	List<DiaryCommentDTO> findByComments(@Param("diaryNo") int diaryNo, @Param("page") int page);
 
 	void insertDiary(DiaryDTO dto);
 
