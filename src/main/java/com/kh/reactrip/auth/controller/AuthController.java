@@ -32,7 +32,7 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<ResponseData<Object>> login(@Valid @RequestBody MemberLoginDTO member) {
 		Map<String, String> loginResponse = authService.login(member);
-		return ResponseData.ok(loginResponse,"로그인 성공");
+		return ResponseData.ok("로그인 성공");
 	}
 
 	

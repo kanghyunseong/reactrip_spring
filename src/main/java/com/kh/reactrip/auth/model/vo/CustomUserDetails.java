@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.Builder;
 import lombok.Value;
 
+
 @Value
 @Builder
 public class CustomUserDetails implements UserDetails {
