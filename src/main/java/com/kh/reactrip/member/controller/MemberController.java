@@ -22,6 +22,10 @@ import com.kh.reactrip.common.ResponseData;
 import com.kh.reactrip.member.model.service.MemberService;
 
 import jakarta.validation.Valid;
+import com.kh.reactrip.member.model.dto.SignupRequest;
+import com.kh.reactrip.common.ResponseData;
+import com.kh.reactrip.member.model.service.MemberService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -94,4 +98,13 @@ public class MemberController {
 //		memberService.updateProfileImage(memberId, profileImage);
 //		return ResponseData.ok("프로필 이미지 변경 성공");
 //	}
+	public ResponseEntity<ResponseData<Object>> signUp(@RequestBody SignupRequest request) {
+		
+		memberService.signUp(request);
+
+		return ResponseData.ok("회원가입 성공");
+		
+	}
+	
+
 }

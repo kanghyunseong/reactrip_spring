@@ -15,6 +15,7 @@ import com.kh.reactrip.member.model.dto.UpdatePasswordRequest;
 import com.kh.reactrip.member.model.vo.AuthMember;
 import com.kh.reactrip.member.model.vo.Member;
 import com.kh.reactrip.member.model.vo.DeleteMember;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl implements MemberService{
 	
 	private final MemberMapper memberMapper;
 	private final AuthMemberMapper authMemberMapper;
 	private final PasswordEncoder passwordEncoder;
 	private final MemberValidationService validationService;  // 추가
+	// private final FileService fileService;
+	
 	@Override
 	@Transactional
 	public void signUp(SignupRequest request) {
@@ -54,6 +58,56 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional
 	public void deleteMember(Long memberNo) {
 		memberMapper.insertDeleteMember(memberNo);
+		if (memberMapper.countById(request.getMemberId()) > 0) {
+			throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+		}
+		
+		if (memberMapper.countByEmail(request.getEmail()) > 0) {
+			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+		}
+		
+		if (memberMapper.countByPhone(request.getPhone()) > 0) {
+			throw new IllegalArgumentException("이미 존재하는 번호입니다.");
+		}
+		
+		String encryptedPassword = passwordEncoder.encode(request.getMemberPwd());
+		
+		Date currentDate = new Date(System.currentTimeMillis());
+		
+		Member member = Member.builder()
+					          .memberName(request.getMemberName())
+					          .birthDay(request.getBirthDay())
+					          .phone(request.getPhone())
+					          .email(request.getEmail())
+					          .memberRole("ROLE_USER")
+					          .enrollDate(currentDate)
+					          .image(request.getImage())
+					          .build();
+	
+		memberMapper.insertMemberInfo(member);
+		
+		Long generatedMemberNo = member.getMemberNo();
+
+		AuthMember authMember = AuthMember.builder()
+										  .memberNo(generatedMemberNo)
+										  .memberId(request.getMemberId())
+									      .memberPwd(encryptedPassword)
+									      .build();
+		
+		memberMapper.insertAuthMember(authMember);
+
+		DeleteMember deleteMember = DeleteMember.builder()
+													.memberNo(generatedMemberNo)
+													.deleteStatus('N')
+													.build();
+															
+	}
+	
+	@Transactional
+	public void deleteMember(Long memberNo) {
+		// 삭제 레코드 생성
+		memberMapper.insertDeleteMember(memberNo);
+		// 삭제일 업데이트
 		memberMapper.deleteMember(memberNo);
 	}
 	
