@@ -141,4 +141,13 @@
 	    WHERE a.MEMBER_ID = #{memberId}
 	      AND NVL(d.DELETE_STATUS, 'N') = 'N'
 	</select>
+	
+	<update id="updateMemberName">
+		UPDATE
+		       TB_MEMBER
+		   SET
+		       MEMBER_NAME = #{memberName}
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	</update>
 </mapper>

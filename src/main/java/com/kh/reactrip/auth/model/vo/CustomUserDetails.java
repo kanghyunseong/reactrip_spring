@@ -39,12 +39,3 @@ public class CustomUserDetails implements UserDetails {
         return authNo;
     }
 }
-
-	private Collection<? extends GrantedAuthority> authorities;
-	private Long memberNo;
-	private String username;
-	private String password;
-	private String birthday;
-	private String email;
-	private String phone;
-}

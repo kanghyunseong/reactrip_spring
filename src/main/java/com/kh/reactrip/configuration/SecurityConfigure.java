@@ -74,9 +74,11 @@ public class SecurityConfigure {
                           "/api/cars/**",
                           "/api/station/**",
                           "/api/reserve/**",
+                          "/api/**",
                           "/api/**"
                           "/api/admin/members",
                           "/api/admin/**"
+                                        
                   ).permitAll();
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
@@ -119,6 +121,7 @@ public class SecurityConfigure {
                   
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
+                		  "/api/members/mypage",
                           "/api/boards/*",
                           "/api/imgBoards/*",
                           "/api/notices/*"

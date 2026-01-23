@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.exception.CustomAuthenticationException;
-import com.kh.reactrip.exception.LogoutFailureException;
 import com.kh.reactrip.member.model.vo.AuthMember;
-import com.kh.reactrip.token.model.dao.TokenMapper;
 import com.kh.reactrip.token.model.service.TokenService;
 
 import jakarta.validation.Valid;
@@ -68,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
 		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getMemberNo(), role);
 		loginResponse.put("userNo", String.valueOf(user.getMemberNo()));
 		loginResponse.put("userId", user.getUsername());
-		loginResponse.put("birthDay", user.getBirthday());
+		loginResponse.put("birthDay", user.getBirthDay());
 		loginResponse.put("email", user.getEmail());
 		loginResponse.put("phone", user.getPhone());
 		loginResponse.put("role", user.getAuthorities().toString());

@@ -7,7 +7,11 @@ import com.kh.reactrip.member.model.dto.SignupRequest;
 public interface MemberService {
 	void signUp(SignupRequest request);
 
-	void registerMember(SignupRequest sign);
+	MemberLoginDTO getMemberInfo(String memberId);
+
+	void updateMemberName(String memberId, String memberName);
+
+	void deleteMember(Long memberNo);
 
 	//void updateProfileImage(Long memberId, MultipartFile profileImage);
 }

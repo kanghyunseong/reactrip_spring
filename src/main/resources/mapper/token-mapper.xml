@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.reactrip.token.model.dao.TokenMapper">
+	<delete id="deleteTokenByUserNo">
+		DELETE 
+		  FROM 
+		       TB_TOKEN 
+		 WHERE 
+		       AUTH_NO = #{authNo}
+	</delete>
+	
+	<insert id="saveToken">
+		INSERT 
+		  INTO 
+		       TB_TOKEN (TOKEN_NO, TOKEN, AUTH_NO, EXPIRATION)
+		VALUES 
+		       (SEQ_TOKEN_NO.NEXTVAL, #{token}, #{authNo}, #{expiration})
+	</insert>
+	
+	<select id="findByToken">
+		SELECT 
+		       TOKEN_NO as tokenNo, 
+		       TOKEN as token, 
+		       AUTH_NO as authNo, 
+		       EXPIRATION as expiration
+		  FROM 
+		       TB_TOKEN 
+		 WHERE 
+		       TOKEN = #{token}
+	</select>
+</mapper>
