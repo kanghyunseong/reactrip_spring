@@ -198,9 +198,10 @@ public class GlobalExceptionHandler {
    public ResponseEntity<ResponseData<Object>> handleFileStoageExceptionHandler(FileStorageException e) {
       return ResponseData.failure(e.getMessage(), HttpStatus.BAD_REQUEST);
    }
-   
+
    @ExceptionHandler(PageNotFoundException.class)
    public ResponseEntity<ResponseData<Object>> pageNotFoundExceptionHandler(PageNotFoundException e) {
 	   return ResponseData.failure(e.getMessage(),HttpStatus.NOT_FOUND);
    }
+
 }
