@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 
-@MapperScan("com.kh.reactrip")
+@MapperScan("com.kh.reactrip.*.model.dao")
+
 public class ReactripApplication {
 
 	public static void main(String[] args) {

@@ -2,6 +2,8 @@ package com.kh.reactrip.configuration;
 
 import java.util.Arrays;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -68,10 +70,15 @@ public class SecurityConfigure {
                           "/api/members/login",
                           "/api/members",
                           "/api/members/**",
-                          "/api/diarys/**",
                           "/api/auth/refresh",
+                          "/api/cars/**",
+                          "/api/station/**",
+                          "/api/reserve/**",
+                          "/api/**",
+                          "/api/**"
                           "/api/admin/members",
                           "/api/admin/**"
+                                        
                   ).permitAll();
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
@@ -114,7 +121,8 @@ public class SecurityConfigure {
                   
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/boards/**",
+                		  "/api/members/mypage",
+                          "/api/boards/*",
                           "/api/imgBoards/*",
                           "/api/notices/*"
                   ).authenticated();
@@ -210,7 +218,6 @@ public class SecurityConfigure {
       return source;
    }
    
-
    @Bean
    public PasswordEncoder passwordEncoder() {
       return new BCryptPasswordEncoder();
