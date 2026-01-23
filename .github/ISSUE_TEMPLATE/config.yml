@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 질문/논의(Discussion)
+    url: https://github.com
+    about: "간단 질문/아이디어 논의는 Discussion(또는 팀 채널)로 부탁해요."
+

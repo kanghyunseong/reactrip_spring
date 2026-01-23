@@ -68,8 +68,8 @@ public class TokenService {
 	 */
 	@Transactional
 	private void saveToken(String refreshToken, Long authNo) {
-		// Refresh Token 만료 시간 계산 (application.yml에서 설정된 값 사용)
-		long expirationTime = System.currentTimeMillis() + tokenProperties.getExpirationMillis();
+		// Refresh Token 만료 시간 계산 (7일)
+		
 		
 		RefreshToken token = RefreshToken.builder()
 				.token(refreshToken)
@@ -88,7 +88,7 @@ public class TokenService {
 		}
 		
 		tokenMapper.saveToken(token);
-		log.info("Refresh Token 저장 완료 - authNo: {}", authNo);
+		log.info("Refresh Token 저장 완료 - userNo: {}", authNo);
 	}
 	
 	/**

@@ -16,6 +16,7 @@ import com.kh.reactrip.auth.model.service.AuthService;
 import com.kh.reactrip.common.ResponseData;
 import com.kh.reactrip.token.model.service.TokenService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,11 @@ public class AuthController {
 		return ResponseData.ok("로그인 성공");
 	}
 
-	
+	@PostMapping("/logout")
+	public ResponseEntity<ResponseData<Object>> logout(@Valid @RequestBody MemberLoginDTO member) {
+		authService.logout(member);
+		return ResponseData.ok("로그아웃 성공");
+	}
 
 	@PostMapping("/refresh")
 	public ResponseEntity<ResponseData<Map<String, String>>> refresh(@RequestBody Map<String, String> token) {
