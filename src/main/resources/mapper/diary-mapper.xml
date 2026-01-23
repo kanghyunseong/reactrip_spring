@@ -29,7 +29,8 @@
 	 	   TB_TRAVEL T ON (D.TRAVEL_NO = T.TRAVEL_NO)
 	WHERE
 		   D.DIARY_STATUS = 'N'
-    ORDER BY
+    ORDER 
+       BY
     	   D.DIARY_NO DESC
     OFFSET #{offset} ROWS
     FETCH NEXT #{size} ROWS ONLY	 

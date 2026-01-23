@@ -92,13 +92,6 @@ public class SecurityConfigure {
                           "/api/members", 
                           "/api/members/**", 
                           "/api/comments/**" ,
-                          "/uploads/**",
-                          "/api/notices",
-                          "/api/notices/search",
-                          "/api/comments/**",
-                          "/api/reserve/**",
-                          "/api/reviews/**",
-                          "/api/main",
                           "/api/places/**",
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
@@ -121,7 +114,7 @@ public class SecurityConfigure {
                   
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/boards/*",
+                          "/api/boards/**",
                           "/api/imgBoards/*",
                           "/api/notices/*"
                   ).authenticated();

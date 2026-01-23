@@ -61,7 +61,7 @@ public class DiaryServiceImpl implements DiaryService {
 		Map<String, Object> map = new HashMap();
 		
 		map.put("diary", diaryList);
-		map.put("totalCnt", totalCount);
+		map.put("totalCnt", totalCount); 
 		map.put("limitPage", size);
 		map.put("currentPage", page);
 		
