@@ -3,6 +3,7 @@ package com.kh.reactrip.member.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,12 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
+@Validated
 public class MemberController {
 	
 	private final MemberService memberService;
 	
 	@PostMapping("/signup")
-	public ResponseEntity<ResponseData<Object>>signUp(@RequestBody SignupRequest request) {
+	public ResponseEntity<ResponseData<Object>>signUp(@Valid @RequestBody SignupRequest request) {
 		
 		memberService.signUp(request);
 		return ResponseData.ok("회원가입 성공");
@@ -87,6 +89,9 @@ public class MemberController {
 		
 		return ResponseData.ok(null, "비밀번호가 변경되었습니다");
 	}
+	
+//	@PutMapping("/mypage/profile")
+//	public ResponseEntity<ResponseData<Void>> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @Valid @RequestBody )
 //	@PutMapping("/profile/image/{memberId}")
 //	public ResponseEntity<ResponseData<Object>> updateProfileImage(@PathVariable Long memberId,
 //																   @RequestParam MultipartFile profileImage) {
