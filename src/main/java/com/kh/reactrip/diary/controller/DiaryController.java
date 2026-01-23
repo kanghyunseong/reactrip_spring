@@ -42,21 +42,14 @@ public class DiaryController {
 			@RequestParam(name = "page", defaultValue = "1") int page, 																														// 페이지에
 			@RequestParam(name = "size", defaultValue = "5") int size) { // 게시글 5개 보여줘
 		
-		// Map<String, Object> map = diaryService.findAllDiary(page, size);
-		// log.info("{}", diaryService.findAllDiary(1, size));
-		log.info("컨트롤러 page --> " + page);
+		// log.info("컨트롤러 page --> " + page);
 
-		log.info("page={}, size={}", page, size);
-		log.info("offset={}", (page - 1) * size);
-		
 		return ResponseEntity.ok(diaryService.findAllDiary(page, size));
 	}
 
 	// 상세 조회
 	@GetMapping("/{diaryNo}")
 	public ResponseEntity<DiaryDetailDTO> findByDiaryNo(@PathVariable(name="diaryNo") int diaryNo) {
-
-		// log.info("상세조회 : " + ddVO );
 
 		DiaryDetailDTO diary = diaryService.findByDiaryNo(diaryNo);
 
