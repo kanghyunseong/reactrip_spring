@@ -6,12 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO;
-import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDetailDTO;
 import com.kh.reactrip.admin.community.comment.model.mapper.AdminCommentMapper;
-import com.kh.reactrip.admin.community.comment.model.vo.AdminCommentVO;
-import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryVO;
 import com.kh.reactrip.common.PageResponseDTO;
-import com.kh.reactrip.file.service.FileService;
 import com.kh.reactrip.util.PageInfo;
 import com.kh.reactrip.util.Pagenation;
 import com.kh.reactrip.util.Validator;
@@ -37,50 +33,31 @@ public class AdminCommentServiceImpl implements AdminCommentService {
 
 		Validator.validatePage(page, pi.getMaxPage());
 		
-		List<AdminCommentVO> voList = adminCommentMapper.findAllComment(pagenation.createRowBounds(pi));
-		
-		List<AdminCommentDTO> dtoList = voList.stream()
-				.map((AdminCommentVO vo) -> {
-					return new AdminCommentDTO(vo);
-				})
-				.toList();
+		List<AdminCommentDTO> dtoList = adminCommentMapper.findAllComment(pagenation.createRowBounds(pi));
 
 		return new PageResponseDTO<>(pi, dtoList);
 	}
 
 	@Override
-	public AdminCommentDetailDTO findByCommentNo(Long commentNo) {
+	public AdminCommentDTO findByCommentNo(Long commentNo) {
 		
 		Validator.validateNo(commentNo, "상세조회할 게시글을 찾지 못했습니다.");
 		
-		AdminCommentVO vo  = adminCommentMapper.findByCommentNo(commentNo);
-		
-		Validator.validateExist(vo, "조회할 게시글 번호가 잘못됨");
-		
-		AdminCommentDetailDTO dtoDetail = new AdminCommentDetailDTO(vo);
-		
-		return dtoDetail;
+		AdminCommentDTO dto  = adminCommentMapper.findByCommentNo(commentNo);
+		Validator.validateExist(dto, "조회할 게시글 번호가 잘못됨");
+		return dto;
 	}
 	
 	@Override
-	public AdminCommentDetailDTO deleteComment(Long commentNo, AdminCommentDetailDTO dto) {
-
-		
-		dto.setCommentNo(commentNo);
-		
+	public void deleteComment(Long commentNo) {
 		Validator.validateNo(commentNo, "삭제할 번호가 잘못됨.");
 		
-		AdminCommentVO vo = new AdminCommentVO(dto);
-		
-		int result = adminCommentMapper.deleteStatus(vo);
-		
-		Validator.validateExist(vo, "대상을 찾을 수 없습니다.");
-		
-		return findByCommentNo(commentNo);
+		int result = adminCommentMapper.deleteStatus(commentNo);
+		Validator.validateResult(result, "대상을 찾을 수 없습니다.");
 	}
 
 	@Override
-	public PageResponseDTO<AdminCommentDetailDTO> findBySearch(String keyword, int page) {
+	public PageResponseDTO<AdminCommentDTO> findBySearch(String keyword, int page) {
 
 		if(keyword == null || keyword.trim().isEmpty()) {
 			return new PageResponseDTO<>(new PageInfo(), new ArrayList<>());
@@ -88,15 +65,14 @@ public class AdminCommentServiceImpl implements AdminCommentService {
 		
 		int totalCount = adminCommentMapper.getSearchCount(keyword);
 		
-		
 		if(totalCount == 0) {
-			log.error("Comment Not Found Exception : {} ", keyword);
-			throw new RuntimeException(keyword);
+			PageInfo pi = pagenation.getPageInfo(0, page);
+			return new PageResponseDTO<>(pi, new ArrayList<>());
 		}
 		
 		PageInfo pi = pagenation.getPageInfo(totalCount, page);
 		
-		List<AdminCommentDetailDTO> list = adminCommentMapper.findBySearch(keyword, pagenation.createRowBounds(pi));
+		List<AdminCommentDTO> list = adminCommentMapper.findBySearch(keyword, pagenation.createRowBounds(pi));
 		
 		return new PageResponseDTO<>(pi, list);
 	}

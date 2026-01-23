@@ -3,14 +3,9 @@ package com.kh.reactrip.admin.community.diary.model.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryImageVO;
 import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryVO;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryImageVO;
+import lombok.*;
 
 @Getter
 @Setter
@@ -18,23 +13,33 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class AdminDiaryDTO {
-	
-	private Long diaryNo;
-	private String diaryTitle;
-	private LocalDateTime createdDate;
-	private int count;
-	private Long travelNo;
-	private String memberName; 
+    
+    private Long diaryNo;
+    private String diaryTitle;
+    private String diaryContent;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
+    private int count;
     private String diaryStatus;
+    private Long memberNo;
+    private Long scheduleNo;
+    private Long travelNo;
+    private String memberName; 
+    private String email;
+    private List<AdminDiaryImageVO> images;
     
     public AdminDiaryDTO(AdminDiaryVO vo) {
         this.diaryNo = vo.getDiaryNo();
         this.diaryTitle = vo.getDiaryTitle();
-        this.createdDate = vo.getCreatedDate(); 
+        this.diaryContent = vo.getDiaryContent();
+        this.createdDate = vo.getCreatedDate();
+        this.updatedDate = vo.getUpdatedDate();
         this.count = vo.getCount();
+        this.diaryStatus = vo.getDiaryStatus();
+        this.memberNo = vo.getMemberNo();
+        this.scheduleNo = vo.getScheduleNo();
         this.travelNo = vo.getTravelNo();
         this.memberName = vo.getMemberName();
-        this.diaryStatus = vo.getDiaryStatus();
+        this.email = vo.getEmail();
     }
-
 }

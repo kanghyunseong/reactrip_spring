@@ -4,13 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO;
-import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDetailDTO;
 import com.kh.reactrip.admin.community.comment.model.service.AdminCommentService;
 import com.kh.reactrip.common.PageResponseDTO;
 import com.kh.reactrip.common.ResponseData;
@@ -36,31 +34,29 @@ public class AdminCommentController {
 	}
 	
 	@GetMapping("/{commentNo}")
-	public ResponseEntity<ResponseData<AdminCommentDetailDTO>> findByCommentNo(
+	public ResponseEntity<ResponseData<AdminCommentDTO>> findByCommentNo(
 			@PathVariable(name = "commentNo")Long commentNo) {
 		
-		AdminCommentDetailDTO detailDTO = adminCommentService.findByCommentNo(commentNo);
+		AdminCommentDTO detailDTO = adminCommentService.findByCommentNo(commentNo);
 		
 		return ResponseData.ok(detailDTO, "상세조회 성공하였습니다.");
 	}
 	
 	@DeleteMapping("/{commentNo}")
-	public ResponseEntity<ResponseData<AdminCommentDetailDTO>> deleteComment(
-			@PathVariable(name = "commentNo") Long commentNo,
-			@RequestBody AdminCommentDetailDTO dto) {
+	public ResponseEntity<ResponseData<Void>> deleteComment(
+			@PathVariable(name = "commentNo") Long commentNo) {
 		
-		AdminCommentDetailDTO detailDTO = adminCommentService.deleteComment(commentNo, dto);
-		
+		adminCommentService.deleteComment(commentNo);
 		return ResponseData.noContent();
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<ResponseData<PageResponseDTO<AdminCommentDetailDTO>>> findBySearch(
+	public ResponseEntity<ResponseData<PageResponseDTO<AdminCommentDTO>>> findBySearch(
 			@RequestParam(name = "keyword")String keyword,
 			@RequestParam(name = "page") int page
 			) {
 		
-		PageResponseDTO<AdminCommentDetailDTO> dtoList = adminCommentService.findBySearch(keyword, page);
+		PageResponseDTO<AdminCommentDTO> dtoList = adminCommentService.findBySearch(keyword, page);
 		
 		return ResponseData.ok(dtoList, "검색 조회 성공 하였습니다.");
 	}

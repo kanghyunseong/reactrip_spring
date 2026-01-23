@@ -5,22 +5,21 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
-import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDetailDTO;
-import com.kh.reactrip.admin.community.comment.model.vo.AdminCommentVO;
+import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO;
 
 @Mapper
 public interface AdminCommentMapper {
 
 	int getTotalCount();
 
-	List<AdminCommentVO> findAllComment(RowBounds rowBounds);
+	List<AdminCommentDTO> findAllComment(RowBounds rowBounds);
 	
-	AdminCommentVO findByCommentNo(Long commentNo);
+	AdminCommentDTO findByCommentNo(Long commentNo);
 
-	int deleteStatus(AdminCommentVO vo);
+	int deleteStatus(Long commentNo);
 
 	int getSearchCount(String keyword);
 
-	List<AdminCommentDetailDTO> findBySearch(String keyword, RowBounds rowBounds);
+	List<AdminCommentDTO> findBySearch(String keyword, RowBounds rowBounds);
 
 }

@@ -6,13 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO;
-import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDetailDTO;
 import com.kh.reactrip.admin.community.diary.model.mapper.AdminDiaryMapper;
 import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryImageVO;
-import com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryVO;
-import com.kh.reactrip.admin.members.model.mapper.AdminMemberMapper;
 import com.kh.reactrip.common.PageResponseDTO;
-import com.kh.reactrip.exception.NoticeNotFoundException;
 import com.kh.reactrip.util.PageInfo;
 import com.kh.reactrip.util.Pagenation;
 import com.kh.reactrip.util.Validator;
@@ -34,64 +30,57 @@ public class AdminDiaryServiceImpl implements AdminDiaryService {
 		int totalCount = adminDiaryMapper.getTotalCount();
 
 		PageInfo pi = pagenation.getPageInfo(totalCount, page);
-		
+
 		List<AdminDiaryDTO> diary = adminDiaryMapper.findAllDiary(pagenation.createRowBounds(pi));
 
 		return new PageResponseDTO<>(pi, diary);
 	}
 
 	@Override
-	public AdminDiaryDetailDTO findByDiaryNo(Long diaryNo) {
+	public AdminDiaryDTO findByDiaryNo(Long diaryNo) {
 		
 		Validator.validateNo(diaryNo, "조회할 일기 번호가 잘못됐습니다.");
 		
-		AdminDiaryVO vo = adminDiaryMapper.findByDiaryNo(diaryNo);
-		
-		Validator.validateExist(vo, "해당 게시글을 찾을 수 없습니다.");
-		
+		AdminDiaryDTO dto = adminDiaryMapper.findByDiaryNo(diaryNo);
+		Validator.validateExist(dto, "해당 게시글을 찾을 수 없습니다.");
+
 		List<AdminDiaryImageVO> imageList = adminDiaryMapper.findImagesByDiaryNo(diaryNo);
 		
-		AdminDiaryDetailDTO detailDto = new AdminDiaryDetailDTO(vo, imageList);
-		
-		return detailDto;
+		dto.setImages(imageList);
+		return dto;
 	}
 
 	@Override
-	public AdminDiaryDTO deleteStatus(Long diaryNo, AdminDiaryDTO dto) {
+    public AdminDiaryDTO deleteStatus(Long diaryNo, AdminDiaryDTO dto) {
 		
-		Validator.validateNo(diaryNo, "변경할 일기 번호가 잘못되었습니당.");
-		
-		dto.setDiaryNo(diaryNo);
-		
-		AdminDiaryVO vo = new AdminDiaryVO(dto);
-		
-		int result = adminDiaryMapper.deleteStatus(vo);
-		
-		Validator.validateExist(vo, "해당 일기의 상태를 변경할 수 없습니다. ");
-		
-		return findByDiaryNo(diaryNo);
-	}
+        Validator.validateNo(diaryNo, "변경할 일기 번호가 잘못되었습니다.");
+        
+        dto.setDiaryNo(diaryNo);
+        int result = adminDiaryMapper.deleteStatus(dto);
+        Validator.validateResult(result, "상태 변경 실패");
+
+        return adminDiaryMapper.findByDiaryNo(diaryNo);
+    }
 
 	@Override
-	public PageResponseDTO<AdminDiaryDetailDTO> findByDiarySearch(String keyword, int page) {
-		
-		if(keyword == null || keyword.trim().isEmpty()) {
+	public PageResponseDTO<AdminDiaryDTO> findByDiarySearch(String keyword, int page) {
+
+		if (keyword == null || keyword.trim().isEmpty()) {
 			return new PageResponseDTO<>(new PageInfo(), new ArrayList<>());
 		}
-		
+
 		int totalCount = adminDiaryMapper.getSearchCount(keyword);
-		
-		if(totalCount == 0) {
-			log.error("Diary Not Found Exception : {}", keyword);
-			throw new NoticeNotFoundException(keyword);
+
+		if (totalCount == 0) {
+			PageInfo pi = pagenation.getPageInfo(0, page);
+			return new PageResponseDTO<>(pi, new ArrayList<>());
 		}
-		
+
 		PageInfo pi = pagenation.getPageInfo(totalCount, page);
-		
-		List<AdminDiaryDetailDTO> list = adminDiaryMapper.findByDiarySearch(keyword, pagenation.createRowBounds(pi));
+
+		List<AdminDiaryDTO> list = adminDiaryMapper.findByDiarySearch(keyword, pagenation.createRowBounds(pi));
 
 		return new PageResponseDTO<>(pi, list);
 	}
 
-	
 }

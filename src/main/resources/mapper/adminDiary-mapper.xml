@@ -6,7 +6,7 @@
 
 <mapper namespace="com.kh.reactrip.admin.community.diary.model.mapper.AdminDiaryMapper">
 
-<resultMap id="diaryDetailMap" type="com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDetailDTO">
+<resultMap id="diaryDetailMap" type="com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO">
     <id property="diaryNo" column="diaryNo"/>
     <result property="diaryTitle" column="diaryTitle"/>
     <result property="diaryContent" column="diaryContent"/>
@@ -61,7 +61,7 @@
            D.CREATED_DATE DESC
 </select>
 
-<select id="findByDiaryNo" resultType="com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryVO">
+<select id="findByDiaryNo" resultType="com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO">
     SELECT 
            D.DIARY_NO      AS diaryNo
          , D.DIARY_TITLE   AS diaryTitle
@@ -105,7 +105,30 @@
      ORDER BY 
            SORT_ORDER ASC
 </select>
-
+<select id="findByDiarySearch" resultType="com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO">
+    SELECT 
+           D.DIARY_NO      AS diaryNo
+         , D.DIARY_TITLE   AS diaryTitle
+         , D.CREATED_DATE  AS createdDate
+         , D.COUNT         AS count
+         , D.DIARY_STATUS  AS diaryStatus
+         , M.MEMBER_NAME   AS memberName
+         , D.TRAVEL_NO     AS travelNo
+      FROM
+           TB_DIARY D
+      JOIN
+           TB_MEMBER M ON D.MEMBER_NO = M.MEMBER_NO
+     WHERE
+           D.DIARY_STATUS = 'N'
+       <if test="keyword != null and keyword != ''">
+       AND (
+           D.DIARY_TITLE   LIKE '%' || #{keyword} || '%'
+        OR D.DIARY_CONTENT LIKE '%' || #{keyword} || '%'
+        OR M.MEMBER_NAME   LIKE '%' || #{keyword} || '%'
+       )
+       </if>
+     ORDER BY D.DIARY_NO DESC
+</select>
 <select id="getSearchCount" resultType="_int">
     SELECT
            COUNT(*)
@@ -123,40 +146,5 @@
        )
        </if> 
 </select>
-<select id="findByDiarySearch" resultMap="diaryDetailMap">
-    SELECT 
-           D.DIARY_NO      AS diaryNo
-         , D.DIARY_TITLE   AS diaryTitle
-         , D.DIARY_CONTENT AS diaryContent
-         , D.CREATED_DATE  AS createdDate
-         , D.COUNT         AS count
-         , D.DIARY_STATUS  AS diaryStatus
-         , D.MEMBER_NO     AS memberNo
-         , M.MEMBER_NAME   AS memberName
-         , D.SCHEDULE_NO   AS scheduleNo
-         , D.TRAVEL_NO     AS travelNo
-         , D.UPDATED_DATE  AS updatedDate
-         , I.IMAGE_NO      AS imageNo
-         , I.IMAGE_URL     AS imageUrl
-         , I.ORIGINAL_NAME AS originalName
-         , I.SORT_ORDER    AS sortOrder
-         , I.DIARY_NO      AS imgDiaryNo FROM
-           TB_DIARY D
-      JOIN
-           TB_MEMBER M ON D.MEMBER_NO = M.MEMBER_NO
-      LEFT JOIN
-           TB_DIARY_IMAGE I ON D.DIARY_NO = I.DIARY_NO 
-     WHERE
-           D.DIARY_STATUS = 'N'
-       <if test="keyword != null and keyword != ''">
-       AND (
-           D.DIARY_TITLE   LIKE '%' || #{keyword} || '%'
-        OR D.DIARY_CONTENT LIKE '%' || #{keyword} || '%'
-        OR M.MEMBER_NAME   LIKE '%' || #{keyword} || '%'
-       )
-       </if>
-     ORDER
-        BY
-           D.DIARY_NO DESC
-</select>
+
 </mapper>
