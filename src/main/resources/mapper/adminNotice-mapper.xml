@@ -66,15 +66,15 @@
 </select>
 <select id="selectNoticeDetail" resultType="com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO">
     SELECT 
-           NOTICE_NO
-         , MEMBER_NO
-         , NOTICE_TITLE
-         , NOTICE_CONTENT
-         , IMAGE AS image
+           NOTICE_NO     AS noticeNo
+         , MEMBER_NO     AS memberNo
+         , NOTICE_TITLE  AS noticeTitle
+         , NOTICE_CONTENT AS noticeContent
+         , IMAGE         AS image
          , NOTICE_STATUS AS noticeStatus
-         , CREATED_DATE AS createdDate
-         , UPDATED_DATE AS updatedDate
-         , COUNT AS count
+         , CREATED_DATE  AS createdDate
+         , UPDATED_DATE  AS updatedDate
+         , COUNT         AS count
       FROM 
            TB_NOTICE
      WHERE 
