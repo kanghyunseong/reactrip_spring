@@ -3,7 +3,6 @@ package com.kh.reactrip.admin.community.diary.model.vo;
 import java.time.LocalDateTime;
 
 import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO;
-import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDetailDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,19 +31,17 @@ public class AdminDiaryVO {
 	private String email;
 
 	public AdminDiaryVO(AdminDiaryDTO dto) {
-		this.diaryNo = dto.getDiaryNo();
-		this.diaryTitle = dto.getDiaryTitle();
-		this.diaryStatus = dto.getDiaryStatus();
-		this.createdDate = dto.getCreatedDate();
-		this.count = dto.getCount();
-		this.travelNo = dto.getTravelNo();
-		this.memberName = dto.getMemberName();
-		
-		if (dto instanceof AdminDiaryDetailDTO detail) {
-            this.diaryContent = detail.getDiaryContent();
-            this.updatedDate = detail.getUpdatedDate();
-            this.memberNo = detail.getMemberNo();
-            this.scheduleNo = detail.getScheduleNo();
-        }
-	}
+        this.diaryNo = dto.getDiaryNo();
+        this.diaryTitle = dto.getDiaryTitle();
+        this.diaryContent = dto.getDiaryContent();
+        this.diaryStatus = dto.getDiaryStatus();
+        this.createdDate = dto.getCreatedDate();
+        this.updatedDate = dto.getUpdatedDate();
+        this.count = dto.getCount();
+        this.memberNo = dto.getMemberNo();
+        this.scheduleNo = dto.getScheduleNo();
+        this.travelNo = dto.getTravelNo();
+        this.memberName = dto.getMemberName();
+        this.email = dto.getEmail();
+    }
 }

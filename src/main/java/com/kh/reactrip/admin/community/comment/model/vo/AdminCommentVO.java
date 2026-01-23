@@ -3,8 +3,6 @@ package com.kh.reactrip.admin.community.comment.model.vo;
 import java.time.LocalDateTime;
 
 import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO;
-import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDetailDTO;
-import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,16 +29,13 @@ public class AdminCommentVO {
 	
 	public AdminCommentVO(AdminCommentDTO dto) {
 	    this.commentNo = dto.getCommentNo();
+	    this.commentStatus = dto.getCommentStatus();
 	    this.commentContent = dto.getCommentContent();
 	    this.createdDate = dto.getCreatedDate();
+	    this.updatedDate = dto.getUpdatedDate();
+	    this.diaryNo = dto.getDiaryNo();
+	    this.memberNo = dto.getMemberNo();
 	    this.memberName = dto.getMemberName();
-	    
-	    if (dto instanceof AdminCommentDetailDTO detail) {
-	        this.updatedDate = detail.getUpdatedDate();
-	        this.diaryNo = detail.getDiaryNo();
-	        this.memberNo = detail.getMemberNo();
-	        this.commentStatus = detail.getCommentStatus();
-	    }
 	}
 
 }

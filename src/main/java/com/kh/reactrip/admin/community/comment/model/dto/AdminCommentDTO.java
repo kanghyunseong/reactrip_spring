@@ -2,8 +2,6 @@ package com.kh.reactrip.admin.community.comment.model.dto;
 
 import java.time.LocalDateTime;
 
-import com.kh.reactrip.admin.community.comment.model.vo.AdminCommentVO;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,16 +16,11 @@ import lombok.ToString;
 public class AdminCommentDTO {
 	
 	private Long commentNo;
+	private String commentStatus;
 	private String commentContent;
 	private LocalDateTime createdDate;
+	private LocalDateTime updatedDate;
 	private Long diaryNo;
+	private Long memberNo;
 	private String memberName;
-	
-	public AdminCommentDTO(AdminCommentVO vo) {
-		this.commentNo = vo.getCommentNo();
-		this.commentContent = vo.getCommentContent();
-		this.createdDate = vo.getCreatedDate();
-		this.diaryNo = vo.getDiaryNo();
-		this.memberName = vo.getMemberName();
-	}
 }

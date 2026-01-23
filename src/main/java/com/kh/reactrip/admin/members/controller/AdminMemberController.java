@@ -36,7 +36,7 @@ public class AdminMemberController {
         PageResponseDTO<AdminMemberDTO> list = memberService.findAllMember(page);
         
         // ★ ResponseData.ok(메시지, 데이터) 순서 맞춤
-        return ResponseData.ok("회원 목록 조회 성공", list);
+        return ResponseData.ok(list, "회원 목록 조회 성공");
     }
     
     // 2. 회원 삭제
@@ -59,7 +59,7 @@ public class AdminMemberController {
     	PageResponseDTO<AdminMemberDTO> list = memberService.findByMembers(keyword, page);
         
         // ★ ResponseData.ok(메시지, 데이터) 순서 맞춤
-        return ResponseData.ok("검색어로 조회 성공", list);
+        return ResponseData.ok(list, "검색어로 조회 성공");
     }
     
     // 4. 권한 변경
@@ -71,6 +71,6 @@ public class AdminMemberController {
         memberService.updateMemberRole(memberNo, memberRole);
         
         // ★ 데이터가 없을 땐 null을 인자로 전달
-        return ResponseData.ok("유저 권한 변경 성공", null);
+        return ResponseData.ok(null, "유저 권한 변경 성공");
     }
 }

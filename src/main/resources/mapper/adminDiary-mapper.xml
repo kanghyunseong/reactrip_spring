@@ -6,7 +6,7 @@
 
 <mapper namespace="com.kh.reactrip.admin.community.diary.model.mapper.AdminDiaryMapper">
 
-<resultMap id="diaryDetailMap" type="com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDetailDTO">
+<resultMap id="diaryDetailMap" type="com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO">
     <id property="diaryNo" column="diaryNo"/>
     <result property="diaryTitle" column="diaryTitle"/>
     <result property="diaryContent" column="diaryContent"/>
@@ -61,7 +61,7 @@
            D.CREATED_DATE DESC
 </select>
 
-<select id="findByDiaryNo" resultType="com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryVO">
+<select id="findByDiaryNo" resultType="com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO">
     SELECT 
            D.DIARY_NO      AS diaryNo
          , D.DIARY_TITLE   AS diaryTitle
@@ -133,6 +133,7 @@
          , D.DIARY_STATUS  AS diaryStatus
          , D.MEMBER_NO     AS memberNo
          , M.MEMBER_NAME   AS memberName
+         , M.EMAIL         AS email
          , D.SCHEDULE_NO   AS scheduleNo
          , D.TRAVEL_NO     AS travelNo
          , D.UPDATED_DATE  AS updatedDate
@@ -140,7 +141,8 @@
          , I.IMAGE_URL     AS imageUrl
          , I.ORIGINAL_NAME AS originalName
          , I.SORT_ORDER    AS sortOrder
-         , I.DIARY_NO      AS imgDiaryNo FROM
+         , I.DIARY_NO      AS imgDiaryNo
+      FROM
            TB_DIARY D
       JOIN
            TB_MEMBER M ON D.MEMBER_NO = M.MEMBER_NO

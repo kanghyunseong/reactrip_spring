@@ -33,7 +33,7 @@ public class AdminTravelController {
 
 		PageResponseDTO<AdminTravelDTO> response = adminTravelService.findAllTravel(page);
 		
-		return ResponseData.ok("여행지 목록 조회 성공. ", response);
+		return ResponseData.ok(response, "여행지 목록 조회 성공. ");
 		
 	}
 	
@@ -44,7 +44,7 @@ public class AdminTravelController {
         
         AdminTravelDTO response = adminTravelService.updateTravelStatus(travelNo, status);
         
-        return ResponseData.ok("여행지 상태 변경 성공", response);
+        return ResponseData.ok(response, "여행지 상태 변경 성공");
     }
 	@PostMapping("/insert")
 	public ResponseEntity<ResponseData<String>> insertTravel(
@@ -64,7 +64,7 @@ public class AdminTravelController {
 		
 		adminTravelService.updateTravel(travelNo, file, adminTravelDTO);
 		
-		return ResponseData.ok("여행지 수정 완료.", null);
+		return ResponseData.ok(null, "여행지 수정 완료.");
 	}
 	
 	@PostMapping("/api-sync")
@@ -81,7 +81,7 @@ public class AdminTravelController {
 		
 		List<AdminTravelDTO> list = adminTravelService.getOrSyncNearbyTravels(mapX, mapY);
 		
-		return ResponseData.ok("", list);
+		return ResponseData.ok(list, "");
 		
 	}
 }

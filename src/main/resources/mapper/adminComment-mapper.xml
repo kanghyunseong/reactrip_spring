@@ -14,11 +14,13 @@
 	       COMMENT_STATUS = 'N'	  
 </select>
 
-<select id="findAllComment" resultType="com.kh.reactrip.admin.community.comment.model.vo.AdminCommentVO">
+<select id="findAllComment" resultType="com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO">
         SELECT 
                C.COMMENT_NO       AS commentNo
+             , C.COMMENT_STATUS   AS commentStatus
              , C.COMMENT_CONTENT  AS commentContent
              , C.CREATED_DATE     AS createdDate
+             , C.UPDATED_DATE     AS updatedDate
              , C.DIARY_NO         AS diaryNo
              , C.MEMBER_NO        AS memberNo
              , M.MEMBER_NAME      AS memberName
@@ -33,7 +35,7 @@
                C.COMMENT_NO DESC
 </select>
 
-<select id="findByCommentNo" resultType="com.kh.reactrip.admin.community.comment.model.vo.AdminCommentVO">
+<select id="findByCommentNo" resultType="com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO">
 	SELECT
 	       C.COMMENT_NO      AS commentNo
 	     , C.COMMENT_STATUS  AS commentStatus
@@ -82,8 +84,11 @@
 <select id="findBySearch" resultType="com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO">
     SELECT 
            C.COMMENT_NO       AS commentNo
+         , C.COMMENT_STATUS   AS commentStatus
          , C.COMMENT_CONTENT  AS commentContent
          , C.CREATED_DATE     AS createdDate 
+         , C.UPDATED_DATE     AS updatedDate
+         , C.MEMBER_NO        AS memberNo
          , M.MEMBER_NAME      AS memberName 
          , D.DIARY_NO         AS diaryNo    
       FROM
