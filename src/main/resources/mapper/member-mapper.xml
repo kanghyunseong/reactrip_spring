@@ -75,7 +75,14 @@
 		       member_No = #{memberNo}
 	</update>
 	
-	<select id="selectByMemberId" resultType="AuthMember">
+	<resultMap id="authMemberResultMap" type="AuthMember">
+	    <id property="authNo" column="AUTH_NO"/>
+	    <result property="memberNo" column="MEMBER_NO"/>
+	    <result property="memberId" column="MEMBER_ID"/>
+	    <result property="memberPwd" column="MEMBER_PWD"/>
+	</resultMap>
+	
+	<select id="selectByMemberId" resultMap="authMemberResultMap">
 		SELECT
 			   MEMBER_NO,
 			   MEMBER_ID,
@@ -145,7 +152,39 @@
 		UPDATE
 		       TB_MEMBER
 		   SET
-		       MEMBER_NAME = #{memberName}
+		       MEMBER_NAME = #{newName}
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	</update>
+	<update id="updateMemberEmail">
+		UPDATE
+			   TB_MEMBER
+		   SET
+		       EMAIL = #{newEmail}
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	</update>
+	<update id="updateMemberPhone">
+		UPDATE
+			   TB_MEMBER
+		   SET
+		       PHONE = #{newPhone}
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	</update>
+	<update id="updateMemberBirthday">
+		UPDATE
+			   TB_MEMBER
+		   SET
+		       BIRTHDAY = #{newBirthDay}
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	</update>
+	<update id="updateMemberPassword">
+		UPDATE
+		       TB_AUTHENTICATION
+		   SET
+		       MEMBER_PWD = #{encryptedPassword}
 		 WHERE
 		       MEMBER_NO = #{memberNo}
 	</update>

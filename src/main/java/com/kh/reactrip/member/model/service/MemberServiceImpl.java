@@ -1,12 +1,17 @@
 package com.kh.reactrip.member.model.service;
 
 import java.sql.Date;
+
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
+import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.member.model.dao.AuthMemberMapper;
 import com.kh.reactrip.member.model.dao.MemberMapper;
 import com.kh.reactrip.member.model.dto.SignupRequest;
+import com.kh.reactrip.member.model.dto.UpdateNameRequest;
+import com.kh.reactrip.member.model.dto.UpdatePasswordRequest;
 import com.kh.reactrip.member.model.vo.AuthMember;
 import com.kh.reactrip.member.model.vo.Member;
 import com.kh.reactrip.member.model.vo.DeleteMember;
@@ -23,7 +28,6 @@ public class MemberServiceImpl implements MemberService {
 	private final AuthMemberMapper authMemberMapper;
 	private final PasswordEncoder passwordEncoder;
 	private final MemberValidationService validationService;  // 추가
-	
 	@Override
 	@Transactional
 	public void signUp(SignupRequest request) {
@@ -60,12 +64,56 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	@Transactional
-	public void updateMemberName(String memberId, String memberName) {
-		// AuthMember 조회 (공통 메서드 사용)
+	public void updateMemberName(String memberId, String newName) {
 		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		memberMapper.updateMemberName(authMember.getMemberNo(), newName);
+	}
+
+	@Override
+	@Transactional
+	public void updateMemberBirthday(String memberId, String newBirthDay) {
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		memberMapper.updateMemberBirthday(authMember.getMemberNo(), newBirthDay);
+	}
+	@Override
+	@Transactional
+	public void updateMemberEmail(String memberId, String newEmail) {
 		
-		log.info("회원 이름 변경: memberNo={}, newName={}", authMember.getMemberNo(), memberName);
-		memberMapper.updateMemberName(authMember.getMemberNo(), memberName);
+		if(validationService.isEmailDuplicate(newEmail)) {
+			throw new IllegalArgumentException("이미 사용중인 이메일입니다");
+		}
+		
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		memberMapper.updateMemberEmail(authMember.getMemberNo(), newEmail);
+	}
+	
+	@Override
+	@Transactional
+	public void updateMemberPhone(String memberId, String newPhone) {
+		
+		if(validationService.isPhoneDuplicate(newPhone)) {
+			throw new IllegalArgumentException("이미 사용중인 전화번호입니다");
+		};
+		
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		memberMapper.updateMemberPhone(authMember.getMemberNo(), newPhone);
+	}
+	
+	@Override
+	@Transactional
+	public void updateMemberPassword(String memberId, UpdatePasswordRequest request) {
+		
+		if(!request.getNewMemberPwd().equals(request.getConfirmPassword())) {
+			throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다");
+		}
+		
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		if(!checkPassword(request.getCurrentPassword(), authMember.getMemberPwd())) {
+			throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+		}
+		String encryptedPassword = passwordEncoder.encode(request.getNewMemberPwd());
+		
+		memberMapper.updateMemberPassword(authMember.getMemberNo(), encryptedPassword);
 	}
 	
 	// ========== 공통 메서드 (private) ==========
@@ -124,4 +172,5 @@ public class MemberServiceImpl implements MemberService {
 	private boolean checkPassword(String rawPassword, String encodedPassword) {
 		return passwordEncoder.matches(rawPassword, encodedPassword);
 	}
+
 }

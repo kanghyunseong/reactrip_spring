@@ -37,6 +37,7 @@ public class TokenService {
 	@Transactional
 	public Map<String, String> generateToken(String username, Long authNo, String role) {
 		// 1. Access Token, Refresh Token 생성
+		
 		Map<String, String> tokens = createTokens(username, role);
 		
 		// 2. Refresh Token DB에 저장
@@ -67,28 +68,19 @@ public class TokenService {
 	 * 기존 토큰이 있으면 삭제 후 저장
 	 */
 	@Transactional
+	// saveToken 메서드에서 authNo 파라미터가 제대로 전달되는지
 	private void saveToken(String refreshToken, Long authNo) {
-		// Refresh Token 만료 시간 계산 (application.yml에서 설정된 값 사용)
-		long expirationTime = System.currentTimeMillis() + tokenProperties.getExpirationMillis();
-		
-		RefreshToken token = RefreshToken.builder()
-				.token(refreshToken)
-				.authNo(authNo) 
-				.expiration(expirationTime)
-				.build();
-		
-		log.debug("RefreshToken 생성: authNo={}, expiration={}", authNo, expirationTime);
-		
-		// 기존 토큰 삭제 후 새 토큰 저장
-		try {
-			tokenMapper.deleteTokenByUserNo(authNo);
-			log.debug("기존 Refresh Token 삭제 완료");
-		} catch (Exception e) {
-			log.debug("기존 토큰 없음 (정상)");
-		}
-		
-		tokenMapper.saveToken(token);
-		log.info("Refresh Token 저장 완료 - authNo: {}", authNo);
+	    System.out.println("saveToken 호출 - authNo: " + authNo); // 로그 추가
+	    
+	    RefreshToken token = RefreshToken.builder()
+	            .token(refreshToken)
+	            .authNo(authNo)  // 이 값이 null인지 확인
+	            .expiration(System.currentTimeMillis() + tokenProperties.getExpirationMillis())
+	            .build();
+	    
+	    System.out.println("생성된 token 객체: " + token); // 로그 추가
+	    
+	    tokenMapper.saveToken(token);
 	}
 	
 	/**
