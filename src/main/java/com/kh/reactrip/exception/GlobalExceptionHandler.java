@@ -198,9 +198,11 @@ public class GlobalExceptionHandler {
    public ResponseEntity<ResponseData<Object>> handleFileStoageExceptionHandler(FileStorageException e) {
       return ResponseData.failure(e.getMessage(), HttpStatus.BAD_REQUEST);
    }
-   
-   @ExceptionHandler(PageNotFoundException.class)
-   public ResponseEntity<ResponseData<Object>> pageNotFoundExceptionHandler(PageNotFoundException e) {
-	   return ResponseData.failure(e.getMessage(),HttpStatus.NOT_FOUND);
+   // 여행지 조회 관련 커스텀 예외
+   @ExceptionHandler(PlaceNotFoundException.class)
+   public ResponseEntity<ResponseData<Object>> handlePlaceNotFoundExceptionHandler(PlaceNotFoundException e) {
+	   log.warn("여행지 조회 또는 상세 조회 실패: {}", e.getMessage());
+	   return ResponseData.failure(e.getMessage(), HttpStatus.NOT_FOUND);
    }
+   
 }
