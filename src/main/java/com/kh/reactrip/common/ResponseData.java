@@ -3,8 +3,6 @@ package com.kh.reactrip.common;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO;
-
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,7 +26,11 @@ public class ResponseData<T> {
 	}
 
 	public static <T> ResponseEntity<ResponseData<T>> ok(T data, String message) {
-		return ResponseEntity.ok(new ResponseData<T>(message, data, "등록 성공"));
+		return ResponseEntity.ok(new ResponseData<T>(message, data, "요청성공"));
+	}
+
+	public static <T> ResponseEntity<ResponseData<T>> ok(String message) {
+		return ResponseEntity.ok(new ResponseData<T>(message, null, "요청성공"));
 	}
 
 	// 실패응답
@@ -43,7 +45,15 @@ public class ResponseData<T> {
 
 	// 4. 생성 성공 (201 Created)
 	public static <T> ResponseEntity<ResponseData<T>> created(T data) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseData<>("생성되었습니다.", data, "요청 성공"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseData<>(null, data, "요청성공"));
+	}
+
+	public static <T> ResponseEntity<ResponseData<T>> created(String message) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseData<>(message, null, "요청성공"));
+	}
+
+	public static <T> ResponseEntity<ResponseData<T>> created(String message, T data) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseData<>(message, data, "요청성공"));
 	}
 
 }
