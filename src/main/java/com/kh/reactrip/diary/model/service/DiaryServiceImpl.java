@@ -50,7 +50,7 @@ public class DiaryServiceImpl implements DiaryService {
 		
 		int offset = (page - 1) * size;
 
-		List<DiaryDTO> diaryList = diaryMapper.findAllDiary(size, offset);
+		List<DiaryDTO> diaryList = diaryMapper.findAllDiary(offset, size);
 		
 		int totalCount = diaryMapper.findDiaryCount();
 

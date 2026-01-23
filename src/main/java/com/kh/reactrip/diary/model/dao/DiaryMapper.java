@@ -13,7 +13,7 @@ import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 @Mapper  
 public interface DiaryMapper {
 
-	List<DiaryDTO> findAllDiary(@Param("size") int size, @Param("offset") int offset);
+	List<DiaryDTO> findAllDiary(@Param("offset") int offset, @Param("size") int size);
 
 	int findDiaryCount();
 

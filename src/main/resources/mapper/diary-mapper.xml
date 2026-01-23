@@ -41,7 +41,7 @@
 	SELECT 
 		   COUNT(*)
 	  FROM
-	       TB_DIARY
+	       TB_DIARY D
 	 WHERE
 	 	   DIARY_STATUS = 'N'	
 </select>
