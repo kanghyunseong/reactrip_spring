@@ -50,6 +50,7 @@ dependencies {
 	    //자동빌드 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+
 }
 
 tasks.named('test') {

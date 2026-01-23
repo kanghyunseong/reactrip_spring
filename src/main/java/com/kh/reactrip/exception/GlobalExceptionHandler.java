@@ -204,6 +204,7 @@ public class GlobalExceptionHandler {
 	   return ResponseData.failure(e.getMessage(),HttpStatus.NOT_FOUND);
    }
 
+
    // 여행지 조회 관련 커스텀 예외
    @ExceptionHandler(PlaceNotFoundException.class)
    public ResponseEntity<ResponseData<Object>> handlePlaceNotFoundExceptionHandler(PlaceNotFoundException e) {
