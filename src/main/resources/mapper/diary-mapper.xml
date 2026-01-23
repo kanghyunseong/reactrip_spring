@@ -64,7 +64,7 @@
 	   		TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
 	  WHERE 
 	  		D.DIARY_NO = #{diaryNo}
-</select>
+</select>  
 
  
 <!-- 댓글 목록 -->

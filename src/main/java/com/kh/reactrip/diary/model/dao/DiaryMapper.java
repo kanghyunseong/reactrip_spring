@@ -9,7 +9,7 @@ import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
 import com.kh.reactrip.diary.model.vo.DiaryComListVO;
-
+  
 @Mapper  
 public interface DiaryMapper {
 

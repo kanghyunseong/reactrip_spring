@@ -72,7 +72,7 @@ public class DiaryController {
 	}
 
  
-	
+	  
 	// 게시글 작성
 	@PostMapping
 	public ResponseEntity<?> insertDiary(@RequestPart("data") DiaryDTO dto,

@@ -70,7 +70,7 @@ public class DiaryServiceImpl implements DiaryService {
  
 
 	// 상세 조회
-	@Override
+	@Override  
 	public DiaryDetailDTO findByDiaryNo(int diaryNo) {
 		
 		if(diaryNo <= 0) {

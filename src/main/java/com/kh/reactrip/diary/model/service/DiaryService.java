@@ -21,5 +21,5 @@ public interface DiaryService {
 
 	void insertDiary(DiaryDTO dto, List<MultipartFile> images);
 
-
+ 
 }
