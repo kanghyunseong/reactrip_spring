@@ -29,7 +29,7 @@
 		       PHONE = #{phone}
 	</select>	
 	
-	<select id="findById" parameterType="String" resultType="Member">
+	<select id="findById" parameterType="String" resultType="com.kh.reactrip.member.model.vo.Member">
 		SELECT
 		       *
 		  FROM
@@ -77,7 +77,7 @@
 		       member_No = #{memberNo}
 	</update>
 	
-	<select id="selectByMemberId" resultType="AuthMember">
+	<select id="selectByMemberId" resultType="com.kh.reactrip.member.model.vo.AuthMember">
 		SELECT
 			   MEMBER_NO,
 			   MEMBER_ID,
@@ -89,7 +89,7 @@
 		       MEMBER_ID = #{memberId}
 	</select>
 	
-	<select id="selectByMemberNo" resultType="Member">
+	<select id="selectByMemberNo" resultType="com.kh.reactrip.member.model.vo.Member">
 		SELECT
 		       MEMBER_NO,
 		       MEMBER_ID
@@ -106,7 +106,7 @@
 		       MEMBER_NO = #{memberNo}
 	</select>
 	
-	<resultMap id="loginResultMap" type="MemberLoginDTO">
+	<resultMap id="loginResultMap" type="com.kh.reactrip.auth.model.dto.MemberLoginDTO">
 		<id property="memberNo" column="MEMBER_NO"/>
 		<result property="memberId" column="MEMBER_ID"/>
 		<result property="memberPwd" column="MEMBER_PWD"/>

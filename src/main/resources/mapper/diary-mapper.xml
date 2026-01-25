@@ -107,7 +107,7 @@
      FROM 
      	  TB_COMMENT
     WHERE 
-    	  DIARY_NO = #{diaryNo}
+    	  DIARY_NO = #{diaryNo} AND COMMENT_STATUS = 'N'
     </select>
 
 

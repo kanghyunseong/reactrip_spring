@@ -75,7 +75,7 @@ public class SecurityConfigure {
                           "/api/station/**",
                           "/api/reserve/**",
                           "/api/**",
-                          "/api/**"
+                          "/api/**",
                           "/api/admin/members",
                           "/api/admin/**"
                                         

@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.exception.CustomAuthenticationException;
+import com.kh.reactrip.exception.LogoutFailureException;
 import com.kh.reactrip.member.model.vo.AuthMember;
+import com.kh.reactrip.token.model.dao.TokenMapper;
 import com.kh.reactrip.token.model.service.TokenService;
 
 import jakarta.validation.Valid;
@@ -27,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
 
 	private final AuthenticationManager authenticationManager;
 	private final TokenService tokenService;
+	private final TokenMapper tokenMapper;
 
 	@Override
 	public Map<String, String> login(MemberLoginDTO member) {
@@ -66,14 +69,6 @@ public class AuthServiceImpl implements AuthService {
 		loginResponse.put("email", user.getEmail());
 		loginResponse.put("phone", user.getPhone());
 		loginResponse.put("role", user.getAuthorities().toString());
-		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getMemberNo(), role);
-		loginResponse.put("userNo", String.valueOf(user.getMemberNo()));
-		loginResponse.put("userId", user.getUsername());
-		loginResponse.put("birthDay", user.getBirthDay());
-		loginResponse.put("email", user.getEmail());
-		loginResponse.put("phone", user.getPhone());
-		loginResponse.put("role", user.getAuthorities().toString());
-
 		return loginResponse;
 
 	}
@@ -81,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public void logout(@Valid MemberLoginDTO member) {
 		
-		int result = TokenMapper.deleteTokenForLogout(member);
+		int result = tokenMapper.deleteTokenForLogout(member);
 		
 		if(result == 1) {
 			return;
