@@ -60,6 +60,4 @@ public class AdminCommentController {
 		
 		return ResponseData.ok(dtoList, "검색 조회 성공 하였습니다.");
 	}
-	
-	 
 }

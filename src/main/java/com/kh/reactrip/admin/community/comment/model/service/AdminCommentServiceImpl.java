@@ -3,6 +3,7 @@ package com.kh.reactrip.admin.community.comment.model.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Primary
 @RequiredArgsConstructor
 @Slf4j
 public class AdminCommentServiceImpl implements AdminCommentService {
@@ -43,7 +45,8 @@ public class AdminCommentServiceImpl implements AdminCommentService {
 		
 		Validator.validateNo(commentNo, "상세조회할 게시글을 찾지 못했습니다.");
 		
-		AdminCommentDTO dto  = adminCommentMapper.findByCommentNo(commentNo);
+		AdminCommentDTO dto = adminCommentMapper.findByCommentNo(commentNo);		
+		
 		Validator.validateExist(dto, "조회할 게시글 번호가 잘못됨");
 		return dto;
 	}

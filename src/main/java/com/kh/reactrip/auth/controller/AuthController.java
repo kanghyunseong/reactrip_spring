@@ -33,11 +33,7 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<ResponseData<Object>> login(@Valid @RequestBody MemberLoginDTO member) {
 		Map<String, String> loginResponse = authService.login(member);
-<<<<<<< HEAD
 		return ResponseData.ok(loginResponse, "로그인 성공");
-=======
-		return ResponseData.ok("로그인 성공");
->>>>>>> 5d3ff508e0166528a5bd964850cf83acd006253c
 	}
 
 	@PostMapping("/logout")

@@ -27,11 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminNoticeController {
 
 	private final AdminNoticeService adminNoticeService;
-<<<<<<< HEAD
-
-=======
-	 
->>>>>>> 5d3ff508e0166528a5bd964850cf83acd006253c
+	
 	@PostMapping("/insert")
 	public ResponseEntity<ResponseData<String>> insertNotice(
 			@AuthenticationPrincipal CustomUserDetails user,
@@ -48,7 +44,6 @@ public class AdminNoticeController {
 			@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		PageResponseDTO<AdminNoticeDTO> list = adminNoticeService.findAllNotice(page);
-<<<<<<< HEAD
 
 		return ResponseData.ok(list, "공지사항 목록 조회 성공");
 	}
@@ -78,10 +73,6 @@ public class AdminNoticeController {
 		adminNoticeService.deleteNotice(noticeNo);
 
 		return ResponseData.ok(null, "공지사항 삭제 성공");
-=======
-		
-		return ResponseData.ok(list, "공지사항 목록 조회 성공");
->>>>>>> 5d3ff508e0166528a5bd964850cf83acd006253c
 	}
 
 }

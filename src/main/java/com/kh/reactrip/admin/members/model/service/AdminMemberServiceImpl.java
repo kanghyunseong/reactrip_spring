@@ -3,11 +3,7 @@ package com.kh.reactrip.admin.members.model.service;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-=======
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.context.annotation.Primary;
->>>>>>> 5d3ff508e0166528a5bd964850cf83acd006253c
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.admin.members.model.dto.AdminMemberDTO;
