@@ -39,7 +39,7 @@
 		     , RE.REGION_NO regionNo
 		     , RE.REGION_NAME regionName
 		     , TH.THEME_NO themeNo
-		     , TH.THEME_NAME themeTitle
+		     , TH.THEME_NAME themeName
 	</sql>
 	
 	<select id="findAllPlace"
@@ -57,11 +57,14 @@
 		  JOIN
 		       TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
 		<where>
-			<if test="query.regionNo != null">
-				AND TR.REGION_NO = #{query.regionNo}
+			<if test="regionNo != null">
+				AND TR.REGION_NO = #{regionNo}
 			</if>
-			<if test="query.themeNo != null">
-				AND TH.THEME_NO = #{query.themeNo}
+			<if test="themeNo != null">
+				AND TH.THEME_NO = #{themeNo}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				AND TR.TRAVEL_NAME LIKE '%' || #{keyword} || '%'
 			</if>
 			AND
 				TR.TRAVEL_STATUS = 'N'

@@ -39,6 +39,8 @@ public class PlaceController {
 			@RequestParam(value = "sort", required = false) String sort
 			) {
 		
+		log.info("키워드가 들어오는지? : {}", keyword);
+		
 		List<PlaceDTO> places = placeService.findAllPlace(keyword, themeNo, regionNo, page, size, sort);
 		return ResponseEntity.ok(places);
 		
@@ -47,11 +49,7 @@ public class PlaceController {
 	@GetMapping("/{travelNo}")
 	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") @Validated @Pattern(regexp="^[0-9]+$", message="유효하지 않은 접근입니다.") String travelNo) {
 		 
-		if(Long.parseLong(travelNo) < 1) {
-			throw new InvalidParameterException("유효하지 않은 접근입니다."); // 커스텀 예외 아님, 값이 0 또는 음수일 경우
-		}
-		
-		PlaceDTO place = placeService.findByTravelNo(Long.parseLong(travelNo));
+		PlaceDTO place = placeService.findByTravelNo(travelNo);
 		return ResponseEntity.ok(place);
 		
 	}
