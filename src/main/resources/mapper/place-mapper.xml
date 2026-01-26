@@ -5,7 +5,7 @@
 <mapper namespace="com.kh.reactrip.place.model.dao.PlaceMapper">
 	
 	<resultMap id="placeResultSet"
-			type="PlaceDTO"
+			type="com.kh.reactrip.place.model.dto.PlaceDTO"
 			autoMapping="false">
 		<id column="travelNo" property="travelNo" />
 		<result column="travelName" property="travelName" />
@@ -18,7 +18,7 @@
 		<result column="regionName" property="regionName" />
 		<result column="themeNo" property="themeNo" />
 		<result column="themeName" property="themeName" />
-		<association property="location" javaType="Location">
+		<association property="location" javaType="com.kh.reactrip.location.Location">
 			<result column="longitude" property="longitude" />
 			<result column="latitude" property="latitude" />
 		</association>
