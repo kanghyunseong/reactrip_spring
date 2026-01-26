@@ -64,7 +64,7 @@ public class AdminNoticeController {
 
 		adminNoticeService.updateNotice(noticeNo, file, adminNoticeDTO);
 
-		return ResponseData.ok(null, "공지사항 수정 완료");
+		return ResponseData.ok(null, "공지사항 수정 완료 ");
 	}
 
 	@DeleteMapping("/{noticeNo}")

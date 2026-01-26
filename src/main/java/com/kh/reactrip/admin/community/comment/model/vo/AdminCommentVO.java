@@ -3,7 +3,10 @@ package com.kh.reactrip.admin.community.comment.model.vo;
 import java.time.LocalDateTime;
 
 import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO;
+<<<<<<< HEAD
 import com.kh.reactrip.admin.community.diary.model.dto.AdminDiaryDTO;
+=======
+>>>>>>> 6c4d14ea81831215e7ed33a0c260c740121d4425
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

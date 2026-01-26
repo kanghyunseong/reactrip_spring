@@ -14,12 +14,10 @@ import com.kh.reactrip.util.Pagenation;
 import com.kh.reactrip.util.Validator;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Primary
 @RequiredArgsConstructor
-@Slf4j
 public class AdminCommentServiceImpl implements AdminCommentService {
 
 	private final AdminCommentMapper adminCommentMapper;
@@ -74,6 +72,7 @@ public class AdminCommentServiceImpl implements AdminCommentService {
 		}
 		
 		PageInfo pi = pagenation.getPageInfo(totalCount, page);
+		Validator.validatePage(page, pi.getMaxPage());
 		
 		List<AdminCommentDTO> list = adminCommentMapper.findBySearch(keyword, pagenation.createRowBounds(pi));
 		

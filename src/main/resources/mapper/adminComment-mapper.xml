@@ -88,6 +88,7 @@
          , C.COMMENT_CONTENT  AS commentContent
          , C.CREATED_DATE     AS createdDate 
          , C.UPDATED_DATE     AS updatedDate
+         , C.MEMBER_NO        AS memberNo
          , M.MEMBER_NAME      AS memberName 
          , D.DIARY_NO         AS diaryNo    
       FROM
