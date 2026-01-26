@@ -33,5 +33,9 @@ public interface MemberMapper {
 	MemberLoginDTO loadUser(String username);
 	// 
 	AuthMember selectByMemberId(String memberId);
-	void updateMemberName(Long memberNo, String memberName);
+	void updateMemberName(@Param("memberNo") Long memberNo, @Param("newName") String newName);
+	void updateMemberEmail(@Param("memberNo") Long memberNo, @Param("newEmail") String newEmail);
+	void updateMemberPhone(@Param("memberNo") Long memberNo, @Param("newPhone") String newPhone);
+	void updateMemberBirthday(@Param("memberNo") Long memberNo, @Param("newBirthDay") String newBirthDay);
+	void updateMemberPassword(@Param("memberNo") Long memberNo, @Param("encryptedPassword") String encryptedPassword);
 }
