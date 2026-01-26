@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ResponseData<T> {
+
 	private String message;
 	private T data;
 	private String success;
@@ -23,12 +24,12 @@ public class ResponseData<T> {
 	}
 
 	// 성공 응답
-	public static <T> ResponseEntity<ResponseData<T>> ok(String message) {
-		return ResponseEntity.ok(new ResponseData<T>(message, null, "요청성공"));
+	public static <T> ResponseEntity<ResponseData<T>> ok(T data) {
+		return ResponseEntity.ok(new ResponseData<T>(null, data, "요청성공"));
 	}
 
-	public static <T> ResponseEntity<ResponseData<T>> ok(String message, T data) {
-		return ResponseEntity.ok(new ResponseData<T>(message, data, "요청성공"));
+	public static <T> ResponseEntity<ResponseData<T>> ok(T data, String message) {
+		return ResponseEntity.ok(new ResponseData<T>(message, data, "등록 성공"));
 	}
 
 	// 실패응답
@@ -45,5 +46,6 @@ public class ResponseData<T> {
 	public static <T> ResponseEntity<ResponseData<T>> created(T data) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseData<>("생성되었습니다.", data, "요청 성공"));
 	}
+
 
 }

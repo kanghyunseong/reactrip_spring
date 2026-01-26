@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.exception.PlaceNotFoundException;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Primary
 public class PlaceServiceImpl implements PlaceService {
 	
 	private final PlaceMapper placeMapper;

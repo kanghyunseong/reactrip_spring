@@ -3,6 +3,7 @@ package com.kh.reactrip.admin.members.model.service;
 import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.admin.members.model.dto.AdminMemberDTO;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Primary
 public class AdminMemberServiceImpl implements AdminMemberService {
 
 	private final Pagenation pagenation;

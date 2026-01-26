@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin/members")
 public class AdminMemberController {
 
-    private final AdminMemberService memberService;
+    private final AdminMemberService adminMemberService;
     
     // 1. 회원목록 전체 조회 (페이징 적용)
     @GetMapping
@@ -33,10 +33,10 @@ public class AdminMemberController {
             @RequestParam(name = "page", defaultValue = "1") int page) {
         
         // ★ 제네릭 타입 명시
-        PageResponseDTO<AdminMemberDTO> list = memberService.findAllMember(page);
+        PageResponseDTO<AdminMemberDTO> list = adminMemberService.findAllMember(page);
         
         // ★ ResponseData.ok(메시지, 데이터) 순서 맞춤
-        return ResponseData.ok("회원 목록 조회 성공", list);
+        return ResponseData.ok(list, "회원 목록 조회 성공");
     }
     
     // 2. 회원 삭제
@@ -45,7 +45,7 @@ public class AdminMemberController {
             @PathVariable(name = "memberNo") Long memberNo, 
             @AuthenticationPrincipal CustomUserDetails adminUserDetails) {
         
-        memberService.deleteMember(memberNo);
+    	adminMemberService.deleteMember(memberNo);
         
         return ResponseData.noContent();
     }
@@ -55,10 +55,10 @@ public class AdminMemberController {
     public ResponseEntity<ResponseData<List<AdminMemberDTO>>> findByMembers(
             @RequestParam(name = "keyword", required = false) String keyword) {
         
-        List<AdminMemberDTO> list = memberService.findByMembers(keyword);
+        List<AdminMemberDTO> list = adminMemberService.findByMembers(keyword);
         
         // ★ ResponseData.ok(메시지, 데이터) 순서 맞춤
-        return ResponseData.ok("검색어로 조회 성공", list);
+        return ResponseData.ok(list, "검색어로 조회 성공");
     }
     
     // 4. 권한 변경
@@ -67,9 +67,9 @@ public class AdminMemberController {
             @PathVariable(name = "memberNo") Long memberNo, 
             @RequestParam(name = "memberRole") String memberRole) {
         
-        memberService.updateMemberRole(memberNo, memberRole);
+    	adminMemberService.updateMemberRole(memberNo, memberRole);
         
         // ★ 데이터가 없을 땐 null을 인자로 전달
-        return ResponseData.ok("유저 권한 변경 성공", null);
+        return ResponseData.ok(null, "유저 권한 변경 성공");
     }
 }

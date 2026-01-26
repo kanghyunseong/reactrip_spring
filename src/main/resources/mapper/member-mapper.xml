@@ -1,7 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-
-<mapper namespace="com.kh.reactrip.auth.member.model.dao.MemberMapper">
+<mapper namespace="com.kh.reactrip.member.model.dao.MemberMapper">
+	
+	<sql id="countMember">
+		SELECT 
+		       COUNT(*)
+		  FROM 
+		       TB_MEMBER 
+		 WHERE 
+	</sql>	
+	
+	<select id="countById" parameterType="String" resultType="int">
+		SELECT
+			   COUNT(*)
+	      FROM
+		       TB_AUTHENTICATION
+		 WHERE
+		       MEMBER_ID = #{memberId}
+	</select>
+	
+	<select id="countByEmail" parameterType="String" resultType="int">
+		<include refid="countMember"/>
+		       EMAIL = #{email}
+	</select>
+	<select id="countByPhone" parameterType="String" resultType="int">
+		<include refid="countMember"/>
+		       PHONE = #{phone}
+	</select>	
+	
+	<select id="findById" parameterType="String" resultType="com.kh.reactrip.member.model.vo.Member">
+		SELECT
+		       *
+		  FROM
+		       TB_AUTHENTICATION
+		 WHERE
+		       MEMBER_ID = #{memberId}
+	</select>
+	
+	<insert id="insertMemberInfo">
+		<selectKey keyProperty="memberNo" resultType="java.lang.Long" order="BEFORE">
+			SELECT 
+			       SEQ_MEMBER.NEXTVAL
+			  FROM
+			       DUAL
+		</selectKey>
+		INSERT
+		  INTO
+		       TB_MEMBER (member_No, member_Name, birthDay, phone, email, image, member_Role, enroll_Date)
+		VALUES
+			   (#{memberNo}, #{memberName}, #{birthDay}, #{phone}, #{email} , DEFAULT , DEFAULT, DEFAULT)
+	</insert>
+	
+	<insert id="insertAuthMember">
+		INSERT
+		  INTO
+		       TB_AUTHENTICATION (auth_No, member_Id, member_Pwd, member_No) 
+		VALUES
+		       (SEQ_AUTH.NEXTVAL, #{memberId}, #{memberPwd}, #{memberNo})
+	</insert>
+	
+	<insert id="insertDeleteMember">
+		INSERT
+		  INTO
+		       TB_DELETED_MEMBER (deleted_No, member_No, delete_Status)
+		VALUES
+		       (SEQ_DEL.NEXTVAL, #{memberNo}, #{deleteStatus})
+	</insert>
+	
+	<update id="deleteMember">
+		UPDATE
+			   TB_DELETED_MEMBER
+		   SET
+		       delete_Date = SYSDATE
+		 WHERE
+		       member_No = #{memberNo}
+	</update>
+	
+	<select id="selectByMemberId" resultType="com.kh.reactrip.member.model.vo.AuthMember">
+		SELECT
+			   MEMBER_NO,
+			   MEMBER_ID,
+			   MEMBER_PWD,
+			   AUTH_NO
+		  FROM 
+		       TB_AUTHENTICATION
+		 WHERE
+		       MEMBER_ID = #{memberId}
+	</select>
+	
+	<select id="selectByMemberNo" resultType="com.kh.reactrip.member.model.vo.Member">
+		SELECT
+		       MEMBER_NO,
+		       MEMBER_ID
+		       MEMBER_NAME,
+		       BIRTH_DAY,
+		       PHONE,
+		       EMAIL,
+		       IMAGE,
+		       MEMBER_ROLE,
+		       ENROLL_DATE
+		  FROM 
+		       TB_MEMBER
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	</select>
+	
+	<resultMap id="loginResultMap" type="com.kh.reactrip.auth.model.dto.MemberLoginDTO">
+		<id property="memberNo" column="MEMBER_NO"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="memberPwd" column="MEMBER_PWD"/>
+		<result property="authNo" column="AUTH_NO"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="email" column="EMAIL"/>
+		<result property="phone" column="PHONE"/>
+		<result property="birthDay" column="BIRTHDAY"/>
+		<result property="image" column="IMAGE"/>
+		<result property="memberRole" column="MEMBER_ROLE"/>
+		<result property="deletedDate" column="DELETED_DATE"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="deleteStatus" column="DELETE_STATUS"/>
+	</resultMap>
+	
+	<select id="loadUser" resultMap="loginResultMap">
+	    SELECT 
+	    	a.AUTH_NO,
+	        a.MEMBER_NO,
+	        a.MEMBER_ID,
+	        a.MEMBER_PWD,
+	        m.MEMBER_NAME,
+	        m.EMAIL,
+	        m.PHONE,
+	        m.BIRTHDAY,
+	        m.IMAGE,
+	        m.MEMBER_ROLE,
+	        m.ENROLL_DATE,
+	        NVL(d.DELETE_STATUS, 'N') AS DELETE_STATUS
+	    FROM TB_AUTHENTICATION a
+	    JOIN TB_MEMBER m ON a.MEMBER_NO = m.MEMBER_NO
+	    LEFT JOIN TB_DELETED_MEMBER d ON a.MEMBER_NO = d.MEMBER_NO 
+	    WHERE a.MEMBER_ID = #{memberId}
+	      AND NVL(d.DELETE_STATUS, 'N') = 'N'
+	</select>
+	
+	<update id="updateMemberName">
+		UPDATE
+		       TB_MEMBER
+		   SET
+		       MEMBER_NAME = #{memberName}
+		 WHERE
+		       MEMBER_NO = #{memberNo}
+	</update>
 
 </mapper>
