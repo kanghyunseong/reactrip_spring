@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.reactrip.diary.model.dao.DiaryMapper">
+
+<!-- 전체 목록 조회-->
+<select id="findAllDiary" resultType="com.kh.reactrip.diary.model.dto.DiaryDTO">
+	SELECT
+		   D.DIARY_NO AS diaryNo
+		 , D.DIARY_TITLE AS diaryTitle
+		 , SUBSTR( D.DIARY_CONTENT,0 ,40)||'...' AS diaryContent
+		 , D.DIARY_STATUS AS diaryStatus
+		 , TO_CHAR(D.CREATED_DATE,'YYYY.MM.DD') AS createdDate
+		 , D.UPDATED_DATE AS updatedDate
+		 , D.COUNT AS count
+		 , M.MEMBER_NO AS memberNo
+		 , M.MEMBER_NAME AS memberName
+		 , S.SCHEDULE_NO AS scheduleNo
+		 , T.TRAVEL_NO AS travelNo
+	 FROM
+	       TB_DIARY D
+	 JOIN
+	       TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
+	 LEFT
+	 JOIN  
+	 	   TB_SCHEDULE S ON (D.SCHEDULE_NO = S.SCHEDULE_NO)
+	 LEFT
+	 JOIN
+	 	   TB_TRAVEL T ON (D.TRAVEL_NO = T.TRAVEL_NO)
+	WHERE
+		   D.DIARY_STATUS = 'N'
+    ORDER 
+       BY
+    	   D.DIARY_NO DESC
+    OFFSET #{offset} ROWS
+    FETCH NEXT #{size} ROWS ONLY	 
+</select>
+
+
+<!-- 전체 게시글 개수-->
+<select id="findDiaryCount" resultType="_int">
+	SELECT 
+		   COUNT(*)
+	  FROM
+	       TB_DIARY D
+	 WHERE
+	 	   DIARY_STATUS = 'N'	
+</select>
+
+
+<!-- 상세 조회 -->
+<select id="findByDiaryNo" parameterType="int" resultType="com.kh.reactrip.diary.model.dto.DiaryDetailDTO">
+	 SELECT
+	        D.DIARY_NO AS diaryNo
+	      , D.DIARY_TITLE AS diaryTitle
+	      , D.DIARY_CONTENT AS diaryContent
+	      , TO_CHAR(D.CREATED_DATE,'YYYY.MM.DD') AS createdDate
+	      , D.COUNT AS count
+	      , M.MEMBER_NO AS memberNo
+	      , M.MEMBER_NAME AS memberName
+	   FROM 
+	   		TB_DIARY D
+	   JOIN 
+	   		TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
+	  WHERE 
+	  		D.DIARY_NO = #{diaryNo}
+</select>  
+
+ 
+<!-- 댓글 목록 -->
+<select id="findByComments" parameterType="map" resultType="com.kh.reactrip.diary.model.dto.DiaryCommentDTO">
+    SELECT *
+      FROM (
+      	   SELECT ROWNUM rn, A.*
+      	     FROM (
+      	          SELECT
+				         C.COMMENT_NO AS commentNo
+				       , D.DIARY_NO AS diaryNo
+				       , C.COMMENT_CONTENT AS commentContent
+				       , M.MEMBER_NO AS memberNo
+				       , M.MEMBER_NAME AS memberName
+				       , TO_CHAR( C.CREATED_DATE, 'yyyy.mm.dd')  AS createdDate
+                    FROM 
+     	   				 TB_COMMENT C
+			        JOIN
+			        	 TB_DIARY D ON (C.DIARY_NO = D.DIARY_NO)
+			        LEFT
+			        JOIN
+			      	     TB_MEMBER M ON (M.MEMBER_NO = C.MEMBER_NO)
+			       WHERE 
+			       	   D.DIARY_NO = #{diaryNo}
+			         AND
+			             C.COMMENT_STATUS = 'N'
+			       ORDER
+			          BY C.CREATED_DATE DESC
+			) A
+		)
+ 	 WHERE
+ 	 		rn BETWEEN #{startRow} AND #{endRow}
+</select>
+ 
+ 
+ <!-- 댓글 전체 갯수 -->
+ <select id="countByComments" resultType="int">
+   SELECT 
+   		  COUNT(*)
+     FROM 
+     	  TB_COMMENT
+    WHERE 
+    	  DIARY_NO = #{diaryNo} AND COMMENT_STATUS = 'N'
+    </select>
+
+
+<!-- 게시글 작성 -->
+<insert id="insertDiary" useGeneratedKeys="true" keyProperty="diaryNo">
+
+</insert>
+
+
+
+
+		   
+</mapper>

@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 public class AdminNoticeController {
 
 	private final AdminNoticeService adminNoticeService;
-
 	@PostMapping("/insert")
 	public ResponseEntity<ResponseData<String>> insertNotice(
 			@AuthenticationPrincipal CustomUserDetails user,
@@ -72,7 +71,7 @@ public class AdminNoticeController {
 
 		adminNoticeService.deleteNotice(noticeNo);
 
-		return ResponseData.ok(null, "공지사항 삭제 성공");
+		return ResponseData.ok(list, "공지사항 목록 조회 성공");
 	}
 
 }
