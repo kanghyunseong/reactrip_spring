@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminNoticeController {
 	
 	private final AdminNoticeService adminNoticeService;
-	
+	 
 	@PostMapping("/insert")
 	public ResponseEntity<ResponseData<String>> insertNotice(@ModelAttribute AdminNoticeDTO adminNoticeDTO, 
 			@RequestParam(value = "file", required = true)MultipartFile file) {
@@ -38,7 +38,7 @@ public class AdminNoticeController {
 		
 		PageResponseDTO<AdminNoticeDTO> list = adminNoticeService.findAllNotice(page);
 		
-		return ResponseData.ok("공지사항 목록 조회 성공", list);
+		return ResponseData.ok(list, "공지사항 목록 조회 성공");
 	}
 
 }

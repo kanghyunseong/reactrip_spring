@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-public class MemberServiceImpl implements MemberService{
 	
 	private final MemberMapper memberMapper;
 	private final AuthMemberMapper authMemberMapper;
@@ -56,54 +55,54 @@ public class MemberServiceImpl implements MemberService{
 		DeleteMember deleteMember = createDeleteMember(generatedMemberNo);
 	}
 	
-	@Override
-	@Transactional
-	public void deleteMember(Long memberNo) {
-		memberMapper.insertDeleteMember(memberNo);
-		if (memberMapper.countById(request.getMemberId()) > 0) {
-			throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-		}
-		
-		if (memberMapper.countByEmail(request.getEmail()) > 0) {
-			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-		}
-		
-		if (memberMapper.countByPhone(request.getPhone()) > 0) {
-			throw new IllegalArgumentException("이미 존재하는 번호입니다.");
-		}
-		
-		String encryptedPassword = passwordEncoder.encode(request.getMemberPwd());
-		
-		Date currentDate = new Date(System.currentTimeMillis());
-		
-		Member member = Member.builder()
-					          .memberName(request.getMemberName())
-					          .birthDay(request.getBirthDay())
-					          .phone(request.getPhone())
-					          .email(request.getEmail())
-					          .memberRole("ROLE_USER")
-					          .enrollDate(currentDate)
-					          .image(request.getImage())
-					          .build();
-	
-		memberMapper.insertMemberInfo(member);
-		
-		Long generatedMemberNo = member.getMemberNo();
-
-		AuthMember authMember = AuthMember.builder()
-										  .memberNo(generatedMemberNo)
-										  .memberId(request.getMemberId())
-									      .memberPwd(encryptedPassword)
-									      .build();
-		
-		memberMapper.insertAuthMember(authMember);
-
-		DeleteMember deleteMember = DeleteMember.builder()
-													.memberNo(generatedMemberNo)
-													.deleteStatus('N')
-													.build();
-															
-	}
+//	@Override
+//	@Transactional
+//	public void deleteMember(Long memberNo) {
+//		memberMapper.insertDeleteMember(memberNo);
+//		if (memberMapper.countById(request.getMemberId()) > 0) {
+//			throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+//		}
+//		
+//		if (memberMapper.countByEmail(request.getEmail()) > 0) {
+//			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+//		}
+//		
+//		if (memberMapper.countByPhone(request.getPhone()) > 0) {
+//			throw new IllegalArgumentException("이미 존재하는 번호입니다.");
+//		}
+//		
+//		String encryptedPassword = passwordEncoder.encode(request.getMemberPwd());
+//		
+//		Date currentDate = new Date(System.currentTimeMillis());
+//		
+//		Member member = Member.builder()
+//					          .memberName(request.getMemberName())
+//					          .birthDay(request.getBirthDay())
+//					          .phone(request.getPhone())
+//					          .email(request.getEmail())
+//					          .memberRole("ROLE_USER")
+//					          .enrollDate(currentDate)
+//					          .image(request.getImage())
+//					          .build();
+//	
+//		memberMapper.insertMemberInfo(member);
+//		
+//		Long generatedMemberNo = member.getMemberNo();
+//
+//		AuthMember authMember = AuthMember.builder()
+//										  .memberNo(generatedMemberNo)
+//										  .memberId(request.getMemberId())
+//									      .memberPwd(encryptedPassword)
+//									      .build();
+//		
+//		memberMapper.insertAuthMember(authMember);
+//
+//		DeleteMember deleteMember = DeleteMember.builder()
+//													.memberNo(generatedMemberNo)
+//													.deleteStatus('N')
+//													.build();
+//															
+//	}
 	
 	@Transactional
 	public void deleteMember(Long memberNo) {
@@ -184,7 +183,7 @@ public class MemberServiceImpl implements MemberService{
 	private boolean checkPassword(String rawPassword, String encodedPassword) {
 		return passwordEncoder.matches(rawPassword, encodedPassword);
 	}
-}
+
 	public void registerMember(SignupRequest sign) {
 		// 비밀번호 암호화
 		String encryptedPassword = passwordEncoder.encode(sign.getMemberPwd());
@@ -194,10 +193,10 @@ public class MemberServiceImpl implements MemberService{
 		
 	}
 	
-	private boolean checkPassword(String rawPassword, String encodedPassword) {
-		// 비밀번호 검증
-		return passwordEncoder.matches(rawPassword, encodedPassword);
-	}
+//	private boolean checkPassword(String rawPassword, String encodedPassword) {
+//		// 비밀번호 검증
+//		return passwordEncoder.matches(rawPassword, encodedPassword);
+//	}
 	
 	
 //	public void updateProfileImage(Long memberId, MultipartFile profileImage) {

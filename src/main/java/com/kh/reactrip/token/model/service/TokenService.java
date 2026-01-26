@@ -69,8 +69,7 @@ public class TokenService {
 	@Transactional
 	private void saveToken(String refreshToken, Long authNo) {
 		// Refresh Token 만료 시간 계산 (7일)
-		
-		
+		long expirationTime = 60L;
 		RefreshToken token = RefreshToken.builder()
 				.token(refreshToken)
 				.authNo(authNo) 

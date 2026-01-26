@@ -1,5 +1,6 @@
 package com.kh.reactrip.member.controller;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,10 +32,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/members")
-@RequiredArgsConstructor
+@Qualifier("MemberServiceImpl")
 public class MemberController {
 	
 	private final MemberService memberService;
+	
+	public MemberController(@Qualifier("memberServiceImpl") MemberService memberService) {  
+		this.memberService = memberService;
+	}
+
 	
 	@PostMapping("/signup")
 	public ResponseEntity<ResponseData<Object>>signUp(@RequestBody SignupRequest request) {
@@ -65,13 +71,13 @@ public class MemberController {
 //		memberService.updateProfileImage(memberId, profileImage);
 //		return ResponseData.ok("프로필 이미지 변경 성공");
 //	}
-	public ResponseEntity<ResponseData<Object>> signUp(@RequestBody SignupRequest request) {
-		
-		memberService.signUp(request);
-
-		return ResponseData.ok("회원가입 성공");
-		
-	}
+//	public ResponseEntity<ResponseData<Object>> signUp(@RequestBody SignupRequest request) {
+//		
+//		memberService.signUp(request);
+//
+//		return ResponseData.ok("회원가입 성공");
+//		
+//	}
 	
 
 }
