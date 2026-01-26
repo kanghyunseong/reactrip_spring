@@ -5,6 +5,8 @@ import java.sql.Clob;
 import java.sql.Date;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,8 @@ public class DiaryDTO {
 	private int scheduleNo;			// 일정 번호
 	private int travelNo;			// 여행지 번호
 	private String memberName;       // 작성자이름           
+	
+	private List<MultipartFile> images;
 	
 	private int totalCount;
 	

@@ -17,6 +17,7 @@ import com.kh.reactrip.diary.model.dao.DiaryMapper;
 import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
+import com.kh.reactrip.diary.model.dto.DiaryImageDTO;
 import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 import com.kh.reactrip.file.service.S3Service;
 import com.kh.reactrip.util.PageInfo;
@@ -79,10 +80,13 @@ public class DiaryServiceImpl implements DiaryService {
 		
 		DiaryDetailDTO ddDTO = diaryMapper.findByDiaryNo(diaryNo);
 		
+		List<String> imageUrls = diaryMapper.findDiaryImages(diaryNo);
+		
 		log.info("상세조회 : {}", ddDTO);
+
+		ddDTO.setImageUrls(imageUrls);
 		
-		
-		return diaryMapper.findByDiaryNo(diaryNo);
+		return ddDTO;
 	}
 
 
@@ -115,27 +119,24 @@ public class DiaryServiceImpl implements DiaryService {
 	// 게시글 작성
 	@Transactional
 	@Override
-	public void insertDiary(DiaryDTO dto, List<MultipartFile> images) {
+	public void insertDiary(DiaryDTO diary) {
 		
-		diaryMapper.insertDiary(dto);
-		
-		int diaryNo = dto.getDiaryNo();
+		diaryMapper.insertDiary(diary);
 		
 		// 이미지 파일
-		if(images == null || images.isEmpty()) {
-			throw new IllegalArgumentException("이미지는 최소 1장 이상 등록해야 합니다.");
-		}  
-		
-		int order = 1;
-	
-		for(MultipartFile file : images) {
-			String imageUrl = s3Service.fileSave(file);
-			diaryMapper.insertDiaryImage(diaryNo, imageUrl, order++);
-		}
-		
-	}
+        if (diary.getImages() == null); 
+        
+            for (MultipartFile file : diary.getImages()) {
 
+                if (file.isEmpty()) continue;
 
+                String imagePath = s3Service.fileSave(file);
+
+                diaryMapper.insertDiaryImage(diary.getDiaryNo(), imagePath);
+            }
+		
+        }
+ 
 
 
 

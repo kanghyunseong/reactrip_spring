@@ -3,6 +3,25 @@
 
 <mapper namespace="com.kh.reactrip.diary.model.dao.DiaryMapper">
 
+<resultMap id="DiaryDetailMap" type="com.kh.reactrip.diary.model.dto.DiaryDetailDTO">
+
+    <id property="diaryNo" column="DIARY_NO"/>
+
+    <result property="diaryTitle" column="DIARY_TITLE"/>
+    <result property="diaryContent" column="DIARY_CONTENT"/>
+    <result property="createdDate" column="CREATED_DATE"/>
+    <result property="count" column="COUNT"/>
+
+    <result property="memberNo" column="MEMBER_NO"/>
+    <result property="memberName" column="MEMBER_NAME"/>
+
+    <!-- 🔥 이미지 리스트 -->
+    <collection property="imageUrls"
+                ofType="string"
+                column="IMAGE_URL"/>
+</resultMap>
+
+
 <!-- 전체 목록 조회-->
 <select id="findAllDiary" resultType="com.kh.reactrip.diary.model.dto.DiaryDTO">
 	SELECT
@@ -64,7 +83,17 @@
 	   		TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
 	  WHERE 
 	  		D.DIARY_NO = #{diaryNo}
-</select>  
+</select>
+
+<!-- 이미지 목록조회 -->
+<select id="findDiaryImages" parameterType="int" resultType="String">
+	  SELECT 
+	  		 IMAGE_URL
+	    FROM 
+	         TB_DIARY_IMAGE
+	   WHERE 
+	         DIARY_NO = #{diaryNo}
+</select>
 
  
 <!-- 댓글 목록 -->
@@ -115,6 +144,7 @@
 <insert id="insertDiary" useGeneratedKeys="true" keyProperty="diaryNo">
 
 </insert>
+
 
 
 
