@@ -2,6 +2,7 @@ package com.kh.reactrip.auth.model.service;
 
 import java.util.Map;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,10 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Primary
 public class AuthServiceImpl implements AuthService {
 
 	private final AuthenticationManager authenticationManager;
 	private final TokenService tokenService;
+	private final TokenMapper tokenMapper;
 
 	@Override
 	public Map<String, String> login(MemberLoginDTO member) {
@@ -58,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
 	private Map<String, String> getLoginResponse(CustomUserDetails user) {
 
 		String role = user.getAuthorities().stream().findFirst().get().getAuthority();
+
 		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getAuthNo(), role);
 		loginResponse.put("userNo", String.valueOf(user.getMemberNo()));
 		loginResponse.put("userId", user.getUsername());
@@ -72,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public void logout(@Valid MemberLoginDTO member) {
 		
-		int result = TokenMapper.deleteTokenForLogout(member);
+		int result = tokenMapper.deleteTokenForLogout(member);
 		
 		if(result == 1) {
 			return;

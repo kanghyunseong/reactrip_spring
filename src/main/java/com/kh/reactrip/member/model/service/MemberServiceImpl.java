@@ -1,19 +1,16 @@
 package com.kh.reactrip.member.model.service;
 
 import java.sql.Date;
+
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.kh.reactrip.file.service.FileService;
-import com.kh.reactrip.file.service.S3Service;
+import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.member.model.dao.AuthMemberMapper;
 import com.kh.reactrip.member.model.dao.MemberMapper;
 import com.kh.reactrip.member.model.dto.SignupRequest;
+import com.kh.reactrip.member.model.dto.UpdatePasswordRequest;
 import com.kh.reactrip.member.model.vo.AuthMember;
 import com.kh.reactrip.member.model.vo.Member;
 import com.kh.reactrip.member.model.vo.DeleteMember;
@@ -26,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-public class MemberServiceImpl implements MemberService{
 	
 	private final MemberMapper memberMapper;
 	private final AuthMemberMapper authMemberMapper;
@@ -56,54 +52,54 @@ public class MemberServiceImpl implements MemberService{
 		DeleteMember deleteMember = createDeleteMember(generatedMemberNo);
 	}
 	
-	@Override
-	@Transactional
-	public void deleteMember(Long memberNo) {
-		memberMapper.insertDeleteMember(memberNo);
-		if (memberMapper.countById(request.getMemberId()) > 0) {
-			throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-		}
-		
-		if (memberMapper.countByEmail(request.getEmail()) > 0) {
-			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-		}
-		
-		if (memberMapper.countByPhone(request.getPhone()) > 0) {
-			throw new IllegalArgumentException("이미 존재하는 번호입니다.");
-		}
-		
-		String encryptedPassword = passwordEncoder.encode(request.getMemberPwd());
-		
-		Date currentDate = new Date(System.currentTimeMillis());
-		
-		Member member = Member.builder()
-					          .memberName(request.getMemberName())
-					          .birthDay(request.getBirthDay())
-					          .phone(request.getPhone())
-					          .email(request.getEmail())
-					          .memberRole("ROLE_USER")
-					          .enrollDate(currentDate)
-					          .image(request.getImage())
-					          .build();
-	
-		memberMapper.insertMemberInfo(member);
-		
-		Long generatedMemberNo = member.getMemberNo();
-
-		AuthMember authMember = AuthMember.builder()
-										  .memberNo(generatedMemberNo)
-										  .memberId(request.getMemberId())
-									      .memberPwd(encryptedPassword)
-									      .build();
-		
-		memberMapper.insertAuthMember(authMember);
-
-		DeleteMember deleteMember = DeleteMember.builder()
-													.memberNo(generatedMemberNo)
-													.deleteStatus('N')
-													.build();
-															
-	}
+//	@Override
+//	@Transactional
+//	public void deleteMember(Long memberNo) {
+//		memberMapper.insertDeleteMember(memberNo);
+//		if (memberMapper.countById(request.getMemberId()) > 0) {
+//			throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+//		}
+//		
+//		if (memberMapper.countByEmail(request.getEmail()) > 0) {
+//			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+//		}
+//		
+//		if (memberMapper.countByPhone(request.getPhone()) > 0) {
+//			throw new IllegalArgumentException("이미 존재하는 번호입니다.");
+//		}
+//		
+//		String encryptedPassword = passwordEncoder.encode(request.getMemberPwd());
+//		
+//		Date currentDate = new Date(System.currentTimeMillis());
+//		
+//		Member member = Member.builder()
+//					          .memberName(request.getMemberName())
+//					          .birthDay(request.getBirthDay())
+//					          .phone(request.getPhone())
+//					          .email(request.getEmail())
+//					          .memberRole("ROLE_USER")
+//					          .enrollDate(currentDate)
+//					          .image(request.getImage())
+//					          .build();
+//	
+//		memberMapper.insertMemberInfo(member);
+//		
+//		Long generatedMemberNo = member.getMemberNo();
+//
+//		AuthMember authMember = AuthMember.builder()
+//										  .memberNo(generatedMemberNo)
+//										  .memberId(request.getMemberId())
+//									      .memberPwd(encryptedPassword)
+//									      .build();
+//		
+//		memberMapper.insertAuthMember(authMember);
+//
+//		DeleteMember deleteMember = DeleteMember.builder()
+//													.memberNo(generatedMemberNo)
+//													.deleteStatus('N')
+//													.build();
+//															
+//	}
 	
 	@Transactional
 	public void deleteMember(Long memberNo) {
@@ -120,12 +116,56 @@ public class MemberServiceImpl implements MemberService{
 	
 	@Override
 	@Transactional
-	public void updateMemberName(String memberId, String memberName) {
-		// AuthMember 조회 (공통 메서드 사용)
+	public void updateMemberName(String memberId, String newName) {
 		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		memberMapper.updateMemberName(authMember.getMemberNo(), newName);
+	}
+
+	@Override
+	@Transactional
+	public void updateMemberBirthday(String memberId, String newBirthDay) {
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		memberMapper.updateMemberBirthday(authMember.getMemberNo(), newBirthDay);
+	}
+	@Override
+	@Transactional
+	public void updateMemberEmail(String memberId, String newEmail) {
 		
-		log.info("회원 이름 변경: memberNo={}, newName={}", authMember.getMemberNo(), memberName);
-		memberMapper.updateMemberName(authMember.getMemberNo(), memberName);
+		if(validationService.isEmailDuplicate(newEmail)) {
+			throw new IllegalArgumentException("이미 사용중인 이메일입니다");
+		}
+		
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		memberMapper.updateMemberEmail(authMember.getMemberNo(), newEmail);
+	}
+	
+	@Override
+	@Transactional
+	public void updateMemberPhone(String memberId, String newPhone) {
+		
+		if(validationService.isPhoneDuplicate(newPhone)) {
+			throw new IllegalArgumentException("이미 사용중인 전화번호입니다");
+		};
+		
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		memberMapper.updateMemberPhone(authMember.getMemberNo(), newPhone);
+	}
+	
+	@Override
+	@Transactional
+	public void updateMemberPassword(String memberId, UpdatePasswordRequest request) {
+		
+		if(!request.getNewMemberPwd().equals(request.getConfirmPassword())) {
+			throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다");
+		}
+		
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		if(!checkPassword(request.getCurrentPassword(), authMember.getMemberPwd())) {
+			throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+		}
+		String encryptedPassword = passwordEncoder.encode(request.getNewMemberPwd());
+		
+		memberMapper.updateMemberPassword(authMember.getMemberNo(), encryptedPassword);
 	}
 	
 	// ========== 공통 메서드 (private) ==========
@@ -184,31 +224,5 @@ public class MemberServiceImpl implements MemberService{
 	private boolean checkPassword(String rawPassword, String encodedPassword) {
 		return passwordEncoder.matches(rawPassword, encodedPassword);
 	}
-}
-	public void registerMember(SignupRequest sign) {
-		// 비밀번호 암호화
-		String encryptedPassword = passwordEncoder.encode(sign.getMemberPwd());
-		sign.setMemberPwd(encryptedPassword);
-		
-		memberMapper.insertMember(sign);
-		
-	}
-	
-	private boolean checkPassword(String rawPassword, String encodedPassword) {
-		// 비밀번호 검증
-		return passwordEncoder.matches(rawPassword, encodedPassword);
-	}
-	
-	
-//	public void updateProfileImage(Long memberId, MultipartFile profileImage) {
-//		
-//		String profileImageUrl = null;
-//		
-//		String defaultImageUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Funknownblog.tistory.com%2F343&psig=AOvVaw1L0tJupKrwUuzY4b2x4Wq-&ust=1763535249259000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNCBj_WO-5ADFQAAAAAdAAAAABAL";
-//
-//		if(profileImage != null && !profileImage.isEmpty()) {
-//			String savePath = "/";
-//		}
-//		String profileImageUrl = S3Service.uploadFile(request.getProfileUrl(), "profiles");
-//	}
+
 }

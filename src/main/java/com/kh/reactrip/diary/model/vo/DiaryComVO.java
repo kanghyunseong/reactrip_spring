@@ -1,4 +1,6 @@
-package com.kh.reactrip.member.model.dto;
+package com.kh.reactrip.diary.model.vo;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +13,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class MemberDTO {
-	private String memberName;
-	private String birthDay;
-	private String phone;
-	private String image;
-	private String memberPwd;
+public class DiaryComVO{
+
+	private int diaryNo;
+	private List<DiaryComListVO> commentList;
+	
 }
+  

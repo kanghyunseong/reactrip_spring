@@ -9,10 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.Builder;
 import lombok.Value;
 
-
 @Value
 @Builder
 public class CustomUserDetails implements UserDetails {
+
 	private String username;
 	private String password;
 	
@@ -38,4 +38,5 @@ public class CustomUserDetails implements UserDetails {
 	public Long getAuthNo() {  // getter가 있는지 확인
         return authNo;
     }
+
 }
