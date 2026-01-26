@@ -4,7 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
 import com.kh.reactrip.member.model.dto.SignupRequest;
-import com.kh.reactrip.member.model.dto.UpdateNameRequest;
 import com.kh.reactrip.member.model.dto.UpdatePasswordRequest;
 
 import jakarta.validation.Valid;

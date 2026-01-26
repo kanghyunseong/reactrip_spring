@@ -10,7 +10,6 @@ import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.member.model.dao.AuthMemberMapper;
 import com.kh.reactrip.member.model.dao.MemberMapper;
 import com.kh.reactrip.member.model.dto.SignupRequest;
-import com.kh.reactrip.member.model.dto.UpdateNameRequest;
 import com.kh.reactrip.member.model.dto.UpdatePasswordRequest;
 import com.kh.reactrip.member.model.vo.AuthMember;
 import com.kh.reactrip.member.model.vo.Member;
