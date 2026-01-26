@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ResponseData<T> {
+
 	private String message;
 	private T data;
 	private String success;
@@ -45,5 +46,6 @@ public class ResponseData<T> {
 	public static <T> ResponseEntity<ResponseData<T>> created(T data) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseData<>("생성되었습니다.", data, "요청 성공"));
 	}
+
 
 }

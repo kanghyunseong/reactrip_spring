@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.reactrip.place.model.dao.PlaceMapper">
+	
+	<resultMap id="placeResultSet"
+			type="com.kh.reactrip.place.model.dto.PlaceDTO"
+			autoMapping="false">
+		<id column="travelNo" property="travelNo" />
+		<result column="travelName" property="travelName" />
+		<result column="travelContent" property="travelContent" />
+		<result column="travelImage" property="travelImage" />
+		<result column="travelStatus" property="travelStatus" />
+		<result column="travelAddress" property="travelAddress" />
+		<result column="count" property="count" />
+		<result column="regionNo" property="regionNo" />
+		<result column="regionName" property="regionName" />
+		<result column="themeNo" property="themeNo" />
+		<result column="themeName" property="themeName" />
+		<association property="location" javaType="com.kh.reactrip.location.Location">
+			<result column="longitude" property="longitude" />
+			<result column="latitude" property="latitude" />
+		</association>
+	</resultMap>
+	
+	<sql id="travelColumn">
+		SELECT
+		       TR.TRAVEL_NO travelNo
+		     , TR.TRAVEL_NAME travelName
+		     , TR.TRAVEL_CONTENT travelContent
+		     , TR.TRAVEL_IMAGE travelImage
+		     , TR.TRAVEL_STATUS travelStatus
+		     , TR.TRAVEL_ADDRESS travelAddress
+		     , TR.MAP_X longitude
+		     , TR.MAP_Y latitude
+		     , TR.COUNT count
+		     , RE.REGION_NO regionNo
+		     , RE.REGION_NAME regionName
+		     , TH.THEME_NO themeNo
+		     , TH.THEME_NAME themeTitle
+	</sql>
+	
+	<select id="findAllPlace"
+			resultMap="placeResultSet">
+		<include refid="travelColumn" />
+		  FROM
+		       TB_TRAVEL TR
+		  LEFT
+		  JOIN
+		       TB_REGION RE ON TR.REGION_NO = RE.REGION_NO
+		  LEFT
+		  JOIN
+		       TB_REG_THEME TRT ON TRT.TRAVEL_NO = TR.TRAVEL_NO
+		  LEFT
+		  JOIN
+		       TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
+		<where>
+			<if test="query.regionNo != null">
+				AND TR.REGION_NO = #{query.regionNo}
+			</if>
+			<if test="query.themeNo != null">
+				AND TH.THEME_NO = #{query.themeNo}
+			</if>
+			AND
+				TR.TRAVEL_STATUS = 'N'
+		</where>
+		 ORDER
+		    BY
+		       TR.COUNT DESC
+	</select>
+	
+	<select id="findByTravelNo"
+			resultMap="placeResultSet"
+			parameterType="long">
+		<include refid="travelColumn" />
+		  FROM
+		       TB_TRAVEL TR
+		  LEFT
+		  JOIN
+		       TB_REGION RE ON TR.REGION_NO = RE.REGION_NO
+		  LEFT
+		  JOIN
+		       TB_REG_THEME TRT ON TRT.TRAVEL_NO = TR.TRAVEL_NO
+		  LEFT
+		  JOIN
+		       TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
+		 WHERE
+		       TR.TRAVEL_STATUS = 'N'
+		   AND
+		       TR.TRAVEL_NO = #{travelNo}
+		 ORDER
+		    BY
+		       TR.COUNT DESC
+	</select>
+
+</mapper>

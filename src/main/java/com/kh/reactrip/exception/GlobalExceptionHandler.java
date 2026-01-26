@@ -52,14 +52,13 @@ public class GlobalExceptionHandler {
       log.warn("로그인 실패: {}", e.getMessage());
       return ResponseData.failure(e.getMessage(), null);
    }
-   
+
    @ExceptionHandler(UserNotFoundException.class) 
    public ResponseEntity<ResponseData<Object>> handleUserNotFoundException(UserNotFoundException e) {
 	   log.error("검색된 유저를 찾을 수 없습니다 : {} ", e.getMessage());
 	   return ResponseData.failure(e.getMessage(), HttpStatus.NOT_FOUND);
    }
-	 
-
+	
    
 
    
@@ -198,5 +197,12 @@ public class GlobalExceptionHandler {
    public ResponseEntity<ResponseData<Object>> handleFileStoageExceptionHandler(FileStorageException e) {
       return ResponseData.failure(e.getMessage(), HttpStatus.BAD_REQUEST);
    }
-
+   
+   // 여행지 조회 관련 커스텀 예외
+   @ExceptionHandler(PlaceNotFoundException.class)
+   public ResponseEntity<ResponseData<Object>> handlePlaceNotFoundExceptionHandler(PlaceNotFoundException e) {
+	   log.warn("여행지 조회 또는 상세 조회 실패: {}", e.getMessage());
+	   return ResponseData.failure(e.getMessage(), HttpStatus.NOT_FOUND);
+   }
+   
 }
