@@ -97,8 +97,8 @@ public class SecurityConfigure {
                           "/api/places/**",
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
-                		  "/api/admin/**"
-                
+                		  "/api/admin/**",
+                		  "/api/**"
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.PUT,

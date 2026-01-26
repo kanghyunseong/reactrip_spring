@@ -16,6 +16,7 @@
          , NOTICE_TITLE
          , NOTICE_CONTENT
          , IMAGE
+         , NOTICE_STATUS
          , CREATED_DATE
          , COUNT
            )
@@ -26,6 +27,7 @@
          , #{noticeTitle}
          , #{noticeContent}
          , #{image}
+         , 'N'
          , SYSDATE
          , 0
     	   )
@@ -45,9 +47,11 @@
           , N.MEMBER_NO AS memberNo
           , N.NOTICE_TITLE AS noticeTitle
           , N.NOTICE_CONTENT AS noticeContent
-          , N.IMAGE
-          , N.CREATED_DATE
-          , N.COUNT
+          , N.IMAGE AS image
+          , N.NOTICE_STATUS AS noticeStatus
+          , N.CREATED_DATE AS createdDate
+          , N.UPDATED_DATE AS updatedDate
+          , N.COUNT AS count
           , M.MEMBER_NAME AS memberName 
        FROM 
             TB_NOTICE N
@@ -66,9 +70,11 @@
          , MEMBER_NO
          , NOTICE_TITLE
          , NOTICE_CONTENT
-         , IMAGE
-         , CREATED_DATE
-         , COUNT
+         , IMAGE AS image
+         , NOTICE_STATUS AS noticeStatus
+         , CREATED_DATE AS createdDate
+         , UPDATED_DATE AS updatedDate
+         , COUNT AS count
       FROM 
            TB_NOTICE
      WHERE 
@@ -100,7 +106,7 @@
 	   SET
 	       NOTICE_STATUS = 'Y'
      WHERE
-           NOTICE_NO = #{noticeNO}
+           NOTICE_NO = #{noticeNo}
 </update>
 
 <select id="getSearchCount" resultType="_int">
@@ -125,7 +131,9 @@
          , N.NOTICE_TITLE   AS noticeTitle
          , N.NOTICE_CONTENT AS noticeContent
          , N.IMAGE          AS image
+         , N.NOTICE_STATUS  AS noticeStatus
          , N.CREATED_DATE   AS createdDate
+         , N.UPDATED_DATE   AS updatedDate
          , N.COUNT          AS count
       FROM 
            TB_NOTICE N

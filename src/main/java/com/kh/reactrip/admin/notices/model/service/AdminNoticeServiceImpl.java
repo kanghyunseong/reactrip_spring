@@ -40,17 +40,23 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	@Transactional
 	public void insertNotice(AdminNoticeDTO adminNoticeDTO, MultipartFile file, CustomUserDetails user) {
 		
-		adminNoticeDTO.setMemberNo(user.getMemberNo());
+		adminNoticeDTO.setMemberNo(adminNoticeDTO.getMemberNo());
 		
 		Validator.ValidateNoticeinsert(adminNoticeDTO);
 		
+		if (user != null && user.getMemberNo() != null) {
+			adminNoticeDTO.setMemberNo(user.getMemberNo());
+		}
+		if (adminNoticeDTO.getMemberNo() == null) {
+			throw new IllegalArgumentException("공지 등록을 위해 로그인 정보(memberNo)가 필요합니다.");
+		}
 		
 		try {
 			if(file != null && !file.isEmpty()) {
 				String imgUrl = fileService.store(file);
 				adminNoticeDTO.setImage(imgUrl);;
 			}
-			int result = adminNoticeMapper.insertNotice(adminNoticeDTO);
+			adminNoticeMapper.insertNotice(adminNoticeDTO);
 		} catch (IOException e) {
 	        log.error("공지사항 등록 중 S3 업로드 실패 : {}", e.getMessage());
 	        throw new RuntimeException("이미지 서버 업로드에 실패하여 공지사항 등록이 취소되었습니다.", e);
@@ -126,10 +132,11 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 		
 		int totalCount = adminNoticeMapper.getSearchCount(keyword);
 		
- 		if(totalCount == 0) {
- 			log.error("Notice Not Found Exception : {} ", keyword);
- 			throw new RuntimeException(keyword);
- 		}
+		// 검색 결과가 0건이면 예외를 던지지 말고 "빈 리스트"를 정상 응답으로 내려준다.
+		if(totalCount == 0) {
+			PageInfo pi = pagenation.getPageInfo(0, page);
+			return new PageResponseDTO<>(pi, new ArrayList<>());
+		}
  		
  		PageInfo pi = pagenation.getPageInfo(totalCount, page);
  		

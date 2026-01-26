@@ -47,7 +47,7 @@ public class AdminMemberController {
         
         memberService.deleteMember(memberNo);
         
-        return ResponseData.noContent();
+        return ResponseData.ok(null, "회원 삭제 성공");
     }
     
     // 3. 회원 검색 (검색결과도 페이징이 필요하다면 PageResponseDTO를 써야 하지만, 일단 List로 유지)

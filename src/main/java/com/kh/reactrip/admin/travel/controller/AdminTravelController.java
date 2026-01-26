@@ -38,10 +38,10 @@ public class AdminTravelController {
 		
 	}
 	
-	@GetMapping("/regions")
+	@GetMapping("/region")
 	public ResponseEntity<ResponseData<List<Map<String, Object>>>> findAllRegions() {
 		List<Map<String, Object>> regions = adminTravelService.findAllRegions();
-		return ResponseData.ok("지역 목록 조회 성공", regions);
+		return ResponseData.ok(regions, "지역 목록 조회 성공");
 	}
 	
 	@DeleteMapping("/{travelNo}")
@@ -53,7 +53,7 @@ public class AdminTravelController {
         
         return ResponseData.ok(response, "여행지 상태 변경 성공");
     }
-	@PostMapping("/insert")
+	@PostMapping
 	public ResponseEntity<ResponseData<String>> insertTravel(
 			@ModelAttribute AdminTravelDTO adminTravelDTO,
 			@RequestParam(value = "file", required = false)MultipartFile file
@@ -100,6 +100,6 @@ public class AdminTravelController {
 		
 		PageResponseDTO<AdminTravelDTO> list = adminTravelService.findBySearch(keyword, page);
 		
-		return ResponseData.ok("검색어로 조회 성공",list);
+		return ResponseData.ok(list, "검색어로 조회 성공");
 	}
 }
