@@ -4,6 +4,11 @@ package com.kh.reactrip.admin.notices.model.service;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
+=======
+import org.apache.ibatis.session.RowBounds;
+import org.springframework.context.annotation.Primary;
+>>>>>>> 5d3ff508e0166528a5bd964850cf83acd006253c
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Primary
 @Slf4j
 public class AdminNoticeServiceImpl implements AdminNoticeService {
 

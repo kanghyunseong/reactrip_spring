@@ -16,26 +16,35 @@ import com.kh.reactrip.auth.model.service.AuthService;
 import com.kh.reactrip.common.ResponseData;
 import com.kh.reactrip.token.model.service.TokenService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
-
 	private final AuthService authService;
 	private final TokenService tokenService;
-
+	
+	
 	@PostMapping("/login")
 	public ResponseEntity<ResponseData<Object>> login(@Valid @RequestBody MemberLoginDTO member) {
 		Map<String, String> loginResponse = authService.login(member);
+<<<<<<< HEAD
 		return ResponseData.ok(loginResponse, "로그인 성공");
+=======
+		return ResponseData.ok("로그인 성공");
+>>>>>>> 5d3ff508e0166528a5bd964850cf83acd006253c
 	}
 
-	
+	@PostMapping("/logout")
+	public ResponseEntity<ResponseData<Object>> logout(@Valid @RequestBody MemberLoginDTO member) {
+		authService.logout(member);
+		return ResponseData.ok("로그아웃 성공");
+	}
 
 	@PostMapping("/refresh")
 	public ResponseEntity<ResponseData<Map<String, String>>> refresh(@RequestBody Map<String, String> token) {
