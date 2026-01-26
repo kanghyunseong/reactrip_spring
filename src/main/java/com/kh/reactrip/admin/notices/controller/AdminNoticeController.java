@@ -71,7 +71,7 @@ public class AdminNoticeController {
 
 		adminNoticeService.deleteNotice(noticeNo);
 
-		return ResponseData.ok(list, "공지사항 목록 조회 성공");
+		return ResponseData.ok(null, "공지사항 목록 조회 성공");
 	}
 
 }

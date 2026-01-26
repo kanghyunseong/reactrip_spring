@@ -3,6 +3,7 @@ package com.kh.reactrip.admin.community.comment.model.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Primary
 public class AdminCommentServiceImpl implements AdminCommentService {
 
 	private final AdminCommentMapper adminCommentMapper;

@@ -56,10 +56,8 @@ public class AdminMemberController {
             @RequestParam(name = "keyword", required = false) String keyword,
             @RequestParam(name = "page")int page) {
         
-    	PageResponseDTO<AdminMemberDTO> list = memberService.findByMembers(keyword, page);
-        List<AdminMemberDTO> list = adminMemberService.findByMembers(keyword);
+    	PageResponseDTO<AdminMemberDTO> list = adminMemberService.findByMembers(keyword, page);
         
-        // ★ ResponseData.ok(메시지, 데이터) 순서 맞춤
         return ResponseData.ok(list, "검색어로 조회 성공");
     }
     

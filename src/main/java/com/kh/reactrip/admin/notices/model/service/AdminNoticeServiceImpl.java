@@ -4,7 +4,6 @@ package com.kh.reactrip.admin.notices.model.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +13,6 @@ import com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO;
 import com.kh.reactrip.admin.notices.model.mapper.AdminNoticeMapper;
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.common.PageResponseDTO;
-import com.kh.reactrip.exception.NoticeNotFoundException;
 import com.kh.reactrip.file.service.FileService;
 import com.kh.reactrip.util.PageInfo;
 import com.kh.reactrip.util.Pagenation;

@@ -11,10 +11,6 @@ public class Pagenation {
 	private static final int DEFAULT_BOARD_LIMIT = 10;
     private static final int DEFAULT_PAGE_LIMIT = 5;
 
-	private static final int DEFAULT_BOARD_LIMIT = 5;
-    private static final int DEFAULT_PAGE_LIMIT = 5;
-
-
 	public PageInfo getPageInfo(int listCount
 							  , int currentPage
 							  , int boardLimit
