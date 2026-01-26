@@ -75,7 +75,7 @@ public class SecurityConfigure {
                           "/api/station/**",
                           "/api/reserve/**",
                           "/api/**",
-                          "/api/**"
+                          "/api/**",
                           "/api/admin/members",
                           "/api/admin/**"
                                         
@@ -83,22 +83,22 @@ public class SecurityConfigure {
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/uploads/**",
-                          "/api/members/**",
-                          "/api/cars/**",
-                          "/api/station/**",
-                          "/api/station/search",
-                          "/api/boards",
-                          "/api/boards/search",
-                          "/api/imgBoards",
-                          "/api/imgBoards/search",
-                          "/api/notices",
-                          "/api/notices/search",
-                          "/api/comments/**",
-                          "/api/imgComments/**",
-                          "/api/reserve/**",
-                          "/api/reviews/**",
-                          "/api/main",
+                          "/api/diarys/**"
+                		  
+                  ).permitAll();
+
+                  // 3. GET - 로그인 필요 (상세 페이지들)
+                  requests.requestMatchers(HttpMethod.GET,
+                          "/api/notices/*",
+                          "/api/diarys/**" 
+                		  
+                  ).authenticated();
+
+                  // 4. PUT - 로그인 필요
+                  requests.requestMatchers(HttpMethod.PUT,
+                          "/api/members", 
+                          "/api/members/**", 
+                          "/api/comments/**" ,
                           "/api/places/**",
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
@@ -148,6 +148,7 @@ public class SecurityConfigure {
 
                   // 6. POST - 게시글/댓글/공지 작성 (로그인 필요)
                   requests.requestMatchers(HttpMethod.POST,
+                          "/api/diarys/**",
                           "/api/boards/**",
                           "/api/imgBoards/**",
                           "/api/comments/**",
@@ -156,7 +157,10 @@ public class SecurityConfigure {
                           "/api/reviews/**"
                   ).authenticated();
 
+
+
                   /*
+
                   // 7. 관리자 전용
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/admin/ranking/users",
@@ -190,7 +194,9 @@ public class SecurityConfigure {
                           "/api/admin/community/**",
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
+
                   */
+
               })
               .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -202,6 +208,7 @@ public class SecurityConfigure {
    @Bean
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration configuration = new CorsConfiguration();
+      configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
       configuration.setAllowedOrigins(Arrays.asList(instance));
       configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
       configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type"));
