@@ -2,15 +2,13 @@ package com.kh.reactrip.token.model.service;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.kh.reactrip.exception.CustomAuthenticationException;
+import com.kh.reactrip.token.config.TokenProperties;
 import com.kh.reactrip.token.model.dao.TokenMapper;
 import com.kh.reactrip.token.model.util.JwtUtil;
 import com.kh.reactrip.token.model.vo.RefreshToken;
-
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,20 +20,28 @@ public class TokenService {
 	
 	private final JwtUtil tokenUtil;
 	private final TokenMapper tokenMapper;
+	private final TokenProperties tokenProperties;  // 추가
+	
+	// 상수 정의
+	private static final String ACCESS_TOKEN_KEY = "accessToken";
+	private static final String REFRESH_TOKEN_KEY = "refreshToken";
+	private static final String DEFAULT_ROLE = "ROLE_USER";
 	
 	/**
 	 * 토큰 생성 및 저장
 	 * @param username 사용자 ID
-	 * @param userNo 사용자 번호
+	 * @param authNo 인증 번호
+	 * @param role 권한
 	 * @return AccessToken, RefreshToken을 담은 Map
 	 */
 	@Transactional
-	public Map<String, String> generateToken(String username, Long userNo, String role) {
+	public Map<String, String> generateToken(String username, Long authNo, String role) {
 		// 1. Access Token, Refresh Token 생성
+		
 		Map<String, String> tokens = createTokens(username, role);
 		
 		// 2. Refresh Token DB에 저장
-		saveToken(tokens.get("refreshToken"), userNo);
+		saveToken(tokens.get(REFRESH_TOKEN_KEY), authNo);
 		
 		return tokens;
 	}
@@ -47,12 +53,12 @@ public class TokenService {
 		String accessToken = tokenUtil.getAccessToken(username, role);
 		String refreshToken = tokenUtil.getRefreshToken(username);
 		
-		log.info("엑세스 토큰 : {}", accessToken);
-		log.info("리프레시 토큰 : {}", refreshToken);
+		log.info("엑세스 토큰 생성 완료");
+		log.info("리프레시 토큰 생성 완료");
 		
 		Map<String, String> tokens = new HashMap<>();
-		tokens.put("accessToken", accessToken);
-		tokens.put("refreshToken", refreshToken);
+		tokens.put(ACCESS_TOKEN_KEY, accessToken);
+		tokens.put(REFRESH_TOKEN_KEY, refreshToken);
 		
 		return tokens;
 	}
@@ -62,25 +68,19 @@ public class TokenService {
 	 * 기존 토큰이 있으면 삭제 후 저장
 	 */
 	@Transactional
-	private void saveToken(String refreshToken, Long userNo) {
-		// Refresh Token 만료 시간 계산 (7일)
-		
-		
-		RefreshToken token = RefreshToken.builder()
-				.token(refreshToken)
-				.userNo(userNo) 
-				.expiration(System.currentTimeMillis() + 36000000L & 72) 
-				.build();
-		
-		// 기존 토큰 삭제 후 새 토큰 저장
-		try {
-			tokenMapper.deleteTokenByUserNo(userNo);
-		} catch (Exception e) {
-			log.debug("기존 토큰 없음 (정상)");
-		}
-		
-		tokenMapper.saveToken(token);
-		log.info("Refresh Token 저장 완료 - userNo: {}", userNo);
+	// saveToken 메서드에서 authNo 파라미터가 제대로 전달되는지
+	private void saveToken(String refreshToken, Long authNo) {
+	    System.out.println("saveToken 호출 - authNo: " + authNo); // 로그 추가
+	    
+	    RefreshToken token = RefreshToken.builder()
+	            .token(refreshToken)
+	            .authNo(authNo)  // 이 값이 null인지 확인
+	            .expiration(System.currentTimeMillis() + tokenProperties.getExpirationMillis())
+	            .build();
+	    
+	    System.out.println("생성된 token 객체: " + token); // 로그 추가
+	    
+	    tokenMapper.saveToken(token);
 	}
 	
 	/**
@@ -93,20 +93,29 @@ public class TokenService {
 		// 1. DB에서 Refresh Token 조회
 		RefreshToken token = tokenMapper.findByToken(refreshToken);
 		
-		// 2. 토큰이 없거나 만료되었으면 예외 발생
-		if (token == null) {
-			throw new CustomAuthenticationException("유효하지 않은 Refresh Token입니다.");
-		}
-		
-		if (token.getExpiration() < System.currentTimeMillis()) {
-			throw new CustomAuthenticationException("만료된 Refresh Token입니다.");
-		}
+		// 2. 토큰 유효성 검증
+		validateRefreshToken(token);
 		
 		// 3. Refresh Token에서 사용자 정보 추출
 		Claims claims = tokenUtil.parseJwt(refreshToken);
 		String username = claims.getSubject();
 		
 		// 4. 새 토큰 생성 및 반환
-		return createTokens(username, "ROLE_USER");
+		return createTokens(username, DEFAULT_ROLE);
+	}
+	
+	/**
+	 * Refresh Token 유효성 검증
+	 */
+	private void validateRefreshToken(RefreshToken token) {
+		if (token == null) {
+			log.warn("유효하지 않은 Refresh Token 접근 시도");
+			throw new CustomAuthenticationException("유효하지 않은 Refresh Token입니다.");
+		}
+		
+		if (token.getExpiration() < System.currentTimeMillis()) {
+			log.warn("만료된 Refresh Token 사용 시도 - authNo: {}", token.getAuthNo());
+			throw new CustomAuthenticationException("만료된 Refresh Token입니다.");
+		}
 	}
 }
