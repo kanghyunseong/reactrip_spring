@@ -39,7 +39,7 @@ public class DiaryController {
 	// 목록 전체 조회
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> findAllDiary(
-			@RequestParam(name = "page", defaultValue = "1") int page, 																														// 페이지에
+			@RequestParam(name = "page", defaultValue = "1") int page, 
 			@RequestParam(name = "size", defaultValue = "5") int size) { // 게시글 5개 보여줘
 		
 		// log.info("컨트롤러 page --> " + page);
