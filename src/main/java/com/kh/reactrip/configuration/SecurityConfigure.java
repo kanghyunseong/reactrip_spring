@@ -64,6 +64,13 @@ public class SecurityConfigure {
               .csrf(AbstractHttpConfigurer::disable)
               .cors(Customizer.withDefaults())
               .authorizeHttpRequests(requests -> {
+            	  
+            	  requests.requestMatchers(
+            			  "/swagger-ui.html",
+                          "/swagger-ui/**",
+                          "/api-docs/**",     // ★ YAML에서 path: /api-docs 라고 했으니 이걸 열어야 함!
+                          "/v3/api-docs/**"
+              		).permitAll();
 
                   // 1. POST - 비로그인 허용 (회원가입/로그인, 차량/예약 등)
                   requests.requestMatchers(HttpMethod.POST,
@@ -83,14 +90,16 @@ public class SecurityConfigure {
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/diarys/**"
+                          "/api/diarys/**",
+                          "/api/admin/**"
                 		  
                   ).permitAll();
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/notices/*",
-                          "/api/diarys/**" 
+                          "/api/diarys/**",
+                          "/api/admin/**"
                 		  
                   ).authenticated();
 
@@ -102,21 +111,26 @@ public class SecurityConfigure {
                           "/api/places/**",
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
+                		  "/api/admin/**",
+                		  "/api/**",
                 		  "/api/admin/**"
-                
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.PUT,
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
-                		  "/api/admin/members/**"
+                		  "/api/admin/members/**",
+                		  "/api/admin/**"
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.DELETE,
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
-                		  "/api/**"
+                		  "/api/**",
+                		  "/api/admin/**"
                   ).permitAll();
+                  
+                  
 
                   
                   // 3. GET - 로그인 필요 (상세 페이지들)
@@ -158,23 +172,15 @@ public class SecurityConfigure {
                   ).authenticated();
 
 
-
-                  /*
-
                   // 7. 관리자 전용
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/admin/ranking/users",
                           "/api/admin/**",
-                          "/api/admin/settings/**",
-                          "/api/admin/notice/list",
-                          "/api//admin/community/**",
                           "/api/uploads/**",
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
 
                   requests.requestMatchers(HttpMethod.POST,
                           "/api/admin/**",
-                          "/api/admin/settings/**",
                           "/api/admin/notice/**",
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
@@ -194,8 +200,6 @@ public class SecurityConfigure {
                           "/api/admin/community/**",
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
-
-                  */
 
               })
               .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

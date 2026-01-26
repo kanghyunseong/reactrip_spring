@@ -37,7 +37,6 @@ public class JwtFilter extends OncePerRequestFilter{
 		
 		String uri = request.getRequestURI();
 		
-		
 		   if (uri.startsWith("/members/naver")) {
 		        filterChain.doFilter(request, response);
 		        return;

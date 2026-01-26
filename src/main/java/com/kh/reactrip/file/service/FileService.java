@@ -26,4 +26,16 @@ public class FileService {
             s3Service.deleteFile(fileUrl);
         }
     }
+    
+    public String updateFile(MultipartFile newFile, String oldFileurl) {
+    	if(newFile == null || newFile.isEmpty()) {
+    		return oldFileurl;
+    	}
+    	
+    	if(oldFileurl != null && !oldFileurl.isEmpty()) {
+    		this.delete(oldFileurl);
+    	}
+    	
+    	return this.store(newFile);
+    }
 }
