@@ -109,7 +109,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 		AdminNoticeDTO origin = adminNoticeMapper.selectNoticeDetail(noticeNo);
 		
 		if(origin == null ) {
-			throw new RuntimeException("삭제할 게시글을 찾지 못함");
+			throw new RuntimeException("삭제할 게시글을 찾지 못하였습니다. ");
 		}
 		
 		int result = adminNoticeMapper.deleteNotice(noticeNo);
@@ -119,7 +119,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 				fileService.delete(origin.getImage());
 			}
 		} else {
-			throw new RuntimeException("삭제 처리 실패");
+			throw new RuntimeException("삭제 처리에 실패하였습니다. ");
 		}
 	}
 

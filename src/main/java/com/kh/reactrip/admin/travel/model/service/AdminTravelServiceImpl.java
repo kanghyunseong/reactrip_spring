@@ -170,7 +170,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 				String cat2 = String.valueOf(item.get("cat2"));
 				String cat3 = String.valueOf(item.get("cat3"));
 
-				Long themeNo = mappingTheme(cat1, cat2, cat3);
+				Long themeNo = themeMappingString(cat1, cat2, cat3);
 
 				if (themeNo != null) {
 					Map<String, Object> themeMap = new HashMap<>();
@@ -188,7 +188,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 		}
 	}
 
-	private Long mappingTheme(String cat1, String cat2, String cat3) {
+	private Long themeMappingString (String cat1, String cat2, String cat3) {
 		// 37. 액티비티 (A03: 레포츠)
 		if ("A03".equals(cat1))
 			return 37L;

@@ -20,11 +20,11 @@ public interface AdminMemberMapper {
 
 	int getSearchCount(String keyword);
 
-	List<AdminMemberDTO> findByMembers(@Param("keyword") String keyword, RowBounds rowBounds);
+	List<AdminMemberDTO> findByMembers(String keyword, RowBounds rowBounds);
 
 	int updateMemberRole(@Param("memberNo") Long memberNo, @Param("memberRole") String memberRole);
 
-	int deleteMember(@Param("memberNo") Long memberNo);
+	int deleteMember(Long memberNo);
 
 	AdminMemberDTO findMemberByNo(@Param("memberNo") Long memberNo);
 }
