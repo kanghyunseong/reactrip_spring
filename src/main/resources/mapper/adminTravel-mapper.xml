@@ -26,27 +26,28 @@
 
 <select id="findAllTravel" resultType="AdminTravelVO">
 	SELECT 
-           T.TRAVEL_NO AS travelNo    
-         , T.REGION_NO AS regionNo
-         , T.TRAVEL_NAME AS travelName
+           T.TRAVEL_NO    AS travelNo
+         , T.REGION_NO    AS regionNo
+         , T.TRAVEL_NAME  AS travelName
          , T.TRAVEL_STATUS AS travelStatus
          , T.TRAVEL_ADDRESS AS travelAddress
          , T.MAP_X AS mapX
          , T.MAP_Y AS mapY
          , T.COUNT AS count
          , T.TRAVEL_IMAGE AS travelImage
-         , R.REGION_NAME AS regionName
+         , R.REGION_NAME  AS regionName
          , T.TRAVEL_CONTENT AS travelContent
+         , ( SELECT LISTAGG(TH.THEME_NAME, ', ') WITHIN GROUP (ORDER BY TH.THEME_NO)
+               FROM TB_REG_THEME TRT
+               JOIN TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
+              WHERE TRT.TRAVEL_NO = T.TRAVEL_NO
+           ) AS themeNames
       FROM
            TB_TRAVEL T
-      LEFT
-      JOIN
-           TB_REGION R ON T.REGION_NO = R.REGION_NO
+      LEFT JOIN TB_REGION R ON T.REGION_NO = R.REGION_NO
      WHERE
-           TRAVEL_STATUS = 'N'
-     ORDER
-        BY
-           T.TRAVEL_NO ASC
+           T.TRAVEL_STATUS = 'N'
+     ORDER BY T.TRAVEL_NO ASC
 </select>
 <update id="updateTravelStatus">
     UPDATE 
@@ -183,6 +184,23 @@
      WHERE
            TRAVEL_NAME = #{title}
 </select>
+<select id="findByTitle" parameterType="string" resultType="AdminTravelVO">
+    SELECT 
+           T.TRAVEL_NO AS travelNo
+         , T.REGION_NO AS regionNo
+         , T.TRAVEL_NAME AS travelName
+         , T.TRAVEL_STATUS AS travelStatus
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X AS mapX
+         , T.MAP_Y AS mapY
+         , T.COUNT AS count
+         , T.TRAVEL_IMAGE AS travelImage
+         , T.TRAVEL_CONTENT AS travelContent
+      FROM
+           TB_TRAVEL T
+     WHERE
+           T.TRAVEL_NAME = #{title}
+</select>
 <select id="getSearchCount">
 	SELECT 
 	       COUNT(*)
@@ -211,25 +229,22 @@
          , T.TRAVEL_IMAGE   AS travelImage
          , T.TRAVEL_STATUS  AS travelStatus
          , T.COUNT          AS count
-         , R.REGION_NAME    AS regionName 
-      FROM 
+         , R.REGION_NAME    AS regionName
+         , ( SELECT LISTAGG(TH.THEME_NAME, ', ') WITHIN GROUP (ORDER BY TH.THEME_NO)
+               FROM TB_REG_THEME TRT
+               JOIN TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
+              WHERE TRT.TRAVEL_NO = T.TRAVEL_NO
+           ) AS themeNames
+      FROM
            TB_TRAVEL T
-      LEFT
-      JOIN
-           TB_REGION R ON T.REGION_NO = R.REGION_NO 
+      LEFT JOIN TB_REGION R ON T.REGION_NO = R.REGION_NO
      WHERE
-	       T.TRAVEL_STATUS = 'N'
+           T.TRAVEL_STATUS = 'N'
 	    <if test="keyword != null and keyword != ''">
-	  AND
-	      (
-		  T.TRAVEL_NAME LIKE '%' || #{keyword} || '%'
-	   OR
-	      T.TRAVEL_ADDRESS LIKE '%' || #{keyword} || '%'
-		  )
-	    </if> 
-	ORDER
-	   BY
-	      T.TRAVEL_NO ASC
+	  AND ( T.TRAVEL_NAME LIKE '%' || #{keyword} || '%'
+	     OR T.TRAVEL_ADDRESS LIKE '%' || #{keyword} || '%' )
+	    </if>
+     ORDER BY T.TRAVEL_NO ASC
 </select>
 <insert id="insertTravelTheme">
     INSERT 
