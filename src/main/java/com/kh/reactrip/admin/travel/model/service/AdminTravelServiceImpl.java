@@ -151,17 +151,46 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 				return;
 
 			int savedCount = 0;
+			int updatedCount = 0;
 			for (Map<String, Object> item : itemList) {
 				String title = String.valueOf(item.get("title"));
-				if (adminTravelMapper.existsByTitle(title) > 0)
-
-					continue;
 				String overview = fetchOverview(String.valueOf(item.get("contentid")));
-
+				String apiImage = item.get("firstimage") != null ? String.valueOf(item.get("firstimage")) : "";
+				
+				// 기존 여행지 확인
+				AdminTravelVO existing = adminTravelMapper.findByTitle(title);
+				
+				if (existing != null) {
+					// 이미지가 없거나 비어있거나, 소프트 삭제된 경우 업데이트
+					boolean needsUpdate = (existing.getTravelImage() == null || existing.getTravelImage().isEmpty() || existing.getTravelImage().trim().equals(""))
+						|| "Y".equals(existing.getTravelStatus());
+					
+					if (needsUpdate) {
+						AdminTravelDTO updateDto = new AdminTravelDTO();
+						updateDto.setTravelNo(existing.getTravelNo());
+						updateDto.setTravelName(title);
+						updateDto.setTravelAddress(String.valueOf(item.get("addr1")));
+						updateDto.setMapX(parseSafeDouble(item.get("mapx")));
+						updateDto.setMapY(parseSafeDouble(item.get("mapy")));
+						updateDto.setTravelImage(apiImage);
+						updateDto.setTravelContent(overview);
+						updateDto.setTravelStatus("N"); // 활성 상태로 복구
+						updateDto.setRegionNo(getRegionNoFromApiCode(String.valueOf(item.get("areacode"))));
+						
+						adminTravelMapper.updateTravel(updateDto);
+						updatedCount++;
+						continue;
+					} else {
+						// 이미 존재하고 이미지도 있고 활성 상태면 건너뛰기
+						continue;
+					}
+				}
+				
+				// 신규 여행지 추가
 				AdminTravelVO vo = AdminTravelVO.builder().travelName(title)
 						.travelAddress(String.valueOf(item.get("addr1"))).mapX(parseSafeDouble(item.get("mapx")))
 						.mapY(parseSafeDouble(item.get("mapy")))
-						.travelImage(item.get("firstimage") != null ? String.valueOf(item.get("firstimage")) : "")
+						.travelImage(apiImage)
 						.travelContent(overview).travelStatus("N").count(0)
 						.regionNo(getRegionNoFromApiCode(String.valueOf(item.get("areacode")))).build();
 
@@ -178,11 +207,12 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 					Map<String, Object> themeMap = new HashMap<>();
 					themeMap.put("travelNo", vo.getTravelNo());
 					themeMap.put("themeNo", themeNo);
-					adminTravelMapper.insertTravelTheme(themeMap); // Mapper에 해당 메서드 추가 필요
+					adminTravelMapper.insertTravelTheme(themeMap);
 				}
 
 				savedCount++;
 			}
+			log.info("해당 거점 신규 데이터 {}건 저장, {}건 업데이트 완료", savedCount, updatedCount);
 			log.info("해당 거점 신규 데이터 {}건 저장 완료", savedCount);
 			Thread.sleep(300);
 		} catch (Exception e) {

@@ -16,7 +16,7 @@ public interface AdminCommentMapper {
 	
 	AdminCommentDTO findByCommentNo(Long commentNo);
 
-	int deleteStatus(Long commentNo);
+	int deleteStatus(AdminCommentDTO dto);
 
 	int getSearchCount(String keyword);
 

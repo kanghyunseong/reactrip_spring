@@ -82,9 +82,7 @@ public class SecurityConfigure {
                           "/api/station/**",
                           "/api/reserve/**",
                           "/api/**",
-                          "/api/**",
-                          "/api/admin/members",
-                          "/api/admin/**"
+                          "/api/**"
                                         
                   ).permitAll();
 
@@ -107,18 +105,12 @@ public class SecurityConfigure {
                           "/api/members/**", 
                           "/api/comments/**" ,
                           "/api/places/**",
-                		  "/api/admin/members",
-                		  "/api/admin/members/search",
-                		  "/api/admin/**",
                 		  "/api/**"
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.PUT,
-                		  "/api/admin/members",
-                		  "/api/admin/members/search",
-                		  "/api/admin/members/**",
-                		  "/api/admin/**"
-                  ).permitAll();
+                		  "/api/**"
+                		  ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.DELETE,
                 		  "/api/admin/members",
@@ -169,7 +161,7 @@ public class SecurityConfigure {
 
 
 
-                  /*
+                  
 
                   // 7. 관리자 전용
                   requests.requestMatchers(HttpMethod.GET,
@@ -205,7 +197,7 @@ public class SecurityConfigure {
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
 
-                  */
+                  
 
               })
               .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

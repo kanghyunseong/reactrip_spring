@@ -183,6 +183,23 @@
      WHERE
            TRAVEL_NAME = #{title}
 </select>
+<select id="findByTitle" parameterType="string" resultType="AdminTravelVO">
+    SELECT 
+           T.TRAVEL_NO AS travelNo
+         , T.REGION_NO AS regionNo
+         , T.TRAVEL_NAME AS travelName
+         , T.TRAVEL_STATUS AS travelStatus
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X AS mapX
+         , T.MAP_Y AS mapY
+         , T.COUNT AS count
+         , T.TRAVEL_IMAGE AS travelImage
+         , T.TRAVEL_CONTENT AS travelContent
+      FROM
+           TB_TRAVEL T
+     WHERE
+           T.TRAVEL_NAME = #{title}
+</select>
 <select id="getSearchCount">
 	SELECT 
 	       COUNT(*)

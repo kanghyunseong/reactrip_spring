@@ -23,4 +23,5 @@ public class AdminCommentDTO {
 	private Long diaryNo;
 	private Long memberNo;
 	private String memberName;
+	private String diaryTitle;
 }

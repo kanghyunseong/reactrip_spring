@@ -27,6 +27,8 @@ public interface AdminTravelMapper {
 	
 	List<AdminTravelVO> findNearbyTravels(Map<String, Double> params);
 	int existsByTitle(String title);
+	
+	AdminTravelVO findByTitle(String title);
 
 	int getSearchCount(String keyword);
 
