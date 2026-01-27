@@ -64,6 +64,13 @@ public class SecurityConfigure {
               .csrf(AbstractHttpConfigurer::disable)
               .cors(Customizer.withDefaults())
               .authorizeHttpRequests(requests -> {
+            	  
+            	  requests.requestMatchers(
+            			  "/swagger-ui.html",
+                          "/swagger-ui/**",
+                          "/api-docs/**",     // ★ YAML에서 path: /api-docs 라고 했으니 이걸 열어야 함!
+                          "/v3/api-docs/**"
+              		).permitAll();
 
                   // 1. POST - 비로그인 허용 (회원가입/로그인, 차량/예약 등)
                   requests.requestMatchers(HttpMethod.POST,
@@ -103,14 +110,15 @@ public class SecurityConfigure {
                           "/api/places/**",
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
-                		  "/api/admin/**"
-                
+                		  "/api/admin/**",
+                		  "/api/**"
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.PUT,
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
-                		  "/api/admin/members/**"
+                		  "/api/admin/members/**",
+                		  "/api/admin/**"
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.DELETE,
@@ -118,6 +126,8 @@ public class SecurityConfigure {
                 		  "/api/admin/members/search",
                 		  "/api/**"
                   ).permitAll();
+                  
+                  
 
                   
                   // 3. GET - 로그인 필요 (상세 페이지들)

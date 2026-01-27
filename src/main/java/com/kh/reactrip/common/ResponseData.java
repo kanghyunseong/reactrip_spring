@@ -2,9 +2,6 @@ package com.kh.reactrip.common;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO;
-
 import lombok.Builder;
 import lombok.Data;
 
