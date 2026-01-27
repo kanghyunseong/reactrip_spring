@@ -7,8 +7,7 @@ import lombok.Value;
 public class AdminNoticeVO {
 
 	Long noticeNo;
-	String memberNo;
-	Long memberName;
+	String memberName; 
 	String noticeTitle;
 	String noticeContent;
 	LocalDateTime createDate;

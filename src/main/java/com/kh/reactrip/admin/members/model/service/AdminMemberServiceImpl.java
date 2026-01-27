@@ -1,5 +1,6 @@
 package com.kh.reactrip.admin.members.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
@@ -27,41 +28,40 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	private final AdminMemberMapper adminMemberMapper;
 	private final S3Service s3Service;
 	
-	// 페이징 관련 상수뺴기
-	// 상수로 빼면 장점 -> 나중에 유지보수 쉬움 왜? 숫자만 바꾸면 됨 
-	private static final int BOARD_LIMIT = 10;
-	private static final int PAGE_LIMIT = 5;
 
 	@Override
 	public PageResponseDTO<AdminMemberDTO> findAllMember(int page) {
 
 		int totalCount = adminMemberMapper.getTotalCount();
 
-		PageInfo pi = pagenation.getPageInfo(totalCount, page, BOARD_LIMIT, PAGE_LIMIT);
+		PageInfo pi = pagenation.getPageInfo(totalCount, page);
 		
-		RowBounds rowBounds = createRowBounds(pi);
-		
-		List<AdminMemberDTO> members = adminMemberMapper.findAllMembers(rowBounds);
+		List<AdminMemberDTO> members = adminMemberMapper.findAllMembers(pagenation.createRowBounds(pi));
 
 		return new PageResponseDTO<>(pi, members);
 	}
-	
-	private RowBounds createRowBounds(PageInfo pi) {
-		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
-		return new RowBounds(offset, pi.getBoardLimit());
-	}
 
 	@Override
-	public List<AdminMemberDTO> findByMembers(String keyword) {
+	public PageResponseDTO<AdminMemberDTO> findByMembers(String keyword, int page) {
 		
-		List<AdminMemberDTO> findByMembers = adminMemberMapper.findByMembers(keyword);
-		
-		if(findByMembers == null || findByMembers.isEmpty()) {
-			log.error("User Not Found Exception : {} ", keyword );
-			throw new UserNotFoundException("검색어 : " + keyword + "에 대한 정보가 없습니다.");
+		if(keyword == null || keyword.trim().isEmpty()) {
+			return new PageResponseDTO<>(new PageInfo(), new ArrayList<>());
 		}
 		
-		return findByMembers;
+		int totalCount = adminMemberMapper.getSearchCount(keyword);
+		
+		// 검색 결과가 0건이면 예외를 던지지 말고 "빈 리스트"를 정상 응답으로 내려준다.
+		// (프론트에서 404로 인식되어 실패 처리되는 문제 방지)
+		if(totalCount == 0) {
+			PageInfo pi = pagenation.getPageInfo(0, page);
+			return new PageResponseDTO<>(pi, new ArrayList<>());
+		}
+		
+		PageInfo pi = pagenation.getPageInfo(totalCount, page);
+		
+		List<AdminMemberDTO> members = adminMemberMapper.findByMembers(keyword, pagenation.createRowBounds(pi));
+		
+		return new PageResponseDTO<>(pi, members);
 	}
 
 	@Override
