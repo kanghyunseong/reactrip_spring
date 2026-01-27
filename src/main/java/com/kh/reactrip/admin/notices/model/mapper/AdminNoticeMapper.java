@@ -15,5 +15,15 @@ public interface AdminNoticeMapper {
 	int getTotalCount();
 
 	List<AdminNoticeDTO> findAllNotice(RowBounds rowBounds);
+	
+	AdminNoticeDTO selectNoticeDetail(Long noticeNo);
+
+	int updateNotice(AdminNoticeDTO adminNoticeDTO);
+
+	int deleteNotice(Long noticeNo);
+
+	int getSearchCount(String keyword);
+
+	List<AdminNoticeDTO> findByNotice(String keyword, RowBounds rowBounds);
 
 }

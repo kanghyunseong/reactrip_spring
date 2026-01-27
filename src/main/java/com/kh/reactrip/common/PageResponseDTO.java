@@ -17,5 +17,9 @@ public class PageResponseDTO<T> {
 	
 	private PageInfo pageInfo; 
     private List<T> data;
+    
+    public boolean isEmpty() {
+    	return data == null || data.isEmpty();
+    }
 
 }

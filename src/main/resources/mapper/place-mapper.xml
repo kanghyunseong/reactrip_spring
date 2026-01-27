@@ -17,8 +17,9 @@
 		<result column="regionNo" property="regionNo" />
 		<result column="regionName" property="regionName" />
 		<result column="themeNo" property="themeNo" />
+		<result column="themeTitle" property="themeTitle" />
+		<association property="location" javaType="com.kh.reactrip.place.model.vo.PlaceVO">
 		<result column="themeName" property="themeName" />
-		<association property="location" javaType="com.kh.reactrip.location.Location">
 			<result column="longitude" property="longitude" />
 			<result column="latitude" property="latitude" />
 		</association>

@@ -9,7 +9,7 @@ public interface AdminMemberService {
 	
 	PageResponseDTO<AdminMemberDTO> findAllMember(int page);
 
-	List<AdminMemberDTO> findByMembers(String keyword);
+	PageResponseDTO<AdminMemberDTO> findByMembers(String keyword, int page);
 
 	void updateMemberRole(Long memberNo, String memberRole);
 

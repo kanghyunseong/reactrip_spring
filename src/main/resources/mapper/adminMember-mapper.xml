@@ -7,13 +7,34 @@
 
 <select id="getTotalCount" resultType="_int">
     SELECT 
-        COUNT(*)
-    FROM 
-        TB_MEMBER M
-    LEFT JOIN 
-        TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
-    WHERE 
-        D.MEMBER_NO IS NULL
+           COUNT(*)
+      FROM 
+           TB_MEMBER M
+      LEFT
+      JOIN 
+           TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
+     WHERE 
+           D.MEMBER_NO IS NULL
+</select>
+<select id="getSearchCount" resultType="_int">
+    SELECT 
+           COUNT(*)
+      FROM 
+           TB_MEMBER M
+      LEFT
+      JOIN 
+           TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
+     WHERE 
+           D.MEMBER_NO IS NULL
+      <if test="keyword != null and keyword != ''">
+           AND (
+               M.MEMBER_NAME LIKE '%' || #{keyword} || '%'
+            OR 
+               M.EMAIL LIKE '%' || #{keyword} || '%'
+            OR
+               M.PHONE LIKE '%' || #{keyword} || '%'
+           )
+      </if>
 </select>
 
 <select id="findAllMembers" resultType="com.kh.reactrip.admin.members.model.dto.AdminMemberDTO">
@@ -49,7 +70,8 @@
          , M.ENROLL_DATE AS enrollDate
       FROM
            TB_MEMBER M
-      LEFT JOIN
+      LEFT
+      JOIN
            TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
      WHERE
            D.MEMBER_NO IS NULL
@@ -58,6 +80,8 @@
                M.MEMBER_NAME LIKE '%' || #{keyword} || '%'
             OR 
                M.EMAIL LIKE '%' || #{keyword} || '%'
+            OR
+               M.PHONE LIKE '%' || #{keyword} || '%'
            )
       </if>
      ORDER BY M.MEMBER_NO DESC
@@ -77,7 +101,7 @@
 			      TB_DELETED_MEMBER)
 </update>
 
-<select id="findByMemberNo">
+<select id="findMemberByNo">
 	SELECT
 	       MEMBER_NO AS memberNo
 	     , MEMBER_NAME AS memberName
@@ -87,5 +111,10 @@
 	 WHERE
 	       MEMBER_NO = #{memberNo}
 </select>
+
+<insert id="deleteMember">
+	INSERT INTO TB_DELETED_MEMBER (MEMBER_NO)
+	VALUES (#{memberNo})
+</insert>
 
 </mapper>
