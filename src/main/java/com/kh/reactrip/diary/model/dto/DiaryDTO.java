@@ -28,12 +28,15 @@ public class DiaryDTO {
 	private Date updatedDate; 		// 게시글 수정일
 	private int count;				// 조회수
 	private int memberNo;			// 회원 고유번호
+	private String memberName;       // 작성자이름           
 	private int scheduleNo;			// 일정 번호
 	private int travelNo;			// 여행지 번호
-	private String memberName;       // 작성자이름           
+	private int regionNo;
+	private String regionName;
+	private int themeNo;
+	private String themeName;
 	
-	private List<MultipartFile> images;
-	
+	private List<String> imageUrls;
 	private int totalCount;
 	
 }

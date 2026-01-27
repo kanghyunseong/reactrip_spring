@@ -124,18 +124,28 @@ public class DiaryServiceImpl implements DiaryService {
 		diaryMapper.insertDiary(diary);
 		
 		// 이미지 파일
-        if (diary.getImages() == null); 
-        
-            for (MultipartFile file : diary.getImages()) {
-
-                if (file.isEmpty()) continue;
-
-                String imagePath = s3Service.fileSave(file);
-
-                diaryMapper.insertDiaryImage(diary.getDiaryNo(), imagePath);
-            }
-		
+        if (diary.getImageUrls() == null || diary.getImageUrls().isEmpty()) {
+        	return;
         }
+        
+        for(String imageUrl : diary.getImageUrls()) {
+        	
+           diaryMapper.insertDiaryImage(diary.getDiaryNo(), imageUrl);
+    
+        }
+    }
+
+
+	// 이미지 업로드
+	@Override
+	@Transactional
+	public void insertDiaryImages(DiaryImageDTO imgDTO) {
+
+	    for (String url : imgDTO.getImageUrls()) {
+	        diaryMapper.insertDiaryImage(imgDTO.getDiaryNo(), url);
+	    }
+	    
+	}
  
 
 

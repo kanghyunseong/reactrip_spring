@@ -26,10 +26,9 @@ public interface DiaryMapper {
 
 	void insertDiary(DiaryDTO diary);
 
-	void insertDiaryImage(int diaryNo, String imagePath);
-
 	List<String> findDiaryImages(int diaryNo);
 	
+	void insertDiaryImage(@Param("diaryNo") int diaryNo, @Param("imageUrl") String imageUrl);
 
 
 

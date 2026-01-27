@@ -141,10 +141,23 @@
 
 
 <!-- 게시글 작성 -->
-<insert id="insertDiary" useGeneratedKeys="true" keyProperty="diaryNo">
-
+<insert id="insertDiary" parameterType="com.kh.reactrip.diary.model.dto.DiaryDTO" useGeneratedKeys="true" keyProperty="diaryNo">
+	INSERT
+	  INTO
+	  	   TB_DIARY(DIARY_TITLE, DIARY_CONTENT, REGION_NO, THEME_NO)
+	VALUES
+		   (#{diaryTitle}, #{diaryContent}, #{regionNo}, #{themeNo})	
 </insert>
 
+
+<!-- 이미지 업로드 -->
+<insert id="insertDiaryImage">
+	INSERT
+	  INTO
+	  	    TB_DIARY_IMAGE(DIAR_NO, IMAGE_URL)
+ 	VALUES  
+ 			(#{diaryNo}, #{imageUrl})
+</insert>
 
 
 

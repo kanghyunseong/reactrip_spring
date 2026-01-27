@@ -151,17 +151,46 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 				return;
 
 			int savedCount = 0;
+			int updatedCount = 0;
 			for (Map<String, Object> item : itemList) {
 				String title = String.valueOf(item.get("title"));
-				if (adminTravelMapper.existsByTitle(title) > 0)
-
-					continue;
 				String overview = fetchOverview(String.valueOf(item.get("contentid")));
-
+				String apiImage = item.get("firstimage") != null ? String.valueOf(item.get("firstimage")) : "";
+				
+				// 기존 여행지 확인
+				AdminTravelVO existing = adminTravelMapper.findByTitle(title);
+				
+				if (existing != null) {
+					// 이미지가 없거나 비어있거나, 소프트 삭제된 경우 업데이트
+					boolean needsUpdate = (existing.getTravelImage() == null || existing.getTravelImage().isEmpty() || existing.getTravelImage().trim().equals(""))
+						|| "Y".equals(existing.getTravelStatus());
+					
+					if (needsUpdate) {
+						AdminTravelDTO updateDto = new AdminTravelDTO();
+						updateDto.setTravelNo(existing.getTravelNo());
+						updateDto.setTravelName(title);
+						updateDto.setTravelAddress(String.valueOf(item.get("addr1")));
+						updateDto.setMapX(parseSafeDouble(item.get("mapx")));
+						updateDto.setMapY(parseSafeDouble(item.get("mapy")));
+						updateDto.setTravelImage(apiImage);
+						updateDto.setTravelContent(overview);
+						updateDto.setTravelStatus("N"); // 활성 상태로 복구
+						updateDto.setRegionNo(getRegionNoFromApiCode(String.valueOf(item.get("areacode"))));
+						
+						adminTravelMapper.updateTravel(updateDto);
+						updatedCount++;
+						continue;
+					} else {
+						// 이미 존재하고 이미지도 있고 활성 상태면 건너뛰기
+						continue;
+					}
+				}
+				
+				// 신규 여행지 추가
 				AdminTravelVO vo = AdminTravelVO.builder().travelName(title)
 						.travelAddress(String.valueOf(item.get("addr1"))).mapX(parseSafeDouble(item.get("mapx")))
 						.mapY(parseSafeDouble(item.get("mapy")))
-						.travelImage(item.get("firstimage") != null ? String.valueOf(item.get("firstimage")) : "")
+						.travelImage(apiImage)
 						.travelContent(overview).travelStatus("N").count(0)
 						.regionNo(getRegionNoFromApiCode(String.valueOf(item.get("areacode")))).build();
 
@@ -178,11 +207,12 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 					Map<String, Object> themeMap = new HashMap<>();
 					themeMap.put("travelNo", vo.getTravelNo());
 					themeMap.put("themeNo", themeNo);
-					adminTravelMapper.insertTravelTheme(themeMap); // Mapper에 해당 메서드 추가 필요
+					adminTravelMapper.insertTravelTheme(themeMap);
 				}
 
 				savedCount++;
 			}
+			log.info("해당 거점 신규 데이터 {}건 저장, {}건 업데이트 완료", savedCount, updatedCount);
 			log.info("해당 거점 신규 데이터 {}건 저장 완료", savedCount);
 			Thread.sleep(300);
 		} catch (Exception e) {
@@ -190,33 +220,28 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 		}
 	}
 
-	private Long themeMappingString (String cat1, String cat2, String cat3) {
-		// 37. 액티비티 (A03: 레포츠)
+	/** 관광공사 API cat1/cat2 → TB_THEME 시드(THEME_NO 1~10) 매핑 */
+	private Long themeMappingString(String cat1, String cat2, String cat3) {
+		// 3. 액티비티 (A03: 레포츠)
 		if ("A03".equals(cat1))
-			return 37L;
-
-		// 34. 식도락/맛집 (A05: 음식)
+			return 3L;
+		// 9. 식도락/맛집 (A05: 음식)
 		if ("A05".equals(cat1))
-			return 34L;
-
-		// 32. 바다/해변 (A0101: 대분류 자연 - 중분류 해수욕장/섬 등)
+			return 9L;
+		// 5. 바다/해변 (A0101: 해수욕장/섬 등)
 		if ("A0101".equals(cat2))
-			return 32L;
-
-		// 36. 전통 문화 (A0201: 역사/문화유적)
+			return 5L;
+		// 2. 전통 문화 (A0201: 역사/문화유적)
 		if ("A0201".equals(cat2))
-			return 36L;
-
-		// 38. 전시/공연 (A0206: 문화시설)
+			return 2L;
+		// 7. 전시/공연 (A0206: 문화시설)
 		if ("A0206".equals(cat2))
-			return 38L;
-
-		// 31. 자연/풍경 (A01: 전체 자연 중 바다 제외)
+			return 7L;
+		// 4. 자연/풍경 (A01: 자연)
 		if ("A01".equals(cat1))
-			return 31L;
-
-		// 40. 기타
-		return 40L;
+			return 4L;
+		// 10. 기타
+		return 10L;
 	}
 
 	private String fetchOverview(String contentId) {
@@ -259,29 +284,30 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 		}
 	}
 
+	/** 관광공사 API 지역코드 → TB_REGION 시드(REGION_NO 1~12) 매핑 */
 	private Long getRegionNoFromApiCode(String areaCode) {
 		if (areaCode == null || "null".equals(areaCode))
-			return 54L;
+			return 1L;
 		String code = areaCode.contains(".") ? areaCode.split("\\.")[0] : areaCode;
 		return switch (code) {
-		case "1" -> 54L; // 서울
-		case "2" -> 57L; // 인천
-		case "3" -> 59L; // 대전
-		case "4" -> 56L; // 대구
-		case "5" -> 58L; // 광주
-		case "6" -> 55L; // 부산
-		case "7" -> 60L; // 울산
-		case "8" -> 61L; // 세종
-		case "31" -> 62L; // 경기
-		case "32" -> 63L; // 강원
-		case "33" -> 64L; // 충북
-		case "34" -> 65L; // 충남
-		case "35" -> 68L; // 경북
-		case "36" -> 69L; // 경남
-		case "37" -> 66L; // 전북
-		case "38" -> 67L; // 전남
-		case "39" -> 70L; // 제주
-		default -> 54L;
+		case "1" -> 1L;   // 서울
+		case "2" -> 2L;   // 인천
+		case "3" -> 4L;   // 대전 → 세종 인근
+		case "4" -> 12L;  // 대구 → 경상북도
+		case "5" -> 9L;   // 광주 → 전라남도
+		case "6" -> 11L;  // 부산 → 경상남도
+		case "7" -> 11L;  // 울산 → 경상남도
+		case "8" -> 4L;   // 세종
+		case "31" -> 3L;  // 경기
+		case "32" -> 5L;  // 강원도
+		case "33" -> 8L;  // 충청북도
+		case "34" -> 7L;  // 충청남도
+		case "35" -> 12L; // 경상북도
+		case "36" -> 11L; // 경상남도
+		case "37" -> 10L; // 전라북도
+		case "38" -> 9L;  // 전라남도
+		case "39" -> 6L;  // 제주도
+		default -> 1L;
 		};
 	}
 

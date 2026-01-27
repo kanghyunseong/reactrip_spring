@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
+import com.kh.reactrip.diary.model.dto.DiaryImageDTO;
 import com.kh.reactrip.diary.model.service.DiaryService;
 import com.kh.reactrip.file.service.S3Service;
 
@@ -77,8 +79,17 @@ public class DiaryController {
 	}
 	
 	
+	// 이미지 업로드
+	@PostMapping("/images")
+	public ResponseEntity<Void> insertDiaryImages(@RequestBody DiaryImageDTO imgDTO) {
 	
-	// S3 테스트용
+		diaryService.insertDiaryImages(imgDTO);
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	
+//  S3 테스트용
 //	@PostMapping("/test/s3")
 //	public String testUpload(@RequestParam("file") MultipartFile file) {
 //	    return s3Service.fileSave(file);
