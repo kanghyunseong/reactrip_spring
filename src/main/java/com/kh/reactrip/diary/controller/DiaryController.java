@@ -1,5 +1,6 @@
 package com.kh.reactrip.diary.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
@@ -71,8 +73,10 @@ public class DiaryController {
 	  
 	// 게시글 작성
 	@PostMapping
-	public ResponseEntity<?> insertDiary(@ModelAttribute DiaryDTO diary) {
+	public ResponseEntity<?> insertDiary(@RequestBody DiaryDTO diary) {
 	    
+		log.info("diary = {}", diary);
+		
 		diaryService.insertDiary(diary);
 	    
 		return ResponseEntity.ok().build();
@@ -80,13 +84,21 @@ public class DiaryController {
 	
 	
 	// 이미지 업로드
-	@PostMapping("/images")
-	public ResponseEntity<Void> insertDiaryImages(@RequestBody DiaryImageDTO imgDTO) {
-	
-		diaryService.insertDiaryImages(imgDTO);
+	@PostMapping("/upload/diary-image")
+	public ResponseEntity<List<String>> uploadDiaryImages(@RequestParam("images") List<MultipartFile> images) {
 		
-		return ResponseEntity.ok().build();
+	    List<String> imageUrls = s3Service.upload(images);
+	    
+	    return ResponseEntity.ok(imageUrls);
 	}
+	
+//	@PostMapping("/upload/diary-image")
+//	public ResponseEntity<List<String>> insertDiaryImages(@RequestParam("images") List<MultipartFile> images) {
+//	
+//		// diaryService.insertDiaryImages(imgDTO);
+//		
+//		return ResponseEntity.ok(s3Service.upload(images);
+//	}
 	
 	
 //  S3 테스트용

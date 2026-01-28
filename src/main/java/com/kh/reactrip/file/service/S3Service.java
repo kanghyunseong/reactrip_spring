@@ -3,6 +3,7 @@ package com.kh.reactrip.file.service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -94,5 +95,9 @@ public class S3Service {
       }
       return "";
    }
+
+public List<String> upload(List<MultipartFile> images) {
+	return null;
+}
 
 }
