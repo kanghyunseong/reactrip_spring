@@ -18,6 +18,10 @@
     <result property="email" column="email"/>
     <result property="scheduleNo" column="scheduleNo"/>
     <result property="travelNo" column="travelNo"/>
+    <result property="regionNo" column="regionNo"/>
+    <result property="regionName" column="regionName"/>
+    <result property="themeNo" column="themeNo"/>
+    <result property="themeName" column="themeName"/>
     <result property="updatedDate" column="updatedDate"/>
 
     <collection property="images" ofType="com.kh.reactrip.admin.community.diary.model.vo.AdminDiaryImageVO">
@@ -51,11 +55,19 @@
          , M.EMAIL         AS email
          , D.SCHEDULE_NO   AS scheduleNo
          , D.TRAVEL_NO     AS travelNo
+         , D.REGION_NO     AS regionNo
+         , R.REGION_NAME   AS regionName
+         , D.THEME_NO      AS themeNo
+         , T.THEME_NAME    AS themeName
          , D.UPDATED_DATE  AS updatedDate
       FROM
            TB_DIARY D
       JOIN
            TB_MEMBER M ON D.MEMBER_NO = M.MEMBER_NO
+      LEFT JOIN
+           TB_REGION R ON D.REGION_NO = R.REGION_NO
+      LEFT JOIN
+           TB_THEME T ON D.THEME_NO = T.THEME_NO
      ORDER
         BY
            D.CREATED_DATE DESC
@@ -72,6 +84,10 @@
          , D.MEMBER_NO     AS memberNo
          , D.SCHEDULE_NO   AS scheduleNo
          , D.TRAVEL_NO     AS travelNo
+         , D.REGION_NO     AS regionNo
+         , R.REGION_NAME   AS regionName
+         , D.THEME_NO      AS themeNo
+         , T.THEME_NAME    AS themeName
          , M.MEMBER_NAME   AS memberName
          , M.EMAIL         AS email
          , D.UPDATED_DATE  AS updatedDate
@@ -79,6 +95,10 @@
            TB_DIARY D
       JOIN
            TB_MEMBER M ON D.MEMBER_NO = M.MEMBER_NO
+      LEFT JOIN
+           TB_REGION R ON D.REGION_NO = R.REGION_NO
+      LEFT JOIN
+           TB_THEME T ON D.THEME_NO = T.THEME_NO
      WHERE
            D.DIARY_NO = #{diaryNo}
 </select>
@@ -136,6 +156,10 @@
          , M.EMAIL         AS email
          , D.SCHEDULE_NO   AS scheduleNo
          , D.TRAVEL_NO     AS travelNo
+         , D.REGION_NO     AS regionNo
+         , R.REGION_NAME   AS regionName
+         , D.THEME_NO      AS themeNo
+         , T.THEME_NAME    AS themeName
          , D.UPDATED_DATE  AS updatedDate
          , I.IMAGE_NO      AS imageNo
          , I.IMAGE_URL     AS imageUrl
@@ -147,7 +171,11 @@
       JOIN
            TB_MEMBER M ON D.MEMBER_NO = M.MEMBER_NO
       LEFT JOIN
-           TB_DIARY_IMAGE I ON D.DIARY_NO = I.DIARY_NO 
+           TB_REGION R ON D.REGION_NO = R.REGION_NO
+      LEFT JOIN
+           TB_THEME T ON D.THEME_NO = T.THEME_NO
+      LEFT JOIN
+           TB_DIARY_IMAGE I ON D.DIARY_NO = I.DIARY_NO
      WHERE
            D.DIARY_STATUS = 'N'
        <if test="keyword != null and keyword != ''">

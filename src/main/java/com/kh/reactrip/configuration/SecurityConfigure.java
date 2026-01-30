@@ -1,6 +1,8 @@
 package com.kh.reactrip.configuration;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -69,7 +71,8 @@ public class SecurityConfigure {
             			  "/swagger-ui.html",
                           "/swagger-ui/**",
                           "/api-docs/**",     // ★ YAML에서 path: /api-docs 라고 했으니 이걸 열어야 함!
-                          "/v3/api-docs/**"
+                          "/v3/api-docs/**",
+                          "/ws-raspberry/**"
               		).permitAll();
 
                   // 1. POST - 비로그인 허용 (회원가입/로그인, 차량/예약 등)
@@ -117,6 +120,7 @@ public class SecurityConfigure {
                 		  "/api/admin/members/search",
                 		  "/api/**"
                   ).permitAll();
+                  
                   
                   
 
@@ -210,10 +214,16 @@ public class SecurityConfigure {
    @Bean
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration configuration = new CorsConfiguration();
-      configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-      configuration.setAllowedOrigins(Arrays.asList(instance));
+      List<String> allowedOrigins = new ArrayList<>();
+      allowedOrigins.add("http://localhost:5173");
+      if (instance != null && !instance.isBlank()) {
+         allowedOrigins.add(instance);
+      }
+
+      // allowCredentials=true 인 경우, "*" 대신 명시적으로 origin을 허용해야 합니다.
+      configuration.setAllowedOriginPatterns(allowedOrigins);
       configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-      configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type"));
+      configuration.addAllowedHeader("*");
       configuration.setAllowCredentials(true);
       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
       source.registerCorsConfiguration("/**", configuration);

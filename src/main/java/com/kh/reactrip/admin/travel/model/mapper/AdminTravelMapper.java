@@ -35,7 +35,8 @@ public interface AdminTravelMapper {
 	List<AdminTravelDTO> findBySearch(String keyword, RowBounds rowBounds);
 
 	void insertTravelTheme(Map<String, Object> themeMap);
-	
+	void deleteTravelThemesByTravelNo(Long travelNo);
+
 	List<Map<String, Object>> findAllRegions();
 	
 }
