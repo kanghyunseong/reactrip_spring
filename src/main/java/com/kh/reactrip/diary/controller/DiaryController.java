@@ -3,6 +3,7 @@ package com.kh.reactrip.diary.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,10 +73,10 @@ public class DiaryController {
  
 	  
 	// 게시글 작성
-	@PostMapping
+	@PostMapping("/insert")
 	public ResponseEntity<?> insertDiary(@RequestBody DiaryDTO diary) {
-	    
-		log.info("diary = {}", diary);
+		log.info("게시글 작성 컨트롤 호출!~!");
+		log.info("diary = {}", diary);    
 		
 		diaryService.insertDiary(diary);
 	    
@@ -84,11 +85,14 @@ public class DiaryController {
 	
 	
 	// 이미지 업로드
-	@PostMapping("/upload/diary-image")
+	@PostMapping(value = "/api/diarys/upload/diary-image",
+			  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+			//consumes = MediaType.APPLICATION_JSON_VALUE
+	)
 	public ResponseEntity<List<String>> uploadDiaryImages(@RequestParam("images") List<MultipartFile> images) {
-		
+		log.info("이미지 업로드 컨트롤러 호출 !!");
 	    List<String> imageUrls = s3Service.upload(images);
-	    
+	    log.info("결과  : " + imageUrls);
 	    return ResponseEntity.ok(imageUrls);
 	}
 	

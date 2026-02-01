@@ -124,7 +124,7 @@
            )
       </if>
 </select>
-<select id="findByNotice" resultType="AdminNoticeDTO">
+<select id="findByNotice" resultType="com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO">
     SELECT 
            N.NOTICE_NO      AS noticeNo
          , N.MEMBER_NO      AS memberNo

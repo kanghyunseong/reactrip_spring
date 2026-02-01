@@ -24,7 +24,7 @@
 	       TB_TRAVEL
 </select>
 
-<select id="findAllTravel" resultType="AdminTravelVO">
+<select id="findAllTravel" resultType="com.kh.reactrip.admin.travel.model.vo.AdminTravelVO">
 	SELECT 
            T.TRAVEL_NO    AS travelNo
          , T.REGION_NO    AS regionNo
@@ -57,7 +57,7 @@
      WHERE
            TRAVEL_NO = #{travelNo}
 </update>
-<select id="findByTravelNo" resultType="AdminTravelVO">
+<select id="findByTravelNo" resultType="com.kh.reactrip.admin.travel.model.vo.AdminTravelVO">
     SELECT 
            T.TRAVEL_NO AS travelNo
          , T.REGION_NO AS regionNo
@@ -79,7 +79,7 @@
      WHERE 
            T.TRAVEL_NO = #{travelNo}
 </select>
-<insert id="insertTravel" parameterType="AdminTravelVO" useGeneratedKeys="true" keyProperty="travelNo" keyColumn="TRAVEL_NO">
+<insert id="insertTravel" parameterType="com.kh.reactrip.admin.travel.model.vo.AdminTravelVO" useGeneratedKeys="true" keyProperty="travelNo" keyColumn="TRAVEL_NO">
     INSERT
       INTO
            TB_TRAVEL
@@ -184,7 +184,7 @@
      WHERE
            TRAVEL_NAME = #{title}
 </select>
-<select id="findByTitle" parameterType="string" resultType="AdminTravelVO">
+<select id="findByTitle" parameterType="string" resultType="com.kh.reactrip.admin.travel.model.vo.AdminTravelVO">
     SELECT 
            T.TRAVEL_NO AS travelNo
          , T.REGION_NO AS regionNo
@@ -217,7 +217,7 @@
 		  )
 	    </if>
 </select>
-<select id="findBySearch" resultType="AdminTravelDTO">
+<select id="findBySearch" resultType="com.kh.reactrip.admin.travel.model.dto.AdminTravelDTO">
 	SELECT
 	       T.TRAVEL_NO      AS travelNo
          , T.REGION_NO      AS regionNo
