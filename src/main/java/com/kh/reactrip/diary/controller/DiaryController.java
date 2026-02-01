@@ -85,16 +85,16 @@ public class DiaryController {
 	
 	
 	// 이미지 업로드
-	@PostMapping(value = "/api/diarys/upload/diary-image",
-			  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-			//consumes = MediaType.APPLICATION_JSON_VALUE
-	)
-	public ResponseEntity<List<String>> uploadDiaryImages(@RequestParam("images") List<MultipartFile> images) {
-		log.info("이미지 업로드 컨트롤러 호출 !!");
-	    List<String> imageUrls = s3Service.upload(images);
-	    log.info("결과  : " + imageUrls);
-	    return ResponseEntity.ok(imageUrls);
-	}
+//	@PostMapping(value = "/api/diarys/upload/diary-image",
+//			  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+//			//consumes = MediaType.APPLICATION_JSON_VALUE
+//	)
+//	public ResponseEntity<List<String>> uploadDiaryImages(@RequestParam("file") List<MultipartFile> images) {
+//		log.info("이미지 업로드 컨트롤러 호출 !!");
+//	    List<String> imageUrls = s3Service.upload(images);
+//	    log.info("결과  : " + imageUrls);
+//	    return ResponseEntity.ok(imageUrls);
+//	}
 	
 //	@PostMapping("/upload/diary-image")
 //	public ResponseEntity<List<String>> insertDiaryImages(@RequestParam("images") List<MultipartFile> images) {
