@@ -36,6 +36,7 @@
 		 , M.MEMBER_NAME AS memberName
 		 , S.SCHEDULE_NO AS scheduleNo
 		 , T.TRAVEL_NO AS travelNo
+		 , nvl2(img.image_url,img.image_url,'https://us.123rf.com/450wm/oculo/oculo2004/oculo200400003/143645399-no-image-available-icon.jpg') as imageUrl
 	 FROM
 	       TB_DIARY D
 	 JOIN
@@ -46,6 +47,9 @@
 	 LEFT
 	 JOIN
 	 	   TB_TRAVEL T ON (D.TRAVEL_NO = T.TRAVEL_NO)
+	 LEFT
+	 JOIN
+	 	   TB_DIARY_IMAGE IMG ON (d.diary_no = IMG.diary_no)
 	WHERE
 		   D.DIARY_STATUS = 'N'
     ORDER 
@@ -53,6 +57,11 @@
     	   D.DIARY_NO DESC
     OFFSET #{offset} ROWS
     FETCH NEXT #{size} ROWS ONLY	 
+</select>
+
+
+<select id="selectSeqNo" resultType="_int">
+	select SEQ_DIARY.NEXTVAL from dual	
 </select>
 
 
@@ -81,6 +90,7 @@
 	   		TB_DIARY D
 	   JOIN 
 	   		TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
+	    
 	  WHERE 
 	  		D.DIARY_NO = #{diaryNo}
 </select>
@@ -141,22 +151,35 @@
 
 
 <!-- 게시글 작성 -->
-<insert id="insertDiary" parameterType="com.kh.reactrip.diary.model.dto.DiaryDTO" useGeneratedKeys="true" keyProperty="diaryNo">
+<insert id="insertDiary" parameterType="com.kh.reactrip.diary.model.dto.DiaryDTO" >
 	INSERT
 	  INTO
-	  	   TB_DIARY(DIARY_TITLE, DIARY_CONTENT, REGION_NO, THEME_NO)
+	  	   TB_DIARY(DIARY_NO, DIARY_TITLE, DIARY_CONTENT, REGION_NO, THEME_NO, MEMBER_NO, SCHEDULE_NO, TRAVEL_NO)
 	VALUES
-		   (#{diaryTitle}, #{diaryContent}, #{regionNo}, #{themeNo})	
+		   (#{diaryNo} , #{diaryTitle}, #{diaryContent}, #{regionNo}, #{themeNo}, #{memberNo}, #{scheduleNo}, #{travelNo})	
 </insert>
 
 
 <!-- 이미지 업로드 -->
-<insert id="insertDiaryImage">
+<insert id="insertDiaryImage" parameterType="com.kh.reactrip.diary.model.dto.DiaryImageDTO">
 	INSERT
 	  INTO
-	  	    TB_DIARY_IMAGE(DIAR_NO, IMAGE_URL)
+	  	    TB_DIARY_IMAGE(
+	  	     IMAGE_NO
+			,IMAGE_URL
+			,ORIGINAL_NAME
+			,SORT_ORDER
+			,CREATE_DATE
+			,DIARY_NO
+	  	    )
  	VALUES  
- 			(#{diaryNo}, #{imageUrl})
+ 			(SEQ_DIARY_IMG.NEXTVAL
+ 			, #{imageUrl}
+ 			, #{originalName}
+ 			, 1
+ 			, SYSDATE
+ 			, #{diaryNo}
+ 			)
 </insert>
 
 

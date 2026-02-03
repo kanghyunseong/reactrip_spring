@@ -119,33 +119,43 @@ public class DiaryServiceImpl implements DiaryService {
 	// 게시글 작성
 	@Transactional
 	@Override
-	public void insertDiary(DiaryDTO diary) {
+	public int insertDiary(DiaryDTO diary) {
+				
+		int diaryNo = diaryMapper.selectSeqNo();
+		diary.setDiaryNo(diaryNo);
 		
 		diaryMapper.insertDiary(diary);
 		
+		
 		// 이미지 파일
-        if (diary.getImageUrls() == null || diary.getImageUrls().isEmpty()) {
-        	return;
+        if (diary.getImageUrl() != null && !"".equals(diary.getImageUrl()) ) {
+        	DiaryImageDTO imgVO = new DiaryImageDTO();
+        	imgVO.setOriginalName("img");
+        	imgVO.setImageUrl(diary.getImageUrl());
+        	imgVO.setDiaryNo(diaryNo);
+        	diaryMapper.insertDiaryImage(imgVO);
         }
         
-        for(String imageUrl : diary.getImageUrls()) {
-        	
-           diaryMapper.insertDiaryImage(diary.getDiaryNo(), imageUrl);
-    
-        }
+//        for(String imageUrl : diary.getImageUrls()) {
+//        	
+//           diaryMapper.insertDiaryImage(diary.getDiaryNo(), imageUrl);
+//    
+//        }
+        
+        return diaryNo;
     }
 
 
 	// 이미지 업로드
-	@Override
-	@Transactional
-	public void insertDiaryImages(DiaryImageDTO imgDTO) {
-
-	    for (String url : imgDTO.getImageUrls()) {
-	        diaryMapper.insertDiaryImage(imgDTO.getDiaryNo(), url);
-	    }
-	    
-	}
+//	@Override
+//	@Transactional
+//	public void insertDiaryImages(DiaryImageDTO imgDTO) {
+//
+//	    for (String url : imgDTO.getImageUrls()) {
+//	        diaryMapper.insertDiaryImage(imgDTO.getDiaryNo(), url);
+//	    }
+//	    
+//	}
  
 
 

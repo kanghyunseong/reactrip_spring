@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
 import com.kh.reactrip.diary.model.dto.DiaryImageDTO;
@@ -74,13 +76,13 @@ public class DiaryController {
 	  
 	// 게시글 작성
 	@PostMapping("/insert")
-	public ResponseEntity<?> insertDiary(@RequestBody DiaryDTO diary) {
+	public ResponseEntity<?> insertDiary(@RequestBody DiaryDTO diary) { 
 		log.info("게시글 작성 컨트롤 호출!~!");
+		//log.info("login : " + user);
 		log.info("diary = {}", diary);    
-		
-		diaryService.insertDiary(diary);
+		int diaryNo = diaryService.insertDiary(diary);
 	    
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(diaryNo);
 	}
 	
 	

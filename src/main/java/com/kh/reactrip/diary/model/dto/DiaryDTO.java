@@ -35,8 +35,8 @@ public class DiaryDTO {
 	private String regionName;
 	private int themeNo;
 	private String themeName;
-	
-	private List<String> imageUrls;
+	private String imageUrl;
+	//private List<String> imageUrls;
 	private int totalCount;
 	
 }

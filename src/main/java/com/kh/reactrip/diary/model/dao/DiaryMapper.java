@@ -28,10 +28,8 @@ public interface DiaryMapper {
 
 	List<String> findDiaryImages(int diaryNo);
 	
-	void insertDiaryImage(@Param("diaryNo") int diaryNo, @Param("imageUrl") String imageUrl);
+	void insertDiaryImage(DiaryImageDTO imgVO);
 
-
-
-	 
+	int selectSeqNo();
 	
 }

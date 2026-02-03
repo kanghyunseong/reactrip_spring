@@ -20,9 +20,9 @@ public interface DiaryService {
   
 	Map<String, Object> findByComments(int diaryNo, int page, int size);
 
-	void insertDiary(DiaryDTO diary);
+	int insertDiary(DiaryDTO diary);
 
-	void insertDiaryImages(DiaryImageDTO imgDTO);
+	//void insertDiaryImages(DiaryImageDTO imgDTO);
 
 
  
