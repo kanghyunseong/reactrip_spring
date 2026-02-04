@@ -89,10 +89,10 @@ public class SecurityConfigure {
                                         
                   ).permitAll();
 
-                  // 2. GET - 비로그인 허용 (목록/조회용)
+                  // 2. GET - 비로그인 허용 (목록/조회용, 룰렛용 여행지 목록 포함)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/diarys/**"
-                		  
+                          "/api/diarys/**",
+                          "/api/admin/travel"
                   ).permitAll();
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
@@ -131,6 +131,7 @@ public class SecurityConfigure {
                           "/api/boards/*",
                           "/api/imgBoards/*",
                           "/api/notices/*"
+                          
                   ).authenticated();
                   
 
@@ -215,7 +216,7 @@ public class SecurityConfigure {
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration configuration = new CorsConfiguration();
       List<String> allowedOrigins = new ArrayList<>();
-      allowedOrigins.add("http://localhost:5173");
+      allowedOrigins.add(instance);
       if (instance != null && !instance.isBlank()) {
          allowedOrigins.add(instance);
       }
