@@ -18,7 +18,8 @@ public interface MemberService {
 	void updateMemberName(String memberId, String newName);
 
 	void updateMemberEmail(String memberId, String newEmail);
-	//void updateProfileImage(Long memberId, MultipartFile profileImage);
+	
+	void updateProfileImage(String memberId, MultipartFile profileImage);
 
 	void updateMemberPhone(String memberId, String newPhone);
 

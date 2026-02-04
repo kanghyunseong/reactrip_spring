@@ -1,6 +1,7 @@
 package com.kh.reactrip.member.controller;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reactrip.member.model.dto.SignupRequest;
 import com.kh.reactrip.member.model.dto.UpdatePasswordRequest;
@@ -95,6 +98,7 @@ public class MemberController {
 		
 		return ResponseData.ok(null, "번호가 변경되었습니다.");
 	}
+	
 	@PutMapping("/mypage/birthday")
 	public ResponseEntity<ResponseData<Void>> updateBirthday(@AuthenticationPrincipal CustomUserDetails userDetails, 
 		@RequestParam("birthday")
@@ -114,22 +118,15 @@ public class MemberController {
 		return ResponseData.ok(null, "비밀번호가 변경되었습니다");
 	}
 	
-//	@PutMapping("/mypage/profile")
-//	public ResponseEntity<ResponseData<Void>> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @Valid @RequestBody )
-//	@PutMapping("/profile/image/{memberId}")
-//	public ResponseEntity<ResponseData<Object>> updateProfileImage(@PathVariable Long memberId,
-//																   @RequestParam MultipartFile profileImage) {
-//		
-//		memberService.updateProfileImage(memberId, profileImage);
-//		return ResponseData.ok("프로필 이미지 변경 성공");
-//	}
-//	public ResponseEntity<ResponseData<Object>> signUp(@RequestBody SignupRequest request) {
-//		
-//		memberService.signUp(request);
-//
-//		return ResponseData.ok("회원가입 성공");
-//		
-//	}
+	@PutMapping(value = "/mypage/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResponseData<Void>> updateImage(
+			@AuthenticationPrincipal UserDetails userDetails,
+			@RequestPart("imageFile") MultipartFile imageFile) {
+		String memberId = userDetails.getUsername();
+		memberService.updateProfileImage(memberId, imageFile);
+		return ResponseData.ok(null, "프로필 이미지가 변경되었습니다.");
+	}
+
 	
 
 }
