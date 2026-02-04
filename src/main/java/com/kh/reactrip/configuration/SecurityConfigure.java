@@ -91,7 +91,8 @@ public class SecurityConfigure {
 
                   // 2. GET - 비로그인 허용 (목록/조회용)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/diarys/**"
+                          "/api/diarys/**",
+                          "/api/places/**"
                 		  
                   ).permitAll();
 
