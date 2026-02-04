@@ -92,7 +92,9 @@ public class SecurityConfigure {
                   // 2. GET - 비로그인 허용 (목록/조회용, 룰렛용 여행지 목록 포함)
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/diarys/**",
-                          "/api/admin/travel"
+                          "/api/admin/travel",
+                          "/api/places/**"
+                		  
                   ).permitAll();
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
