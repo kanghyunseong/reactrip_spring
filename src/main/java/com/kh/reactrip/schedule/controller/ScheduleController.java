@@ -39,9 +39,8 @@ public class ScheduleController {
 	 */
 	@PostMapping
 	public ResponseEntity<ResponseData<Long>> createSchedule(
-			@AuthenticationPrincipal UserDetails userDetails, 
-			@Valid @RequestBody ScheduleRequest request) 
-	{
+		@AuthenticationPrincipal UserDetails userDetails, 
+		@Valid @RequestBody ScheduleRequest request) {
 		String memberId = userDetails.getUsername();
 		Long scheduleNo = scheduleService.createSchedule(memberId, request);
 		return ResponseData.created(scheduleNo);
@@ -55,9 +54,8 @@ public class ScheduleController {
 	 */
 	@GetMapping
 	public ResponseEntity<ResponseData<ScheduleListResponse>> getScheduleList(
-			@AuthenticationPrincipal UserDetails userDetails,
-			@RequestParam(name = "page", defaultValue = "1") int page) 
-	{
+		@AuthenticationPrincipal UserDetails userDetails,
+		@RequestParam(name = "page", defaultValue = "1") int page) {
 		String memberId = userDetails.getUsername();
 		ScheduleListResponse response = scheduleService.getMyScheduleList(memberId, page);
 		return ResponseData.ok(response);
@@ -71,9 +69,8 @@ public class ScheduleController {
 	 */
 	@GetMapping("/{scheduleNo}")
 	public ResponseEntity<ResponseData<ScheduleResponse>> getScheduleDetail(
-			@AuthenticationPrincipal UserDetails userDetails,
-			@PathVariable("scheduleNo") Long scheduleNo) 
-	{
+		@AuthenticationPrincipal UserDetails userDetails,
+		@PathVariable("scheduleNo") Long scheduleNo) {
 		String memberId = userDetails.getUsername();
 		ScheduleResponse response = scheduleService.getScheduleDetail(memberId, scheduleNo);
 		return ResponseData.ok(response);
@@ -86,9 +83,9 @@ public class ScheduleController {
 	 */
 	@PutMapping("/{scheduleNo}")
 	public ResponseEntity<ResponseData<Void>> updateSchedule(
-			@AuthenticationPrincipal UserDetails userDetails,
-			@PathVariable("scheduleNo") Long scheduleNo,
-			@Valid @RequestBody ScheduleRequest request) {
+		@AuthenticationPrincipal UserDetails userDetails,
+		@PathVariable("scheduleNo") Long scheduleNo,
+		@Valid @RequestBody ScheduleRequest request) {
 		String memberId = userDetails.getUsername();
 		scheduleService.updateSchedule(memberId, scheduleNo, request);
 		return ResponseData.ok(null, "스케줄이 수정되었습니다.");
@@ -96,9 +93,8 @@ public class ScheduleController {
 	
 	@DeleteMapping("/{scheduleNo}")
 	public ResponseEntity<ResponseData<Void>> deleteSchedule(
-			@AuthenticationPrincipal UserDetails userDetails,
-			@PathVariable("scheduleNo") Long scheduleNo
-	) {
+		@AuthenticationPrincipal UserDetails userDetails,
+		@PathVariable("scheduleNo") Long scheduleNo) {
 		String memberId = userDetails.getUsername();
 		scheduleService.deleteSchedule(memberId, scheduleNo);
 		return ResponseData.ok(null, "스케줄이 삭제되었습니다.");
