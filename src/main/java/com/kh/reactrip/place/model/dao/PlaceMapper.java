@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.reactrip.place.model.dto.PlaceDTO;
+import com.kh.reactrip.place.model.dto.RegionDTO;
+import com.kh.reactrip.place.model.dto.ThemeDTO;
 
 @Mapper
 public interface PlaceMapper {
@@ -14,5 +16,9 @@ public interface PlaceMapper {
 	List<PlaceDTO> findAllPlace(Map<String, Object> query, RowBounds rb);
 	
 	PlaceDTO findByTravelNo(Long travelNo);
+	
+	List<RegionDTO> findAllRegions();
+	
+	List<ThemeDTO> findAllThemes();
 
 }
