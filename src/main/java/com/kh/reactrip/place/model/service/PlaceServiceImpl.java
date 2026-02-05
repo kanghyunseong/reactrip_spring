@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.kh.reactrip.exception.PlaceNotFoundException;
 import com.kh.reactrip.place.model.dao.PlaceMapper;
 import com.kh.reactrip.place.model.dto.PlaceDTO;
+import com.kh.reactrip.place.model.dto.RegionDTO;
+import com.kh.reactrip.place.model.dto.ThemeDTO;
 import com.kh.reactrip.util.PageInfo;
 
 import lombok.RequiredArgsConstructor;
@@ -78,6 +80,16 @@ public class PlaceServiceImpl implements PlaceService {
 		
 		return place;
 		
+	}
+
+	@Override
+	public List<RegionDTO> findAllRegion() {
+		return placeMapper.findAllRegion();
+	}
+
+	@Override
+	public List<ThemeDTO> findAllTheme() {
+		return placeMapper.findAllTheme();
 	}
 
 }

@@ -98,7 +98,7 @@
 		       TR.COUNT DESC
 	</select>
 	
-	<select id="findAllRegions" resultType="com.kh.reactrip.place.model.dto.RegionDTO">
+	<select id="findAllRegion" resultType="com.kh.reactrip.place.model.dto.RegionDTO">
 	    SELECT
 	           REGION_NO regionNo
 	         , REGION_NAME regionName
@@ -109,7 +109,7 @@
 	           REGION_NO ASC
 	</select>
 
-	<select id="findAllThemes" resultType="com.kh.reactrip.place.model.dto.ThemeDTO">
+	<select id="findAllTheme" resultType="com.kh.reactrip.place.model.dto.ThemeDTO">
 	    SELECT
 	           THEME_NO themeNo
 	         , THEME_NAME themeName

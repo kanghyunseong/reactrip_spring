@@ -17,8 +17,8 @@ public interface PlaceMapper {
 	
 	PlaceDTO findByTravelNo(Long travelNo);
 	
-	List<RegionDTO> findAllRegions();
+	List<RegionDTO> findAllRegion();
 	
-	List<ThemeDTO> findAllThemes();
+	List<ThemeDTO> findAllTheme();
 
 }

@@ -1,6 +1,5 @@
 package com.kh.reactrip.place.controller;
 
-import java.security.InvalidParameterException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -12,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.reactrip.place.model.dto.PlaceDTO;
+import com.kh.reactrip.place.model.dto.RegionDTO;
+import com.kh.reactrip.place.model.dto.ThemeDTO;
 import com.kh.reactrip.place.model.service.PlaceService;
 
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +52,18 @@ public class PlaceController {
 		PlaceDTO place = placeService.findByTravelNo(travelNo);
 		return ResponseEntity.ok(place);
 		
+	}
+	
+	@GetMapping("/regions")
+	public ResponseEntity<List<RegionDTO>> findAllRegion() {
+		List<RegionDTO> regions = placeService.findAllRegion();
+		return ResponseEntity.ok(regions);
+	}
+	
+	@GetMapping("/themes")
+	public ResponseEntity<List<ThemeDTO>> findAllTheme() {
+		List<ThemeDTO> themes = placeService.findAllTheme();
+		return ResponseEntity.ok(themes);
 	}
 
 }
