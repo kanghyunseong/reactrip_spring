@@ -5,8 +5,11 @@ import java.sql.Date;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
+import com.kh.reactrip.file.service.S3Service;
 import com.kh.reactrip.member.model.dao.AuthMemberMapper;
 import com.kh.reactrip.member.model.dao.MemberMapper;
 import com.kh.reactrip.member.model.dto.SignupRequest;
@@ -28,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
 	private final AuthMemberMapper authMemberMapper;
 	private final PasswordEncoder passwordEncoder;
 	private final MemberValidationService validationService;  // 추가
-	// private final FileService fileService;
+	private final S3Service s3Service;
 	
 	@Override
 	@Transactional
@@ -51,55 +54,6 @@ public class MemberServiceImpl implements MemberService {
 		// DeleteMember 초기화 (필요시)
 		DeleteMember deleteMember = createDeleteMember(generatedMemberNo);
 	}
-	
-//	@Override
-//	@Transactional
-//	public void deleteMember(Long memberNo) {
-//		memberMapper.insertDeleteMember(memberNo);
-//		if (memberMapper.countById(request.getMemberId()) > 0) {
-//			throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-//		}
-//		
-//		if (memberMapper.countByEmail(request.getEmail()) > 0) {
-//			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-//		}
-//		
-//		if (memberMapper.countByPhone(request.getPhone()) > 0) {
-//			throw new IllegalArgumentException("이미 존재하는 번호입니다.");
-//		}
-//		
-//		String encryptedPassword = passwordEncoder.encode(request.getMemberPwd());
-//		
-//		Date currentDate = new Date(System.currentTimeMillis());
-//		
-//		Member member = Member.builder()
-//					          .memberName(request.getMemberName())
-//					          .birthDay(request.getBirthDay())
-//					          .phone(request.getPhone())
-//					          .email(request.getEmail())
-//					          .memberRole("ROLE_USER")
-//					          .enrollDate(currentDate)
-//					          .image(request.getImage())
-//					          .build();
-//	
-//		memberMapper.insertMemberInfo(member);
-//		
-//		Long generatedMemberNo = member.getMemberNo();
-//
-//		AuthMember authMember = AuthMember.builder()
-//										  .memberNo(generatedMemberNo)
-//										  .memberId(request.getMemberId())
-//									      .memberPwd(encryptedPassword)
-//									      .build();
-//		
-//		memberMapper.insertAuthMember(authMember);
-//
-//		DeleteMember deleteMember = DeleteMember.builder()
-//													.memberNo(generatedMemberNo)
-//													.deleteStatus('N')
-//													.build();
-//															
-//	}
 	
 	@Transactional
 	public void deleteMember(Long memberNo) {
@@ -166,6 +120,28 @@ public class MemberServiceImpl implements MemberService {
 		String encryptedPassword = passwordEncoder.encode(request.getNewMemberPwd());
 		
 		memberMapper.updateMemberPassword(authMember.getMemberNo(), encryptedPassword);
+	}
+	
+	@Override
+	@Transactional
+	public void updateProfileImage(String memberId, MultipartFile profileImage) {
+		// 1. AuthMember 조회
+		AuthMember authMember = getAuthMemberByMemberId(memberId);
+		
+		// 2. 현재 이미지 URL 조회 (삭제용)
+		MemberLoginDTO currentInfo = memberMapper.loadUser(memberId);
+		String currentImageUrl = currentInfo.getImage();
+		
+		// 3. 새 이미지 업로드
+		String newImageUrl = s3Service.fileSave(profileImage);
+		
+		// 4. DB 업데이트
+		memberMapper.updateMemberImage(authMember.getMemberNo(), newImageUrl);
+		
+		// 5. 기존 이미지 삭제 (업로드 성공 후)
+		if(currentImageUrl != null && !currentImageUrl.equals("default_image.png")) {
+			s3Service.deleteFile(currentImageUrl);
+		}
 	}
 	
 	// ========== 공통 메서드 (private) ==========

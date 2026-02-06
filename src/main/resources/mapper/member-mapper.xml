@@ -191,4 +191,12 @@
 		       MEMBER_NO = #{memberNo}
 	</update>
 
+	<update id="updateMemberImage">
+		UPDATE 
+			   TB_MEMBER
+	       SET
+	           IMAGE = #{image}
+	     WHERE
+	           MEMBER_NO = #{memberNo}
+	</update>
 </mapper>
