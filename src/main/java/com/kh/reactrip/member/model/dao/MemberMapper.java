@@ -38,4 +38,5 @@ public interface MemberMapper {
 	void updateMemberPhone(@Param("memberNo") Long memberNo, @Param("newPhone") String newPhone);
 	void updateMemberBirthday(@Param("memberNo") Long memberNo, @Param("newBirthDay") String newBirthDay);
 	void updateMemberPassword(@Param("memberNo") Long memberNo, @Param("encryptedPassword") String encryptedPassword);
+	void updateMemberImage(@Param("memberNo")Long memberNo, @Param("image")String image);
 }
