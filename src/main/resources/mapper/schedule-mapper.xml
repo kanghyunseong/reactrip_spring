@@ -48,14 +48,15 @@
 	</insert>
 	
 	<!-- 전체 개수 -->
-	<select id="selectScheduleCount" resultType="int">
+	<select id="selectMyScheduleCount" resultType="int">
 		SELECT COUNT(*)
 		FROM TB_SCHEDULE
-		WHERE SCHEDULE_STATUS = 'N'
+		WHERE MEMBER_NO = #{memberNo}
+		  AND SCHEDULE_STATUS = 'N'
 	</select>
 	
 	<!-- 목록 조회 (페이징) -->
-	<select id="selectScheduleList" resultMap="scheduleResultMap">
+	<select id="selectMyScheduleList" resultMap="scheduleResultMap">
 		SELECT
 			s.SCHEDULE_NO,
 			s.MEMBER_NO,
@@ -70,7 +71,8 @@
 	    FROM TB_SCHEDULE s
 	    JOIN TB_MEMBER m ON s.MEMBER_NO = m.MEMBER_NO
 	    JOIN TB_AUTHENTICATION a ON m.MEMBER_NO = a.MEMBER_NO
-	    WHERE s.SCHEDULE_STATUS = 'N'
+	    WHERE s.MEMBER_NO = #{memberNo}
+	      AND s.SCHEDULE_STATUS = 'N'
 	    ORDER BY s.CREATED_DATE DESC
 	</select>
 	
@@ -91,7 +93,8 @@
 		FROM TB_SCHEDULE s
 		JOIN TB_MEMBER m ON s.MEMBER_NO = m.MEMBER_NO
 		JOIN TB_AUTHENTICATION a ON s.MEMBER_NO = a.MEMBER_NO
-		WHERE s.SCHEDULE_NO = #{scheduleNo}
+		WHERE s.MEMBER_NO = #{memberNo}
+		  AND s.SCHEDULE_NO = #{scheduleNo}
 		  AND s.SCHEDULE_STATUS = 'N'
 	</select>
 	
