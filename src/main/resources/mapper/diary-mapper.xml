@@ -3,6 +3,25 @@
 
 <mapper namespace="com.kh.reactrip.diary.model.dao.DiaryMapper">
 
+<resultMap id="DiaryDetailMap" type="com.kh.reactrip.diary.model.dto.DiaryDetailDTO">
+
+    <id property="diaryNo" column="DIARY_NO"/>
+
+    <result property="diaryTitle" column="DIARY_TITLE"/>
+    <result property="diaryContent" column="DIARY_CONTENT"/>
+    <result property="createdDate" column="CREATED_DATE"/>
+    <result property="count" column="COUNT"/>
+
+    <result property="memberNo" column="MEMBER_NO"/>
+    <result property="memberName" column="MEMBER_NAME"/>
+
+    <!-- 🔥 이미지 리스트 -->
+    <collection property="imageUrls"
+                ofType="string"
+                column="IMAGE_URL"/>
+</resultMap>
+
+
 <!-- 전체 목록 조회-->
 <select id="findAllDiary" resultType="com.kh.reactrip.diary.model.dto.DiaryDTO">
 	SELECT
@@ -17,6 +36,7 @@
 		 , M.MEMBER_NAME AS memberName
 		 , S.SCHEDULE_NO AS scheduleNo
 		 , T.TRAVEL_NO AS travelNo
+		 , nvl2(img.image_url,img.image_url,'https://us.123rf.com/450wm/oculo/oculo2004/oculo200400003/143645399-no-image-available-icon.jpg') as imageUrl
 	 FROM
 	       TB_DIARY D
 	 JOIN
@@ -27,6 +47,9 @@
 	 LEFT
 	 JOIN
 	 	   TB_TRAVEL T ON (D.TRAVEL_NO = T.TRAVEL_NO)
+	 LEFT
+	 JOIN
+	 	   TB_DIARY_IMAGE IMG ON (d.diary_no = IMG.diary_no)
 	WHERE
 		   D.DIARY_STATUS = 'N'
     ORDER 
@@ -34,6 +57,11 @@
     	   D.DIARY_NO DESC
     OFFSET #{offset} ROWS
     FETCH NEXT #{size} ROWS ONLY	 
+</select>
+
+
+<select id="selectSeqNo" resultType="_int">
+	select SEQ_DIARY.NEXTVAL from dual	
 </select>
 
 
@@ -48,34 +76,34 @@
 </select>
 
 
-<!-- 상세 조회 (지역/테마 FK 포함) -->
+<!-- 상세 조회 -->
 <select id="findByDiaryNo" parameterType="int" resultType="com.kh.reactrip.diary.model.dto.DiaryDetailDTO">
 	 SELECT
 	        D.DIARY_NO AS diaryNo
 	      , D.DIARY_TITLE AS diaryTitle
 	      , D.DIARY_CONTENT AS diaryContent
 	      , TO_CHAR(D.CREATED_DATE,'YYYY.MM.DD') AS createdDate
-	      , TO_CHAR(D.UPDATED_DATE,'YYYY.MM.DD') AS updatedDate
 	      , D.COUNT AS count
 	      , M.MEMBER_NO AS memberNo
 	      , M.MEMBER_NAME AS memberName
-	      , D.SCHEDULE_NO AS scheduleNo
-	      , D.TRAVEL_NO AS travelNo
-	      , D.REGION_NO AS regionNo
-	      , R.REGION_NAME AS regionName
-	      , D.THEME_NO AS themeNo
-	      , T.THEME_NAME AS themeName
-	   FROM
-	        TB_DIARY D
-	   JOIN
-	        TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
-	   LEFT JOIN
-	        TB_REGION R ON (D.REGION_NO = R.REGION_NO)
-	   LEFT JOIN
-	        TB_THEME T ON (D.THEME_NO = T.THEME_NO)
-	  WHERE
-	        D.DIARY_NO = #{diaryNo}
-</select>  
+	   FROM 
+	   		TB_DIARY D
+	   JOIN 
+	   		TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
+	    
+	  WHERE 
+	  		D.DIARY_NO = #{diaryNo}
+</select>
+
+<!-- 이미지 목록조회 -->
+<select id="findDiaryImages" parameterType="int" resultType="String">
+	  SELECT 
+	  		 IMAGE_URL
+	    FROM 
+	         TB_DIARY_IMAGE
+	   WHERE 
+	         DIARY_NO = #{diaryNo}
+</select>
 
  
 <!-- 댓글 목록 -->
@@ -121,22 +149,38 @@
     	  DIARY_NO = #{diaryNo} AND COMMENT_STATUS = 'N'
     </select>
 
+<!-- 이미지 업로드 -->
+<insert id="insertDiaryImage" parameterType="com.kh.reactrip.diary.model.dto.DiaryImageDTO">
+	INSERT
+	  INTO
+	  	    TB_DIARY_IMAGE(
+	  	     IMAGE_NO
+			,IMAGE_URL
+			,ORIGINAL_NAME
+			,SORT_ORDER
+			,CREATE_DATE
+			,DIARY_NO
+	  	    )
+ 	VALUES  
+ 			(SEQ_DIARY_IMG.NEXTVAL
+ 			, #{imageUrl}
+ 			, #{originalName}
+ 			, 1
+ 			, SYSDATE
+ 			, #{diaryNo}
+ 			)
+</insert>
 
 <!-- 게시글 작성 (REGION_NO, THEME_NO nullable) -->
 <insert id="insertDiary">
-	<selectKey keyProperty="diaryNo" order="BEFORE" resultType="long">
+	<selectKey keyProperty="diaryNo" order="BEFORE" resultType="java.lang.Integer">
 		SELECT SEQ_DIARY.NEXTVAL FROM DUAL
 	</selectKey>
+	
 	INSERT INTO TB_DIARY
-		( DIARY_NO, DIARY_TITLE, DIARY_CONTENT, DIARY_STATUS, CREATED_DATE, UPDATED_DATE, COUNT
-		, MEMBER_NO, SCHEDULE_NO, TRAVEL_NO, REGION_NO, THEME_NO )
+		(DIARY_NO, DIARY_TITLE, DIARY_CONTENT, DIARY_STATUS, CREATED_DATE, UPDATED_DATE, COUNT, MEMBER_NO, SCHEDULE_NO, TRAVEL_NO, REGION_NO, THEME_NO)
 	VALUES
-		( #{diaryNo}, #{diaryTitle}, #{diaryContent}, 'N', SYSDATE, SYSDATE, 0
-		, #{memberNo}, #{scheduleNo}, #{travelNo}, #{regionNo}, #{themeNo} )
+		(#{diaryNo}, #{diaryTitle}, #{diaryContent}, 'N', SYSDATE, SYSDATE, 0, #{memberNo}, #{scheduleNo}, #{travelNo}, #{regionNo}, #{themeNo})
 </insert>
-
-
-
-
 		   
 </mapper>

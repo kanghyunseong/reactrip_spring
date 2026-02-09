@@ -17,6 +17,7 @@ import com.kh.reactrip.diary.model.dao.DiaryMapper;
 import com.kh.reactrip.diary.model.dto.DiaryCommentDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
+import com.kh.reactrip.diary.model.dto.DiaryImageDTO;
 import com.kh.reactrip.diary.model.vo.DiaryComListVO;
 import com.kh.reactrip.file.service.S3Service;
 import com.kh.reactrip.util.PageInfo;
@@ -79,10 +80,13 @@ public class DiaryServiceImpl implements DiaryService {
 		
 		DiaryDetailDTO ddDTO = diaryMapper.findByDiaryNo(diaryNo);
 		
+		List<String> imageUrls = diaryMapper.findDiaryImages(diaryNo);
+		
 		log.info("상세조회 : {}", ddDTO);
+
+		ddDTO.setImageUrls(imageUrls);
 		
-		
-		return diaryMapper.findByDiaryNo(diaryNo);
+		return ddDTO;
 	}
 
 
@@ -115,27 +119,43 @@ public class DiaryServiceImpl implements DiaryService {
 	// 게시글 작성
 	@Transactional
 	@Override
-	public void insertDiary(DiaryDTO dto, List<MultipartFile> images) {
+	public int insertDiary(DiaryDTO diary) {
+
+		diaryMapper.insertDiary(diary);
+		int diaryNo = diary.getDiaryNo();
 		
-		diaryMapper.insertDiary(dto);
 		
-		int diaryNo = dto.getDiaryNo();
 		
 		// 이미지 파일
-		if(images == null || images.isEmpty()) {
-			throw new IllegalArgumentException("이미지는 최소 1장 이상 등록해야 합니다.");
-		}  
-		
-		int order = 1;
-	
-		for(MultipartFile file : images) {
-			String imageUrl = s3Service.fileSave(file);
-			diaryMapper.insertDiaryImage(diaryNo, imageUrl, order++);
-		}
-		
-	}
+        if (diary.getImageUrl() != null && !"".equals(diary.getImageUrl()) ) {
+        	DiaryImageDTO imgVO = new DiaryImageDTO();
+        	imgVO.setOriginalName("img");
+        	imgVO.setImageUrl(diary.getImageUrl());
+        	imgVO.setDiaryNo(diaryNo);
+        	diaryMapper.insertDiaryImage(imgVO);
+        }
+        
+//        for(String imageUrl : diary.getImageUrls()) {
+//        	
+//           diaryMapper.insertDiaryImage(diary.getDiaryNo(), imageUrl);
+//    
+//        }
+        
+        return diaryNo;
+    }
 
 
+	// 이미지 업로드
+//	@Override
+//	@Transactional
+//	public void insertDiaryImages(DiaryImageDTO imgDTO) {
+//
+//	    for (String url : imgDTO.getImageUrls()) {
+//	        diaryMapper.insertDiaryImage(imgDTO.getDiaryNo(), url);
+//	    }
+//	    
+//	}
+ 
 
 
 

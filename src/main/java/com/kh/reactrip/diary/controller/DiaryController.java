@@ -3,26 +3,26 @@ package com.kh.reactrip.diary.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.diary.model.dto.DiaryDTO;
 import com.kh.reactrip.diary.model.dto.DiaryDetailDTO;
+import com.kh.reactrip.diary.model.dto.DiaryImageDTO;
 import com.kh.reactrip.diary.model.service.DiaryService;
-import com.kh.reactrip.diary.model.vo.DiaryComListVO;
-import com.kh.reactrip.diary.model.vo.DiaryComVO;
-import com.kh.reactrip.diary.model.vo.DiaryDetailVO;
+import com.kh.reactrip.file.service.S3Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +35,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DiaryController {
 
 	private final DiaryService diaryService;
+	private final S3Service s3Service;
 
 	// 목록 전체 조회
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> findAllDiary(
-			@RequestParam(name = "page", defaultValue = "1") int page, 																														// 페이지에
+			@RequestParam(name = "page", defaultValue = "1") int page, 
 			@RequestParam(name = "size", defaultValue = "5") int size) { // 게시글 5개 보여줘
 		
 		// log.info("컨트롤러 page --> " + page);
@@ -74,12 +75,18 @@ public class DiaryController {
  
 	  
 	// 게시글 작성
-	@PostMapping
-	public ResponseEntity<?> insertDiary(@RequestPart("data") DiaryDTO dto,
-			@RequestPart(value = "images", required = false) List<MultipartFile> images) {
-
-		diaryService.insertDiary(dto, images);
-		return ResponseEntity.ok().build();
+	@PostMapping("/insert")
+	public ResponseEntity<?> insertDiary(@RequestBody DiaryDTO diary) { 
+		log.info("게시글 작성 컨트롤 호출!~!");
+		
+		log.info("diary = {}", diary);    
+		
+		int diaryNo = diaryService.insertDiary(diary);
+	    
+		return ResponseEntity.ok(diaryNo);
 	}
+	
+	
+	
 
 }
