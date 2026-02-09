@@ -134,7 +134,7 @@ public class SecurityConfigure {
                 		  "/api/members/mypage",
                           "/api/boards/*",
                           "/api/imgBoards/*",
-                          "/api/notices/*"
+                          "/api/notices/*"   
                           
                   ).authenticated();
                   
