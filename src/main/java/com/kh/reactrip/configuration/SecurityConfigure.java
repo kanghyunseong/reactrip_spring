@@ -1,7 +1,11 @@
 package com.kh.reactrip.configuration;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,55 +66,82 @@ public class SecurityConfigure {
               .csrf(AbstractHttpConfigurer::disable)
               .cors(Customizer.withDefaults())
               .authorizeHttpRequests(requests -> {
+            	  
+            	  requests.requestMatchers(
+            			  "/swagger-ui.html",
+                          "/swagger-ui/**",
+                          "/api-docs/**",     // ★ YAML에서 path: /api-docs 라고 했으니 이걸 열어야 함!
+                          "/v3/api-docs/**",
+                          "/ws-raspberry/**"
+              		).permitAll();
 
                   // 1. POST - 비로그인 허용 (회원가입/로그인, 차량/예약 등)
                   requests.requestMatchers(HttpMethod.POST,
                           "/api/members/login",
                           "/api/members",
-                          "/api/members/**",
+                          "/api/members/signup",
                           "/api/auth/refresh",
-                          "/api/cars/**",
                           "/api/station/**",
-                          "/api/reserve/**"
+                          "/api/reserve/**",
+                          "/api/**",
+                          "/api/admin/members",
+                          "/api/admin/**",
+                          "/api/auth/login"
+                           
                   ).permitAll();
 
-                  // 2. GET - 비로그인 허용 (목록/조회용)
+                  // 2. GET - 비로그인 허용 (목록/조회용, 룰렛용 여행지 목록 포함)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/uploads/**",
-                          "/api/members/**",
-                          "/api/cars/**",
-                          "/api/station/**",
-                          "/api/station/search",
-                          "/api/boards",
-                          "/api/boards/search",
-                          "/api/imgBoards",
-                          "/api/imgBoards/search",
-                          "/api/notices",
-                          "/api/notices/search",
-                          "/api/comments/**",
-                          "/api/imgComments/**",
-                          "/api/reserve/**",
-                          "/api/reviews/**",
-                          "/api/main"
+                          "/api/diarys/**",
+                          "/api/admin/travel",
+                          "/api/places/**"
+                		  
                   ).permitAll();
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/boards/*",
-                          "/api/imgBoards/*",
-                          "/api/notices/*"
+                          "/api/notices/*",
+                          "/api/diarys/**",
+                          "/api/schedules/**",
+                          "/api/members/mypage"
                   ).authenticated();
 
                   // 4. PUT - 로그인 필요
                   requests.requestMatchers(HttpMethod.PUT,
                           "/api/members", 
                           "/api/members/**", 
-                          "/api/boards/**", 
-                          "/api/imgBoards/**", 
-                          "/api/comments/**", 
-                          "/api/imgComments/**",
-                          "/api/reserve/**", 
-                          "/api/reviews/**"
+                          "/api/comments/**" ,
+                          "/api/places/**",
+                		  "/api/**"
+                  ).permitAll();
+                  
+                  requests.requestMatchers(HttpMethod.PUT,
+                		  "/api/**"
+                		  ).permitAll();
+                  
+                  requests.requestMatchers(HttpMethod.DELETE,
+                		  "/api/admin/members",
+                		  "/api/admin/members/search",
+                		  "/api/**"
+                  ).permitAll();
+                  
+                  
+                  
+
+                  
+                  // 3. GET - 로그인 필요 (상세 페이지들)
+                  requests.requestMatchers(HttpMethod.GET,
+                		  "/api/members/mypage",
+                          "/api/boards/*",
+                          "/api/imgBoards/*",
+                          "/api/notices/*"
+                          
+                  ).authenticated();
+                  
+
+                  // 4. PUT - 로그인 필요
+                  requests.requestMatchers(HttpMethod.PUT,
+                          "/api/**"
                   ).authenticated();
 
                   // 5. DELETE - 로그인 필요
@@ -128,13 +159,20 @@ public class SecurityConfigure {
 
                   // 6. POST - 게시글/댓글/공지 작성 (로그인 필요)
                   requests.requestMatchers(HttpMethod.POST,
+                          "/api/diarys/**",
+                          "/api/diarys/upload/diary-image",
                           "/api/boards/**",
                           "/api/imgBoards/**",
                           "/api/comments/**",
                           "/api/imgComments/**",
                           "/api/notices/**",
-                          "/api/reviews/**"
+                          "/api/reviews/**",
+                          "/api/schedules/**"
                   ).authenticated();
+
+
+
+                  
 
                   // 7. 관리자 전용
                   requests.requestMatchers(HttpMethod.GET,
@@ -169,6 +207,9 @@ public class SecurityConfigure {
                           "/api/admin/community/**",
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
+
+                  
+
               })
               .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
               .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -180,16 +221,22 @@ public class SecurityConfigure {
    @Bean
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration configuration = new CorsConfiguration();
-      configuration.setAllowedOrigins(Arrays.asList(instance));
+      List<String> allowedOrigins = new ArrayList<>();
+      allowedOrigins.add(instance);
+      if (instance != null && !instance.isBlank()) {
+         allowedOrigins.add(instance);
+      }
+
+      // allowCredentials=true 인 경우, "*" 대신 명시적으로 origin을 허용해야 합니다.
+      configuration.setAllowedOriginPatterns(allowedOrigins);
       configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-      configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type"));
+      configuration.addAllowedHeader("*");
       configuration.setAllowCredentials(true);
       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
       source.registerCorsConfiguration("/**", configuration);
       return source;
    }
    
-
    @Bean
    public PasswordEncoder passwordEncoder() {
       return new BCryptPasswordEncoder();

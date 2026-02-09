@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.reactrip.admin.members.model.mapper.AdminMemberMapper">
+
+<select id="getTotalCount" resultType="_int">
+    SELECT 
+           COUNT(*)
+      FROM 
+           TB_MEMBER M
+      LEFT
+      JOIN 
+           TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
+     WHERE 
+           D.MEMBER_NO IS NULL
+</select>
+<select id="getSearchCount" resultType="_int">
+    SELECT 
+           COUNT(*)
+      FROM 
+           TB_MEMBER M
+      LEFT
+      JOIN 
+           TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
+     WHERE 
+           D.MEMBER_NO IS NULL
+      <if test="keyword != null and keyword != ''">
+           AND (
+               M.MEMBER_NAME LIKE '%' || #{keyword} || '%'
+            OR 
+               M.EMAIL LIKE '%' || #{keyword} || '%'
+            OR
+               M.PHONE LIKE '%' || #{keyword} || '%'
+           )
+      </if>
+</select>
+
+<select id="findAllMembers" resultType="com.kh.reactrip.admin.members.model.dto.AdminMemberDTO">
+    SELECT 
+           M.MEMBER_NO AS memberNo
+         , M.MEMBER_NAME AS memberName
+         , M.BIRTHDAY
+         , M.PHONE
+         , M.EMAIL
+         , M.IMAGE
+         , M.MEMBER_ROLE AS memberRole
+         , M.ENROLL_DATE AS enrollDate
+      FROM 
+           TB_MEMBER M
+      LEFT 
+      JOIN 
+           TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
+     WHERE 
+           D.MEMBER_NO IS NULL
+     ORDER 
+        BY
+           M.MEMBER_NO DESC
+</select>
+<select id="findByMembers" resultType="com.kh.reactrip.admin.members.model.dto.AdminMemberDTO">
+    SELECT 
+           M.MEMBER_NO AS memberNo
+         , M.MEMBER_NAME AS memberName
+         , M.BIRTHDAY
+         , M.PHONE
+         , M.EMAIL
+         , M.IMAGE
+         , M.MEMBER_ROLE AS memberRole
+         , M.ENROLL_DATE AS enrollDate
+      FROM
+           TB_MEMBER M
+      LEFT
+      JOIN
+           TB_DELETED_MEMBER D ON M.MEMBER_NO = D.MEMBER_NO
+     WHERE
+           D.MEMBER_NO IS NULL
+      <if test="keyword != null and keyword != ''">
+           AND (
+               M.MEMBER_NAME LIKE '%' || #{keyword} || '%'
+            OR 
+               M.EMAIL LIKE '%' || #{keyword} || '%'
+            OR
+               M.PHONE LIKE '%' || #{keyword} || '%'
+           )
+      </if>
+     ORDER BY M.MEMBER_NO DESC
+</select>
+<update id="updateMemberRole">
+    UPDATE 
+           TB_MEMBER
+       SET 
+           MEMBER_ROLE = #{memberRole}
+     WHERE 
+           MEMBER_NO = #{memberNo}
+       AND 
+           MEMBER_NO NOT IN (
+			SELECT
+			      MEMBER_NO
+			 FROM 
+			      TB_DELETED_MEMBER)
+</update>
+
+<select id="findMemberByNo">
+	SELECT
+	       MEMBER_NO AS memberNo
+	     , MEMBER_NAME AS memberName
+	     , IMAGE AS image
+	  FROM
+	       TB_MEMBER
+	 WHERE
+	       MEMBER_NO = #{memberNo}
+</select>
+
+<insert id="deleteMember">
+	INSERT INTO TB_DELETED_MEMBER (MEMBER_NO)
+	VALUES (#{memberNo})
+</insert>
+
+</mapper>

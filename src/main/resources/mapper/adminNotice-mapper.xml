@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.kh.reactrip.admin.notices.model.mapper.AdminNoticeMapper">
+
+<insert id="insertNotice" parameterType="com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO">
+    INSERT 
+      INTO
+           TB_NOTICE
+           (		
+           NOTICE_NO
+         , MEMBER_NO
+         , NOTICE_TITLE
+         , NOTICE_CONTENT
+         , IMAGE
+         , NOTICE_STATUS
+         , CREATED_DATE
+         , COUNT
+           )
+    VALUES
+           (
+           SEQ_NOTICE.NEXTVAL
+         , #{memberNo}
+         , #{noticeTitle}
+         , #{noticeContent}
+         , #{image}
+         , 'N'
+         , SYSDATE
+         , 0
+    	   )
+</insert>
+<select id="getTotalCount" resultType="_int">
+	SELECT 
+        COUNT(*)
+    FROM 
+         TB_NOTICE
+   WHERE
+         NOTICE_STATUS = 'N'
+</select>
+
+<select id="findAllNotice" resultType="com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO">
+	SELECT 
+            N.NOTICE_NO AS noticeNo
+          , N.MEMBER_NO AS memberNo
+          , N.NOTICE_TITLE AS noticeTitle
+          , N.NOTICE_CONTENT AS noticeContent
+          , N.IMAGE AS image
+          , N.NOTICE_STATUS AS noticeStatus
+          , N.CREATED_DATE AS createdDate
+          , N.UPDATED_DATE AS updatedDate
+          , N.COUNT AS count
+          , M.MEMBER_NAME AS memberName 
+       FROM 
+            TB_NOTICE N
+       LEFT
+       JOIN 
+            TB_MEMBER M ON (N.MEMBER_NO = M.MEMBER_NO)
+      ORDER
+         BY 
+            N.NOTICE_NO DESC
+</select>
+<select id="selectNoticeDetail" resultType="com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO">
+    SELECT 
+           NOTICE_NO
+         , MEMBER_NO
+         , NOTICE_TITLE
+         , NOTICE_CONTENT
+         , IMAGE AS image
+         , NOTICE_STATUS AS noticeStatus
+         , CREATED_DATE AS createdDate
+         , UPDATED_DATE AS updatedDate
+         , COUNT AS count
+      FROM 
+           TB_NOTICE
+     WHERE 
+           NOTICE_NO = #{noticeNo}
+       AND 
+           NOTICE_STATUS = 'N' 
+</select>
+<update id="updateNotice">
+	UPDATE 
+	       TB_NOTICE
+	 <set>
+		   <if test="noticeTitle != null and noticeTitle != '' ">
+		   NOTICE_TITLE = #{noticeTitle},
+		   </if>
+		   <if test="noticeContent != null and noticeContent !='' ">
+		   NOTICE_CONTENT = #{noticeContent},
+		   </if>
+		   <if test="image != null">
+		   IMAGE = #{image},
+		   </if>
+		   UPDATED_DATE = SYSDATE
+    </set>
+    WHERE
+          NOTICE_NO = #{noticeNo}
+</update>
+<update id="deleteNotice">
+	UPDATE
+	       TB_NOTICE
+	   SET
+	       NOTICE_STATUS = ${diaryStatus}
+     WHERE
+           NOTICE_NO = #{noticeNo}
+</update>
+
+<select id="getSearchCount" resultType="_int">
+    SELECT 
+           COUNT(*)
+      FROM 
+           TB_NOTICE
+     WHERE 
+           NOTICE_STATUS = 'N'
+      <if test="keyword != null and keyword != ''">
+           AND (
+               NOTICE_TITLE   LIKE '%' || #{keyword} || '%'
+            OR 
+               NOTICE_CONTENT LIKE '%' || #{keyword} || '%'
+           )
+      </if>
+</select>
+<select id="findByNotice" resultType="com.kh.reactrip.admin.notices.model.dto.AdminNoticeDTO">
+    SELECT 
+           N.NOTICE_NO      AS noticeNo
+         , N.MEMBER_NO      AS memberNo
+         , N.NOTICE_TITLE   AS noticeTitle
+         , N.NOTICE_CONTENT AS noticeContent
+         , N.IMAGE          AS image
+         , N.NOTICE_STATUS  AS noticeStatus
+         , N.CREATED_DATE   AS createdDate
+         , N.UPDATED_DATE   AS updatedDate
+         , N.COUNT          AS count
+      FROM 
+           TB_NOTICE N
+     WHERE 
+           NOTICE_STATUS = 'N'
+      <if test="keyword != null and keyword != ''">
+           AND (
+               NOTICE_TITLE   LIKE '%' || #{keyword} || '%'
+            OR 
+               NOTICE_CONTENT LIKE '%' || #{keyword} || '%'
+           )
+      </if>
+     ORDER BY NOTICE_NO DESC
+</select>
+</mapper>
