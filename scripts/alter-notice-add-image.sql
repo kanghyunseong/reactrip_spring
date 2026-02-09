@@ -1,0 +1,8 @@
+-- TB_NOTICE에 IMAGE 컬럼 추가 (공지 대표 이미지 URL 저장)
+-- 이미 컬럼이 있으면 오류 발생. 필요 시 "ALTER TABLE TB_NOTICE DROP COLUMN IMAGE;" 후 재실행.
+
+ALTER TABLE TB_NOTICE ADD IMAGE VARCHAR2(500);
+
+COMMENT ON COLUMN TB_NOTICE.IMAGE IS '공지 대표 이미지 URL (선택)';
+
+COMMIT;

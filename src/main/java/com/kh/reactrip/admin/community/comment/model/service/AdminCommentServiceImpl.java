@@ -49,11 +49,14 @@ public class AdminCommentServiceImpl implements AdminCommentService {
 	}
 	
 	@Override
-	public void deleteComment(Long commentNo) {
-		Validator.validateNo(commentNo, "삭제할 번호가 잘못됨.");
+	public AdminCommentDTO deleteStatus(Long commentNo, AdminCommentDTO dto) {
+		Validator.validateNo(commentNo, "변경할 댓글 번호가 잘못되었습니다.");
 		
-		int result = adminCommentMapper.deleteStatus(commentNo);
-		Validator.validateResult(result, "대상을 찾을 수 없습니다.");
+		dto.setCommentNo(commentNo);
+		int result = adminCommentMapper.deleteStatus(dto);
+		Validator.validateResult(result, "상태 변경 실패");
+
+		return adminCommentMapper.findByCommentNo(commentNo);
 	}
 
 	@Override

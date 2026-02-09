@@ -9,7 +9,7 @@ public interface AdminCommentService {
 
 	AdminCommentDTO findByCommentNo(Long commentNo);
 
-	void deleteComment(Long commentNo);
+	AdminCommentDTO deleteStatus(Long commentNo, AdminCommentDTO dto);
 
 	PageResponseDTO<AdminCommentDTO> findBySearch(String keyword, int page);
 

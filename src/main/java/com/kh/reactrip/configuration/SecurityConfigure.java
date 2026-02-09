@@ -1,6 +1,8 @@
 package com.kh.reactrip.configuration;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -69,7 +71,8 @@ public class SecurityConfigure {
             			  "/swagger-ui.html",
                           "/swagger-ui/**",
                           "/api-docs/**",     // ★ YAML에서 path: /api-docs 라고 했으니 이걸 열어야 함!
-                          "/v3/api-docs/**"
+                          "/v3/api-docs/**",
+                          "/ws-raspberry/**"
               		).permitAll();
 
                   // 1. POST - 비로그인 허용 (회원가입/로그인, 차량/예약 등)
@@ -80,15 +83,17 @@ public class SecurityConfigure {
                           "/api/auth/refresh",
                           "/api/station/**",
                           "/api/reserve/**",
+                          "/api/**",
                           "/api/admin/members",
                           "/api/admin/**",
                           "/api/auth/login"
                            
                   ).permitAll();
 
-                  // 2. GET - 비로그인 허용 (목록/조회용)
+                  // 2. GET - 비로그인 허용 (목록/조회용, 룰렛용 여행지 목록 포함)
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/diarys/**",
+                          "/api/admin/travel",
                           "/api/places/**"
                 		  
                   ).permitAll();
@@ -107,24 +112,19 @@ public class SecurityConfigure {
                           "/api/members/**", 
                           "/api/comments/**" ,
                           "/api/places/**",
-                		  "/api/admin/members",
-                		  "/api/admin/members/search",
-                		  "/api/admin/**",
                 		  "/api/**"
                   ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.PUT,
-                		  "/api/admin/members",
-                		  "/api/admin/members/search",
-                		  "/api/admin/members/**",
-                		  "/api/admin/**"
-                  ).permitAll();
+                		  "/api/**"
+                		  ).permitAll();
                   
                   requests.requestMatchers(HttpMethod.DELETE,
                 		  "/api/admin/members",
                 		  "/api/admin/members/search",
                 		  "/api/**"
                   ).permitAll();
+                  
                   
                   
 
@@ -135,6 +135,7 @@ public class SecurityConfigure {
                           "/api/boards/*",
                           "/api/imgBoards/*",
                           "/api/notices/*"
+                          
                   ).authenticated();
                   
 
@@ -170,7 +171,7 @@ public class SecurityConfigure {
 
 
 
-                  /*
+                  
 
                   // 7. 관리자 전용
                   requests.requestMatchers(HttpMethod.GET,
@@ -206,7 +207,7 @@ public class SecurityConfigure {
                           "/api/admin/**"
                   ).hasAuthority("ROLE_ADMIN");
 
-                  */
+                  
 
               })
               .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -219,10 +220,16 @@ public class SecurityConfigure {
    @Bean
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration configuration = new CorsConfiguration();
-      configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-      configuration.setAllowedOrigins(Arrays.asList(instance));
+      List<String> allowedOrigins = new ArrayList<>();
+      allowedOrigins.add(instance);
+      if (instance != null && !instance.isBlank()) {
+         allowedOrigins.add(instance);
+      }
+
+      // allowCredentials=true 인 경우, "*" 대신 명시적으로 origin을 허용해야 합니다.
+      configuration.setAllowedOriginPatterns(allowedOrigins);
       configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-      configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-type"));
+      configuration.addAllowedHeader("*");
       configuration.setAllowCredentials(true);
       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
       source.registerCorsConfiguration("/**", configuration);

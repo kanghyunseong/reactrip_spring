@@ -37,13 +37,6 @@ public class JwtFilter extends OncePerRequestFilter{
 		
 		String uri = request.getRequestURI();
 		
-		   if (uri.startsWith("/api/admin/")) {
-		        log.info("Admin API - 토큰 검증 스킵: {}", uri);
-		        filterChain.doFilter(request, response);
-		        return;
-		    }
-		
-		
 		   if (uri.startsWith("/members/naver")) {
 		        filterChain.doFilter(request, response);
 		        return;

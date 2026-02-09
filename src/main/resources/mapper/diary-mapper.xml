@@ -48,22 +48,33 @@
 </select>
 
 
-<!-- 상세 조회 -->
+<!-- 상세 조회 (지역/테마 FK 포함) -->
 <select id="findByDiaryNo" parameterType="int" resultType="com.kh.reactrip.diary.model.dto.DiaryDetailDTO">
 	 SELECT
 	        D.DIARY_NO AS diaryNo
 	      , D.DIARY_TITLE AS diaryTitle
 	      , D.DIARY_CONTENT AS diaryContent
 	      , TO_CHAR(D.CREATED_DATE,'YYYY.MM.DD') AS createdDate
+	      , TO_CHAR(D.UPDATED_DATE,'YYYY.MM.DD') AS updatedDate
 	      , D.COUNT AS count
 	      , M.MEMBER_NO AS memberNo
 	      , M.MEMBER_NAME AS memberName
-	   FROM 
-	   		TB_DIARY D
-	   JOIN 
-	   		TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
-	  WHERE 
-	  		D.DIARY_NO = #{diaryNo}
+	      , D.SCHEDULE_NO AS scheduleNo
+	      , D.TRAVEL_NO AS travelNo
+	      , D.REGION_NO AS regionNo
+	      , R.REGION_NAME AS regionName
+	      , D.THEME_NO AS themeNo
+	      , T.THEME_NAME AS themeName
+	   FROM
+	        TB_DIARY D
+	   JOIN
+	        TB_MEMBER M ON (D.MEMBER_NO = M.MEMBER_NO)
+	   LEFT JOIN
+	        TB_REGION R ON (D.REGION_NO = R.REGION_NO)
+	   LEFT JOIN
+	        TB_THEME T ON (D.THEME_NO = T.THEME_NO)
+	  WHERE
+	        D.DIARY_NO = #{diaryNo}
 </select>  
 
  
@@ -111,9 +122,17 @@
     </select>
 
 
-<!-- 게시글 작성 -->
-<insert id="insertDiary" useGeneratedKeys="true" keyProperty="diaryNo">
-
+<!-- 게시글 작성 (REGION_NO, THEME_NO nullable) -->
+<insert id="insertDiary">
+	<selectKey keyProperty="diaryNo" order="BEFORE" resultType="long">
+		SELECT SEQ_DIARY.NEXTVAL FROM DUAL
+	</selectKey>
+	INSERT INTO TB_DIARY
+		( DIARY_NO, DIARY_TITLE, DIARY_CONTENT, DIARY_STATUS, CREATED_DATE, UPDATED_DATE, COUNT
+		, MEMBER_NO, SCHEDULE_NO, TRAVEL_NO, REGION_NO, THEME_NO )
+	VALUES
+		( #{diaryNo}, #{diaryTitle}, #{diaryContent}, 'N', SYSDATE, SYSDATE, 0
+		, #{memberNo}, #{scheduleNo}, #{travelNo}, #{regionNo}, #{themeNo} )
 </insert>
 
 

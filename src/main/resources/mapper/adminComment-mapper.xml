@@ -10,8 +10,6 @@
 	       COUNT(*)
 	  FROM     
 	       TB_COMMENT
-	 WHERE
-	       COMMENT_STATUS = 'N'	  
 </select>
 
 <select id="findAllComment" resultType="com.kh.reactrip.admin.community.comment.model.dto.AdminCommentDTO">
@@ -24,12 +22,13 @@
              , C.DIARY_NO         AS diaryNo
              , C.MEMBER_NO        AS memberNo
              , M.MEMBER_NAME      AS memberName
+             , D.DIARY_TITLE      AS diaryTitle
           FROM
                TB_COMMENT C
           JOIN
                TB_MEMBER M ON (C.MEMBER_NO = M.MEMBER_NO)
-         WHERE 
-               COMMENT_STATUS = 'N' 
+          LEFT JOIN
+               TB_DIARY D ON (C.DIARY_NO = D.DIARY_NO)
          ORDER
             BY 
                C.COMMENT_NO DESC
@@ -54,15 +53,13 @@
 </select>
 
 <update id="deleteStatus">
-
 	UPDATE
 	       TB_COMMENT
 	   SET
-	       COMMENT_STATUS = 'Y'
+	       COMMENT_STATUS = #{commentStatus}
 	     , UPDATED_DATE = SYSDATE 
 	 WHERE
 	       COMMENT_NO = #{commentNo}
-	       
 </update>
 
 <select id="getSearchCount" resultType="_int">
@@ -72,10 +69,8 @@
            TB_COMMENT C
       JOIN
            TB_MEMBER M ON C.MEMBER_NO = M.MEMBER_NO
-     WHERE
-           C.COMMENT_STATUS = 'N'
         <if test="keyword != null and keyword != ''">
-       AND (
+     WHERE (
            C.COMMENT_CONTENT LIKE '%' || #{keyword} || '%'
         OR M.MEMBER_NAME    LIKE '%' || #{keyword} || '%' )
        </if> 
@@ -90,17 +85,16 @@
          , C.UPDATED_DATE     AS updatedDate
          , C.MEMBER_NO        AS memberNo
          , M.MEMBER_NAME      AS memberName 
-         , D.DIARY_NO         AS diaryNo    
+         , D.DIARY_NO         AS diaryNo
+         , D.DIARY_TITLE      AS diaryTitle    
       FROM
            TB_COMMENT C  
       JOIN
            TB_MEMBER M ON C.MEMBER_NO = M.MEMBER_NO
-      JOIN
+      LEFT JOIN
            TB_DIARY D ON C.DIARY_NO = D.DIARY_NO
-     WHERE 
-           C.COMMENT_STATUS = 'N' 
        <if test="keyword != null and keyword != ''">
-       AND (
+     WHERE (
            C.COMMENT_CONTENT LIKE '%' || #{keyword} || '%'
         OR
            M.MEMBER_NAME    LIKE '%' || #{keyword} || '%'

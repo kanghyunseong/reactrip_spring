@@ -42,6 +42,7 @@
                JOIN TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
               WHERE TRT.TRAVEL_NO = T.TRAVEL_NO
            ) AS themeNames
+         , ( SELECT MIN(TRT.THEME_NO) FROM TB_REG_THEME TRT WHERE TRT.TRAVEL_NO = T.TRAVEL_NO ) AS themeNo
       FROM
            TB_TRAVEL T
       LEFT JOIN TB_REGION R ON T.REGION_NO = R.REGION_NO
@@ -111,20 +112,19 @@
 </insert>
 <select id="selectTravelDetail" resultType="com.kh.reactrip.admin.travel.model.dto.AdminTravelDTO">
     SELECT
-           TRAVEL_NO      AS travelNo
-         , REGION_NO      AS regionNo
-         , TRAVEL_NAME    AS travelName
-         , TRAVEL_CONTENT AS travelContent
-         , TRAVEL_ADDRESS AS travelAddress
-         , MAP_X          AS mapX
-         , MAP_Y          AS mapY
-         , TRAVEL_IMAGE   AS travelImage
-         , TRAVEL_STATUS  AS travelStatus
-         , COUNT          AS count
-      FROM
-           TB_TRAVEL
-     WHERE
-           TRAVEL_NO = #{travelNo}
+           T.TRAVEL_NO      AS travelNo
+         , T.REGION_NO      AS regionNo
+         , T.TRAVEL_NAME    AS travelName
+         , T.TRAVEL_CONTENT AS travelContent
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X          AS mapX
+         , T.MAP_Y          AS mapY
+         , T.TRAVEL_IMAGE   AS travelImage
+         , T.TRAVEL_STATUS  AS travelStatus
+         , T.COUNT          AS count
+         , ( SELECT MIN(TRT.THEME_NO) FROM TB_REG_THEME TRT WHERE TRT.TRAVEL_NO = T.TRAVEL_NO ) AS themeNo
+      FROM TB_TRAVEL T
+     WHERE T.TRAVEL_NO = #{travelNo}
 </select>
 <update id="updateTravel">
 	UPDATE
@@ -235,6 +235,7 @@
                JOIN TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
               WHERE TRT.TRAVEL_NO = T.TRAVEL_NO
            ) AS themeNames
+         , ( SELECT MIN(TRT.THEME_NO) FROM TB_REG_THEME TRT WHERE TRT.TRAVEL_NO = T.TRAVEL_NO ) AS themeNo
       FROM
            TB_TRAVEL T
       LEFT JOIN TB_REGION R ON T.REGION_NO = R.REGION_NO
@@ -246,6 +247,9 @@
 	    </if>
      ORDER BY T.TRAVEL_NO ASC
 </select>
+<delete id="deleteTravelThemesByTravelNo">
+	DELETE FROM TB_REG_THEME WHERE TRAVEL_NO = #{travelNo}
+</delete>
 <insert id="insertTravelTheme">
     INSERT 
       INTO

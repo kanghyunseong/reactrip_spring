@@ -24,7 +24,11 @@ public class AdminDiaryDTO {
     private Long memberNo;
     private Long scheduleNo;
     private Long travelNo;
-    private String memberName; 
+    private Long regionNo;
+    private String regionName;
+    private Long themeNo;
+    private String themeName;
+    private String memberName;
     private String email;
     private List<AdminDiaryImageVO> images;
     
@@ -39,6 +43,10 @@ public class AdminDiaryDTO {
         this.memberNo = vo.getMemberNo();
         this.scheduleNo = vo.getScheduleNo();
         this.travelNo = vo.getTravelNo();
+        this.regionNo = vo.getRegionNo();
+        this.regionName = vo.getRegionName();
+        this.themeNo = vo.getThemeNo();
+        this.themeName = vo.getThemeName();
         this.memberName = vo.getMemberName();
         this.email = vo.getEmail();
     }

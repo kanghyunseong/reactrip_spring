@@ -30,13 +30,13 @@ public interface AdminTravelMapper {
 	int existsByTitle(String title);
 	
 	AdminTravelVO findByTitle(String title);
-	
 	int getSearchCount(String keyword);
 	
 	List<AdminTravelDTO> findBySearch(String keyword, RowBounds rowBounds);
 	
 	void insertTravelTheme(Map<String, Object> themeMap);
-	
+	void deleteTravelThemesByTravelNo(Long travelNo);
+
 	List<Map<String, Object>> findAllRegions();
 	
 }

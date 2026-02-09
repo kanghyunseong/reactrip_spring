@@ -27,6 +27,8 @@ public class AdminTravelVO {
     private Integer count;
     
     private String regionName;
+    private String themeNames;  // TB_REG_THEME 매핑 테마명들 (쉼표 구분)
+    private Long themeNo;       // 수정 폼용 단일 테마 (첫 번째 테마 번호)
 
     public AdminTravelVO(AdminTravelDTO dto) {
         this.travelNo = dto.getTravelNo();
