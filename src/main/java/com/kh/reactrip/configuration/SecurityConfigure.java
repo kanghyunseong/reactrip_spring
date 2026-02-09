@@ -166,7 +166,7 @@ public class SecurityConfigure {
                           "/api/imgComments/**",
                           "/api/notices/**",
                           "/api/reviews/**",
-                          "/api/schedule"
+                          "/api/schedules/**"
                   ).authenticated();
 
 
