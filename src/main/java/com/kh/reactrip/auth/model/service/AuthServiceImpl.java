@@ -2,6 +2,7 @@ package com.kh.reactrip.auth.model.service;
 
 import java.util.Map;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,23 +12,27 @@ import org.springframework.stereotype.Service;
 import com.kh.reactrip.auth.model.dto.MemberLoginDTO;
 import com.kh.reactrip.auth.model.vo.CustomUserDetails;
 import com.kh.reactrip.exception.CustomAuthenticationException;
+import com.kh.reactrip.exception.LogoutFailureException;
+import com.kh.reactrip.member.model.vo.AuthMember;
+import com.kh.reactrip.token.model.dao.TokenMapper;
 import com.kh.reactrip.token.model.service.TokenService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Primary
 public class AuthServiceImpl implements AuthService {
 
 	private final AuthenticationManager authenticationManager;
 	private final TokenService tokenService;
+	private final TokenMapper tokenMapper;
 
 	@Override
 	public Map<String, String> login(MemberLoginDTO member) {
-
-		//log.info("memberDTO : {} ", member);
 
 		CustomUserDetails user = getCustomUserDetails(member);
 
@@ -35,7 +40,6 @@ public class AuthServiceImpl implements AuthService {
 		//log.info("인증에 성공한 사용자의 정보 : {} ", user);
 
 		Map<String, String> loginResponse = getLoginResponse(user);
-
 		return loginResponse;
 
 	}
@@ -58,18 +62,27 @@ public class AuthServiceImpl implements AuthService {
 
 		String role = user.getAuthorities().stream().findFirst().get().getAuthority();
 
-		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getUserNo(), role);
-		loginResponse.put("userNo", String.valueOf(user.getUserNo()));
+		Map<String, String> loginResponse = tokenService.generateToken(user.getUsername(), user.getAuthNo(), role);
+		loginResponse.put("userNo", String.valueOf(user.getMemberNo()));
 		loginResponse.put("userId", user.getUsername());
 		loginResponse.put("birthDay", user.getBirthDay());
-		loginResponse.put("userName", user.getRealName());
 		loginResponse.put("email", user.getEmail());
 		loginResponse.put("phone", user.getPhone());
 		loginResponse.put("role", user.getAuthorities().toString());
-		loginResponse.put("licenseUrl", user.getLicenseUrl());
-
 		return loginResponse;
 
+	}
+
+	@Override
+	public void logout(@Valid MemberLoginDTO member) {
+		
+		int result = tokenMapper.deleteTokenForLogout(member);
+		
+		if(result == 1) {
+			return;
+		} else {
+			throw new LogoutFailureException("로그아웃 오류 발생, 관리자에게 문의해주세요");
+		}
 	}
 
 }

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.kh.reactrip.admin.travel.model.mapper.AdminTravelMapper">
+
+<resultMap id="travelResultSet" type="com.kh.reactrip.admin.travel.model.vo.AdminTravelVO">
+        <id property="travelNo" column="TRAVEL_NO"/>
+        <result property="regionNo" column="REGION_NO"/>
+        <result property="travelName" column="TRAVEL_NAME"/>
+        <result property="travelContent" column="TRAVEL_CONTENT"/>
+        <result property="travelAddress" column="TRAVEL_ADDRESS"/>
+        <result property="mapX" column="MAP_X"/>
+        <result property="mapY" column="MAP_Y"/>
+        <result property="travelImage" column="TRAVEL_IMAGE"/>
+        <result property="travelStatus" column="TRAVEL_STATUS"/>
+        <result property="count" column="COUNT"/>
+    </resultMap>
+
+<select id="getTotalCount" resultType="_int">
+	SELECT
+	       COUNT(*)
+	  FROM
+	       TB_TRAVEL
+</select>
+
+<select id="findAllTravel" resultType="AdminTravelVO">
+	SELECT 
+           T.TRAVEL_NO    AS travelNo
+         , T.REGION_NO    AS regionNo
+         , T.TRAVEL_NAME  AS travelName
+         , T.TRAVEL_STATUS AS travelStatus
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X AS mapX
+         , T.MAP_Y AS mapY
+         , T.COUNT AS count
+         , T.TRAVEL_IMAGE AS travelImage
+         , R.REGION_NAME  AS regionName
+         , T.TRAVEL_CONTENT AS travelContent
+         , ( SELECT LISTAGG(TH.THEME_NAME, ', ') WITHIN GROUP (ORDER BY TH.THEME_NO)
+               FROM TB_REG_THEME TRT
+               JOIN TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
+              WHERE TRT.TRAVEL_NO = T.TRAVEL_NO
+           ) AS themeNames
+         , ( SELECT MIN(TRT.THEME_NO) FROM TB_REG_THEME TRT WHERE TRT.TRAVEL_NO = T.TRAVEL_NO ) AS themeNo
+      FROM
+           TB_TRAVEL T
+      LEFT JOIN TB_REGION R ON T.REGION_NO = R.REGION_NO
+     WHERE
+           T.TRAVEL_STATUS = 'N'
+     ORDER BY T.TRAVEL_NO ASC
+</select>
+<update id="updateTravelStatus">
+    UPDATE 
+           TB_TRAVEL
+       SET
+           TRAVEL_STATUS = #{travelStatus}
+     WHERE
+           TRAVEL_NO = #{travelNo}
+</update>
+<select id="findByTravelNo" resultType="AdminTravelVO">
+    SELECT 
+           T.TRAVEL_NO AS travelNo
+         , T.REGION_NO AS regionNo
+         , T.TRAVEL_NAME AS travelName
+         , T.TRAVEL_STATUS AS travelStatus
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X AS mapX
+         , T.MAP_Y AS mapY
+         , T.COUNT AS count
+         , T.TRAVEL_IMAGE AS travelImage
+         , R.REGION_NAME AS regionName
+         , T.TRAVEL_CONTENT AS travelContent
+           
+      FROM
+           TB_TRAVEL T
+      LEFT 
+      JOIN 
+           TB_REGION R ON T.REGION_NO = R.REGION_NO
+     WHERE 
+           T.TRAVEL_NO = #{travelNo}
+</select>
+<insert id="insertTravel" parameterType="AdminTravelVO" useGeneratedKeys="true" keyProperty="travelNo" keyColumn="TRAVEL_NO">
+    INSERT
+      INTO
+           TB_TRAVEL
+           (
+           TRAVEL_NO
+         , REGION_NO
+         , TRAVEL_NAME
+         , TRAVEL_CONTENT
+         , TRAVEL_ADDRESS
+         , MAP_X
+         , MAP_Y
+         , TRAVEL_IMAGE
+         , TRAVEL_STATUS
+         , COUNT
+    ) 
+   VALUES 
+        (
+          SEQ_TRAVEL.NEXTVAL
+        , #{regionNo}
+        , #{travelName}
+        , #{travelContent}
+        , #{travelAddress}
+        , #{mapX}
+        , #{mapY}
+        , #{travelImage}
+        , 'N'
+        , 0    
+        )
+</insert>
+<select id="selectTravelDetail" resultType="com.kh.reactrip.admin.travel.model.dto.AdminTravelDTO">
+    SELECT
+           T.TRAVEL_NO      AS travelNo
+         , T.REGION_NO      AS regionNo
+         , T.TRAVEL_NAME    AS travelName
+         , T.TRAVEL_CONTENT AS travelContent
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X          AS mapX
+         , T.MAP_Y          AS mapY
+         , T.TRAVEL_IMAGE   AS travelImage
+         , T.TRAVEL_STATUS  AS travelStatus
+         , T.COUNT          AS count
+         , ( SELECT MIN(TRT.THEME_NO) FROM TB_REG_THEME TRT WHERE TRT.TRAVEL_NO = T.TRAVEL_NO ) AS themeNo
+      FROM TB_TRAVEL T
+     WHERE T.TRAVEL_NO = #{travelNo}
+</select>
+<update id="updateTravel">
+	UPDATE
+	       TB_TRAVEL
+	   <set>
+	   	<if test="travelName != null and travelName != ''">
+	   	TRAVEL_NAME = #{travelName},
+	   	</if>
+	   	<if test="travelContent != null and travelContent != ''">
+	   	TRAVEL_CONTENT = #{travelContent},
+	   	</if>
+	   	<if test="travelAddress != null and travelAddress != ''">
+	   	TRAVEL_ADDRESS = #{travelAddress},
+	   	</if>
+	   	<if test="mapX != null">
+	   	MAP_X = #{mapX},
+	   	</if>
+	   	<if test="mapY != null">
+	   	MAP_Y = #{mapY},
+	   	</if>
+	   	<if test="regionNo != null">
+	   	REGION_NO = #{regionNo},
+	   	</if>
+	   	<if test="travelImage != null">
+	   	TRAVEL_IMAGE = #{travelImage},
+	   	</if>
+	   	<if test="travelStatus != null and travelStatus != ''">
+	   	TRAVEL_STATUS = #{travelStatus}
+	   	</if>
+	   </set>
+	WHERE
+	      TRAVEL_NO = #{travelNo}
+</update>
+<select id="findNearbyTravels" parameterType="map" resultMap="travelResultSet">
+    SELECT 
+           T.*
+         , R.REGION_NAME AS regionName
+      FROM
+           TB_TRAVEL T
+      LEFT
+      JOIN
+           TB_REGION R ON T.REGION_NO = R.REGION_NO
+     WHERE
+           T.MAP_X BETWEEN #{minX} AND #{maxX}
+       AND
+           T.MAP_Y BETWEEN #{minY} AND #{maxY}
+     ORDER
+        BY
+           T.TRAVEL_NO DESC
+</select>
+
+<select id="existsByTitle" parameterType="string" resultType="int">
+    SELECT
+           COUNT(*)
+      FROM
+           TB_TRAVEL
+     WHERE
+           TRAVEL_NAME = #{title}
+</select>
+<select id="findByTitle" parameterType="string" resultType="AdminTravelVO">
+    SELECT 
+           T.TRAVEL_NO AS travelNo
+         , T.REGION_NO AS regionNo
+         , T.TRAVEL_NAME AS travelName
+         , T.TRAVEL_STATUS AS travelStatus
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X AS mapX
+         , T.MAP_Y AS mapY
+         , T.COUNT AS count
+         , T.TRAVEL_IMAGE AS travelImage
+         , T.TRAVEL_CONTENT AS travelContent
+      FROM
+           TB_TRAVEL T
+     WHERE
+           T.TRAVEL_NAME = #{title}
+</select>
+<select id="getSearchCount">
+	SELECT 
+	       COUNT(*)
+	  FROM
+	       TB_TRAVEL
+	 WHERE
+	       TRAVEL_STATUS = 'N'
+	    <if test="keyword != null and keyword != ''">
+	  AND
+	      (
+		  TRAVEL_NAME LIKE '%' || #{keyword} || '%'
+	   OR
+	      TRAVEL_ADDRESS LIKE '%' || #{keyword} || '%'
+		  )
+	    </if>
+</select>
+<select id="findBySearch" resultType="AdminTravelDTO">
+	SELECT
+	       T.TRAVEL_NO      AS travelNo
+         , T.REGION_NO      AS regionNo
+         , T.TRAVEL_NAME    AS travelName
+         , T.TRAVEL_CONTENT AS travelContent
+         , T.TRAVEL_ADDRESS AS travelAddress
+         , T.MAP_X          AS mapX
+         , T.MAP_Y          AS mapY
+         , T.TRAVEL_IMAGE   AS travelImage
+         , T.TRAVEL_STATUS  AS travelStatus
+         , T.COUNT          AS count
+         , R.REGION_NAME    AS regionName
+         , ( SELECT LISTAGG(TH.THEME_NAME, ', ') WITHIN GROUP (ORDER BY TH.THEME_NO)
+               FROM TB_REG_THEME TRT
+               JOIN TB_THEME TH ON TH.THEME_NO = TRT.THEME_NO
+              WHERE TRT.TRAVEL_NO = T.TRAVEL_NO
+           ) AS themeNames
+         , ( SELECT MIN(TRT.THEME_NO) FROM TB_REG_THEME TRT WHERE TRT.TRAVEL_NO = T.TRAVEL_NO ) AS themeNo
+      FROM
+           TB_TRAVEL T
+      LEFT JOIN TB_REGION R ON T.REGION_NO = R.REGION_NO
+     WHERE
+           T.TRAVEL_STATUS = 'N'
+	    <if test="keyword != null and keyword != ''">
+	  AND ( T.TRAVEL_NAME LIKE '%' || #{keyword} || '%'
+	     OR T.TRAVEL_ADDRESS LIKE '%' || #{keyword} || '%' )
+	    </if>
+     ORDER BY T.TRAVEL_NO ASC
+</select>
+<delete id="deleteTravelThemesByTravelNo">
+	DELETE FROM TB_REG_THEME WHERE TRAVEL_NO = #{travelNo}
+</delete>
+<insert id="insertTravelTheme">
+    INSERT 
+      INTO
+           TB_REG_THEME 
+           (
+		   THEME_NO
+         , TRAVEL_NO
+         , CREATE_DATE
+           )
+    VALUES 
+           (
+		   #{themeNo}
+		 , #{travelNo}
+		 , SYSDATE
+		   )
+</insert>
+<select id="findAllRegions" resultType="map">
+    SELECT 
+           REGION_NO AS regionNo
+         , REGION_NAME AS regionName
+      FROM
+           TB_REGION
+     ORDER
+        BY
+           REGION_NO ASC
+</select>
+</mapper>
