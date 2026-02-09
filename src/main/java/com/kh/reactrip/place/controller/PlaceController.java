@@ -16,6 +16,7 @@ import com.kh.reactrip.place.model.dto.ThemeDTO;
 import com.kh.reactrip.place.model.service.PlaceService;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,25 +45,25 @@ public class PlaceController {
 		return ResponseEntity.ok(places);
 		
 	}
-
-	/** 구체 경로를 path variable보다 먼저 선언해야 /regions, /themes가 /{travelNo}에 잡히지 않음 */
+	
+	@GetMapping("/{travelNo}")
+	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") @Validated @Pattern(regexp="^[0-9]+$", message="유효하지 않은 접근입니다.") String travelNo) {
+		 
+		PlaceDTO place = placeService.findByTravelNo(travelNo);
+		return ResponseEntity.ok(place);
+		
+	}
+	
 	@GetMapping("/regions")
 	public ResponseEntity<List<RegionDTO>> findAllRegion() {
 		List<RegionDTO> regions = placeService.findAllRegion();
 		return ResponseEntity.ok(regions);
 	}
-
+	
 	@GetMapping("/themes")
 	public ResponseEntity<List<ThemeDTO>> findAllTheme() {
 		List<ThemeDTO> themes = placeService.findAllTheme();
 		return ResponseEntity.ok(themes);
-	}
-
-	/** 숫자만 매칭 → /regions, /themes가 여기 걸리지 않음 */
-	@GetMapping("/{travelNo:[0-9]+}")
-	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name = "travelNo") String travelNo) {
-		PlaceDTO place = placeService.findByTravelNo(travelNo);
-		return ResponseEntity.ok(place);
 	}
 
 }
