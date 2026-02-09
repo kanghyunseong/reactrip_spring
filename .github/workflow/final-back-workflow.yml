@@ -2,9 +2,9 @@ name: Build and Deploy Spring Boot App
 
 on:
   push:
-    branches: [develop]
+    branches: [merge]
   pull_request:
-    branches: [develop]
+    branches: [merge]
 
 jobs:
   build-and-deploy:
