@@ -180,7 +180,7 @@
 	INSERT INTO TB_DIARY
 		(DIARY_NO, DIARY_TITLE, DIARY_CONTENT, DIARY_STATUS, CREATED_DATE, UPDATED_DATE, COUNT, MEMBER_NO, SCHEDULE_NO, TRAVEL_NO, REGION_NO, THEME_NO)
 	VALUES
-		(#{diaryNo}, #{diaryTitle}, #{diaryContent}, 'N', SYSDATE, SYSDATE, 0, #{memberNo}, #{scheduleNo}, #{travelNo}, #{regionNo}, #{themeNo})
+		(#{diaryNo}, #{diaryTitle}, #{diaryContent}, 'N', SYSDATE, SYSDATE, 0, #{memberNo}, NULL, #{travelNo}, #{regionNo}, #{themeNo})
 </insert>
 		   
 </mapper>
