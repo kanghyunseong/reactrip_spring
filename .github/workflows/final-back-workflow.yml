@@ -1,0 +1,58 @@
+name: Build and Deploy Spring Boot App
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "gradle"
+
+      - name: Grant execute permission for gradle
+        run: chmod +x ./gradlew
+
+      - name: Build to Boot Project
+        run: ./gradlew BootJar -x test
+
+      - name: Verify build jar
+        run: |
+          ls -la build/libs/
+          if [ ! -f build/libs/*.jar ]; then
+            echo "Build Failed"
+            exit 1
+          fi
+          echo "Build Success"
+
+      - name: Deploy Boot App To EC2
+        if: github.event_name == 'push'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "build/libs/*.jar"
+          target: "/home/ubuntu/deploy/back"
+          strip_components: 2
+
+      - name: Restart container
+        if: github.event_name == 'push'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/ubuntu/final
+            docker-compose restart api
