@@ -59,8 +59,8 @@ public class PlaceController {
 		return ResponseEntity.ok(themes);
 	}
 
-	@GetMapping("/{travelNo}")
-	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") @Validated @Pattern(regexp="^[0-9]+$", message="유효하지 않은 접근입니다.") String travelNo) {
+	@GetMapping("/{travelNo:[0-9]+}")
+	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") String travelNo) {
 		PlaceDTO place = placeService.findByTravelNo(travelNo);
 		return ResponseEntity.ok(place);
 	}
