@@ -38,10 +38,14 @@ public class S3Service {
 
       // 파일 이름 바꿔주기 중복 x
       String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+      String contentType = file.getContentType();
+      if (contentType == null || contentType.isEmpty()) {
+         contentType = "application/octet-stream";
+      }
 
       // s3에 업로드
       PutObjectRequest request = PutObjectRequest.builder().bucket(bucketName).key(fileName)
-            .contentType(file.getContentType()).build();
+            .contentType(contentType).build();
 
       try {
          s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
