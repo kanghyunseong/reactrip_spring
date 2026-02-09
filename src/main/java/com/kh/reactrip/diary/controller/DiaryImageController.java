@@ -24,16 +24,22 @@ public class DiaryImageController {
 	
 	
 	@PostMapping(value = "/upload/diary-image", consumes = "multipart/form-data")
-	public ResponseEntity<List<String>> uploadDiaryImages(@RequestPart(value = "file") List<MultipartFile> images) {
-		if (images == null || images.isEmpty()) {
-			return ResponseEntity.ok(new ArrayList<>());
-		}
+	public ResponseEntity<List<String>> uploadDiaryImages(@RequestPart("file") List<MultipartFile> images) {
+		System.out.println("여기 호출되!!!");
+		System.out.println("images size = " + images.size());
+		
 		List<String> imageUrls = new ArrayList<>();
+		
 		for (MultipartFile file : images) {
-			if (file == null || file.isEmpty()) continue;
-			String imageUrl = s3Service.fileSave(file);
-			imageUrls.add(imageUrl);
-		}
-		return ResponseEntity.ok(imageUrls);
+			System.out.println("file : " + file);
+			if(file == null || file.isEmpty()) continue;
+			
+	        String imageUrl = s3Service.fileSave(file);
+	        System.out.println("이미지 url : " + imageUrl);
+	        imageUrls.add(imageUrl);
+	    }
+	
+	    return ResponseEntity.ok(imageUrls);
+	
 	}
 }
