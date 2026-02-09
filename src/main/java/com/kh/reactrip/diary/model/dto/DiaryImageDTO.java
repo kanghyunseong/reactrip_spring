@@ -1,5 +1,7 @@
 package com.kh.reactrip.diary.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,7 @@ public class DiaryImageDTO {
 	private int sortOrder;  
 	private String createDate;
 	private int diaryNo;
+	private List<String> imageUrls;
 	
 
 }

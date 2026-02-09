@@ -30,5 +30,9 @@ public class DiaryDetailDTO {
 	private String regionName;
 	private int themeNo;
 	private String themeName;
+	
+	// 이미지
+	private List<String> imageUrls;
+	
 
 }

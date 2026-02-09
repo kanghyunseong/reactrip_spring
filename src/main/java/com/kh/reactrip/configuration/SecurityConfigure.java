@@ -79,27 +79,31 @@ public class SecurityConfigure {
                   requests.requestMatchers(HttpMethod.POST,
                           "/api/members/login",
                           "/api/members",
-                          "/api/members/**",
+                          "/api/members/signup",
                           "/api/auth/refresh",
-                          "/api/cars/**",
                           "/api/station/**",
                           "/api/reserve/**",
                           "/api/**",
-                          "/api/**"
-                                        
+                          "/api/admin/members",
+                          "/api/admin/**",
+                          "/api/auth/login"
+                           
                   ).permitAll();
 
-                  // 2. GET - 비로그인 허용 (목록/조회용)
+                  // 2. GET - 비로그인 허용 (목록/조회용, 룰렛용 여행지 목록 포함)
                   requests.requestMatchers(HttpMethod.GET,
-                          "/api/diarys/**"
+                          "/api/diarys/**",
+                          "/api/admin/travel",
+                          "/api/places/**"
                 		  
                   ).permitAll();
 
                   // 3. GET - 로그인 필요 (상세 페이지들)
                   requests.requestMatchers(HttpMethod.GET,
                           "/api/notices/*",
-                          "/api/diarys/**" 
-                		  
+                          "/api/diarys/**",
+                          "/api/schedules/**",
+                          "/api/members/mypage"
                   ).authenticated();
 
                   // 4. PUT - 로그인 필요
@@ -131,6 +135,7 @@ public class SecurityConfigure {
                           "/api/boards/*",
                           "/api/imgBoards/*",
                           "/api/notices/*"
+                          
                   ).authenticated();
                   
 
@@ -155,12 +160,14 @@ public class SecurityConfigure {
                   // 6. POST - 게시글/댓글/공지 작성 (로그인 필요)
                   requests.requestMatchers(HttpMethod.POST,
                           "/api/diarys/**",
+                          "/api/diarys/upload/diary-image",
                           "/api/boards/**",
                           "/api/imgBoards/**",
                           "/api/comments/**",
                           "/api/imgComments/**",
                           "/api/notices/**",
-                          "/api/reviews/**"
+                          "/api/reviews/**",
+                          "/api/schedules/**"
                   ).authenticated();
 
 
@@ -215,7 +222,7 @@ public class SecurityConfigure {
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration configuration = new CorsConfiguration();
       List<String> allowedOrigins = new ArrayList<>();
-      allowedOrigins.add("http://localhost:5173");
+      allowedOrigins.add(instance);
       if (instance != null && !instance.isBlank()) {
          allowedOrigins.add(instance);
       }

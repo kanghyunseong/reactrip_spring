@@ -3,6 +3,7 @@ package com.kh.reactrip.admin.travel.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,75 +32,66 @@ public class AdminTravelController {
 	
 	@GetMapping
 	public ResponseEntity<ResponseData<PageResponseDTO<AdminTravelDTO>>> findAllTravel(@RequestParam(name = "page", defaultValue = "1")int page) {
-
+		
 		PageResponseDTO<AdminTravelDTO> response = adminTravelService.findAllTravel(page);
-		
 		return ResponseData.ok(response, "여행지 목록 조회 성공. ");
-		
+	
 	}
 	
 	@GetMapping("/region")
 	public ResponseEntity<ResponseData<List<Map<String, Object>>>> findAllRegions() {
+		
 		List<Map<String, Object>> regions = adminTravelService.findAllRegions();
 		return ResponseData.ok(regions, "지역 목록 조회 성공");
+	
 	}
 	
 	@DeleteMapping("/{travelNo}")
-    public ResponseEntity<ResponseData<AdminTravelDTO>> updateTravelStatus(
-            @PathVariable(name = "travelNo") Long travelNo,
-            @RequestParam(name = "status") String status) {
-        
-        AdminTravelDTO response = adminTravelService.updateTravelStatus(travelNo, status);
-        
-        return ResponseData.ok(response, "여행지 상태 변경 성공");
-    }
-	@PostMapping
-	public ResponseEntity<ResponseData<String>> insertTravel(
-			@ModelAttribute AdminTravelDTO adminTravelDTO,
-			@RequestParam(value = "file", required = false)MultipartFile file
-			) {
-		adminTravelService.insertTravel(adminTravelDTO, file);
+	public ResponseEntity<ResponseData<AdminTravelDTO>> updateTravelStatus(@PathVariable(name = "travelNo") Long travelNo, @RequestParam(name = "status") String status) {
+
+		AdminTravelDTO response = adminTravelService.updateTravelStatus(travelNo, status);
+		return ResponseData.ok(response, "여행지 상태 변경 성공");
 		
+	}
+	
+	@PostMapping
+	public ResponseEntity<ResponseData<String>> insertTravel(@ModelAttribute AdminTravelDTO adminTravelDTO, @RequestParam(value = "file", required = false)MultipartFile file) {
+
+		adminTravelService.insertTravel(adminTravelDTO, file);
 		return ResponseData.created("여행지 등록 성공");
+		
 	}
 	
 	@PutMapping("/{travelNo}")
-	public ResponseEntity<ResponseData<AdminTravelDTO>> updateTravel(
-			@PathVariable(name = "travelNo")Long travelNo,
-			@RequestParam(value = "file", required = false)MultipartFile file,
-			@ModelAttribute AdminTravelDTO adminTravelDTO) {
+	public ResponseEntity<ResponseData<AdminTravelDTO>> updateTravel(@PathVariable(name = "travelNo")Long travelNo, @RequestParam(value = "file", required = false)MultipartFile file, @ModelAttribute AdminTravelDTO adminTravelDTO) {
 		
 		adminTravelService.updateTravel(travelNo, file, adminTravelDTO);
-		
 		return ResponseData.ok(null, "여행지 수정 완료.");
+		
 	}
 	
 	@PostMapping("/api-sync")
 	public ResponseEntity<ResponseData<String>> syncApiData() {
+		
 		adminTravelService.fetchAndSaveApiData();
 		return ResponseData.ok("데이터 동기화 완료");
+		
 	}
 	
 	@GetMapping("/nearby")
-	public ResponseEntity<ResponseData<List<AdminTravelDTO>>> getNearby(
-			@RequestParam("mapX") double mapX, 
-	        @RequestParam("mapY") double mapY
-			) {
+	public ResponseEntity<ResponseData<List<AdminTravelDTO>>> getNearby(@RequestParam("mapX") double mapX, @RequestParam("mapY") double mapY) {
 		
 		List<AdminTravelDTO> list = adminTravelService.getOrSyncNearbyTravels(mapX, mapY);
-		
 		return ResponseData.ok(list, "");
 		
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<ResponseData<PageResponseDTO<AdminTravelDTO>>> findBySearch(
-			@RequestParam(name = "keyword", required = false) String keyword,
-			@RequestParam(name = "page") int page
-			) {
+	public ResponseEntity<ResponseData<PageResponseDTO<AdminTravelDTO>>> findBySearch(@RequestParam(name = "keyword", required = false) String keyword, @RequestParam(name = "page") int page) {
 		
 		PageResponseDTO<AdminTravelDTO> list = adminTravelService.findBySearch(keyword, page);
-		
 		return ResponseData.ok(list, "검색어로 조회 성공");
+		
 	}
+	
 }

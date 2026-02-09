@@ -18,8 +18,8 @@
 		<result column="regionName" property="regionName" />
 		<result column="themeNo" property="themeNo" />
 		<result column="themeTitle" property="themeTitle" />
-		<association property="location" javaType="com.kh.reactrip.place.model.vo.PlaceVO">
 		<result column="themeName" property="themeName" />
+		<association property="location" javaType="com.kh.reactrip.location.Location">
 			<result column="longitude" property="longitude" />
 			<result column="latitude" property="latitude" />
 		</association>
@@ -96,6 +96,28 @@
 		 ORDER
 		    BY
 		       TR.COUNT DESC
+	</select>
+	
+	<select id="findAllRegion" resultType="com.kh.reactrip.place.model.dto.RegionDTO">
+	    SELECT
+	           REGION_NO regionNo
+	         , REGION_NAME regionName
+	      FROM
+	           TB_REGION
+	     ORDER
+	        BY
+	           REGION_NO ASC
+	</select>
+
+	<select id="findAllTheme" resultType="com.kh.reactrip.place.model.dto.ThemeDTO">
+	    SELECT
+	           THEME_NO themeNo
+	         , THEME_NAME themeName
+	      FROM
+	           TB_THEME
+	     ORDER
+	        BY
+	           THEME_NO ASC
 	</select>
 
 </mapper>

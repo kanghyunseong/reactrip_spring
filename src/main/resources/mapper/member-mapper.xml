@@ -77,7 +77,7 @@
 		       member_No = #{memberNo}
 	</update>
 	
-	<resultMap id="authMemberResultMap" type="AuthMember">
+	<resultMap id="authMemberResultMap" type="com.kh.reactrip.member.model.vo.AuthMember">
 	    <id property="authNo" column="AUTH_NO"/>
 	    <result property="memberNo" column="MEMBER_NO"/>
 	    <result property="memberId" column="MEMBER_ID"/>
@@ -191,4 +191,12 @@
 		       MEMBER_NO = #{memberNo}
 	</update>
 
+	<update id="updateMemberImage">
+		UPDATE 
+			   TB_MEMBER
+	       SET
+	           IMAGE = #{image}
+	     WHERE
+	           MEMBER_NO = #{memberNo}
+	</update>
 </mapper>
