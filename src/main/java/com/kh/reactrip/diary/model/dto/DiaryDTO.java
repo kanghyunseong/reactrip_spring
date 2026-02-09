@@ -20,10 +20,10 @@ import lombok.ToString;
 @ToString
 public class DiaryDTO {
 
-	private int diaryNo;			// 게시글 고유번호
+	private Integer diaryNo;			// 게시글 고유번호
 	private String diaryTitle; 		// 게시글 제목
 	private String diaryContent;	// 게시글 내용
-	private char diaryStatus; 		// 게시글 상태
+	private String diaryStatus; 		// 게시글 상태
 	private String createdDate; 	// 게시글 등록일
 	private Date updatedDate; 		// 게시글 수정일
 	private int count;				// 조회수
@@ -36,7 +36,6 @@ public class DiaryDTO {
 	private int themeNo;
 	private String themeName;
 	private String imageUrl;
-	//private List<String> imageUrls;
 	private int totalCount;
 	
 }

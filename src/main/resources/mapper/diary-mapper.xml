@@ -149,17 +149,6 @@
     	  DIARY_NO = #{diaryNo} AND COMMENT_STATUS = 'N'
     </select>
 
-
-<!-- 게시글 작성 -->
-<insert id="insertDiary" parameterType="com.kh.reactrip.diary.model.dto.DiaryDTO" >
-	INSERT
-	  INTO
-	  	   TB_DIARY(DIARY_NO, DIARY_TITLE, DIARY_CONTENT, REGION_NO, THEME_NO, MEMBER_NO, SCHEDULE_NO, TRAVEL_NO)
-	VALUES
-		   (#{diaryNo} , #{diaryTitle}, #{diaryContent}, #{regionNo}, #{themeNo}, #{memberNo}, #{scheduleNo}, #{travelNo})	
-</insert>
-
-
 <!-- 이미지 업로드 -->
 <insert id="insertDiaryImage" parameterType="com.kh.reactrip.diary.model.dto.DiaryImageDTO">
 	INSERT
@@ -182,8 +171,16 @@
  			)
 </insert>
 
-
-
-
+<!-- 게시글 작성 (REGION_NO, THEME_NO nullable) -->
+<insert id="insertDiary">
+	<selectKey keyProperty="diaryNo" order="BEFORE" resultType="java.lang.Integer">
+		SELECT SEQ_DIARY.NEXTVAL FROM DUAL
+	</selectKey>
+	
+	INSERT INTO TB_DIARY
+		(DIARY_NO, DIARY_TITLE, DIARY_CONTENT, DIARY_STATUS, CREATED_DATE, UPDATED_DATE, COUNT, MEMBER_NO, SCHEDULE_NO, TRAVEL_NO, REGION_NO, THEME_NO)
+	VALUES
+		(#{diaryNo}, #{diaryTitle}, #{diaryContent}, 'N', SYSDATE, SYSDATE, 0, #{memberNo}, #{scheduleNo}, #{travelNo}, #{regionNo}, #{themeNo})
+</insert>
 		   
 </mapper>

@@ -58,8 +58,6 @@
        LEFT
        JOIN 
             TB_MEMBER M ON (N.MEMBER_NO = M.MEMBER_NO)
-      WHERE 
-            N.NOTICE_STATUS = 'N'
       ORDER
          BY 
             N.NOTICE_NO DESC
@@ -104,7 +102,7 @@
 	UPDATE
 	       TB_NOTICE
 	   SET
-	       NOTICE_STATUS = 'Y'
+	       NOTICE_STATUS = ${diaryStatus}
      WHERE
            NOTICE_NO = #{noticeNo}
 </update>

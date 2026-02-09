@@ -27,6 +27,10 @@ public class AdminDiaryVO {
 	private Long memberNo;
 	private Long scheduleNo;
 	private Long travelNo;
+	private Long regionNo;
+	private String regionName;
+	private Long themeNo;
+	private String themeName;
 	private String memberName;
 	private String email;
 
@@ -41,6 +45,10 @@ public class AdminDiaryVO {
         this.memberNo = dto.getMemberNo();
         this.scheduleNo = dto.getScheduleNo();
         this.travelNo = dto.getTravelNo();
+        this.regionNo = dto.getRegionNo();
+        this.regionName = dto.getRegionName();
+        this.themeNo = dto.getThemeNo();
+        this.themeName = dto.getThemeName();
         this.memberName = dto.getMemberName();
         this.email = dto.getEmail();
     }

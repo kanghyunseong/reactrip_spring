@@ -68,8 +68,15 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 		if (file != null && !file.isEmpty()) {
 			adminTravelDTO.setTravelImage(fileService.store(file));
 		}
+		AdminTravelVO vo = new AdminTravelVO(adminTravelDTO);
+		adminTravelMapper.insertTravel(vo);
 		
-		adminTravelMapper.insertTravel(new AdminTravelVO(adminTravelDTO));
+		if (vo.getTravelNo() != null && adminTravelDTO.getThemeNo() != null) {
+			Map<String, Object> themeMap = new HashMap<>();
+			themeMap.put("travelNo", vo.getTravelNo());
+			themeMap.put("themeNo", adminTravelDTO.getThemeNo());
+			adminTravelMapper.insertTravelTheme(themeMap);
+		}
 	}
 
 	@Override
@@ -81,13 +88,20 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 		if(file != null && !file.isEmpty()) {
 			adminTravelDTO.setTravelImage(fileService.updateFile(file, origin.getTravelImage()));
 		} else {
-			if(origin.getTravelImage() != null && !origin.getTravelImage().isEmpty()) {
-				fileService.delete(origin.getTravelImage());
-			}
-			adminTravelDTO.setTravelImage("");
+            // 이미지가 없고 기존 이미지가 유지되어야 하는 경우가 아니라면 상황에 맞춰 처리
+			adminTravelDTO.setTravelImage(origin.getTravelImage());
 		}
 		
 		adminTravelMapper.updateTravel(adminTravelDTO);
+
+		// 테마 수정: 기존 매핑 삭제 후 선택한 테마로 저장
+		adminTravelMapper.deleteTravelThemesByTravelNo(travelNo);
+		if (adminTravelDTO.getThemeNo() != null) {
+			Map<String, Object> themeMap = new HashMap<>();
+			themeMap.put("travelNo", travelNo);
+			themeMap.put("themeNo", adminTravelDTO.getThemeNo());
+			adminTravelMapper.insertTravelTheme(themeMap);
+		}
 	}
 
 	@Override
@@ -132,7 +146,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 				.queryParam("serviceKey", tourServiceKey).queryParam("numOfRows", rows).queryParam("pageNo", 1)
 				.queryParam("MobileOS", "ETC").queryParam("MobileApp", "Reactrip").queryParam("_type", "json")
 				.queryParam("arrange", arrange).queryParam("mapX", x).queryParam("mapY", y).queryParam("radius", radius)
-				.queryParam("contentTypeId", "12"); // 필요시 39(맛집) 등 추가 수집 로직 필요
+				.queryParam("contentTypeId", "12");
 
 		try {
 			RestTemplate rt = new RestTemplate();
@@ -150,19 +164,15 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 			if (itemList == null)
 				return;
 
-			int savedCount = 0;
-			int updatedCount = 0;
 			for (Map<String, Object> item : itemList) {
 				String title = String.valueOf(item.get("title"));
 				String overview = fetchOverview(String.valueOf(item.get("contentid")));
 				String apiImage = item.get("firstimage") != null ? String.valueOf(item.get("firstimage")) : "";
 				
-				// 기존 여행지 확인
 				AdminTravelVO existing = adminTravelMapper.findByTitle(title);
 				
 				if (existing != null) {
-					// 이미지가 없거나 비어있거나, 소프트 삭제된 경우 업데이트
-					boolean needsUpdate = (existing.getTravelImage() == null || existing.getTravelImage().isEmpty() || existing.getTravelImage().trim().equals(""))
+					boolean needsUpdate = (existing.getTravelImage() == null || existing.getTravelImage().isEmpty())
 						|| "Y".equals(existing.getTravelStatus());
 					
 					if (needsUpdate) {
@@ -174,29 +184,27 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 						updateDto.setMapY(parseSafeDouble(item.get("mapy")));
 						updateDto.setTravelImage(apiImage);
 						updateDto.setTravelContent(overview);
-						updateDto.setTravelStatus("N"); // 활성 상태로 복구
+						updateDto.setTravelStatus("N");
 						updateDto.setRegionNo(getRegionNoFromApiCode(String.valueOf(item.get("areacode"))));
-						
+
 						adminTravelMapper.updateTravel(updateDto);
-						updatedCount++;
-						continue;
-					} else {
-						// 이미 존재하고 이미지도 있고 활성 상태면 건너뛰기
-						continue;
 					}
+					continue;
 				}
 				
-				// 신규 여행지 추가
-				AdminTravelVO vo = AdminTravelVO.builder().travelName(title)
-						.travelAddress(String.valueOf(item.get("addr1"))).mapX(parseSafeDouble(item.get("mapx")))
+				AdminTravelVO vo = AdminTravelVO.builder()
+                        .travelName(title)
+						.travelAddress(String.valueOf(item.get("addr1")))
+                        .mapX(parseSafeDouble(item.get("mapx")))
 						.mapY(parseSafeDouble(item.get("mapy")))
 						.travelImage(apiImage)
-						.travelContent(overview).travelStatus("N").count(0)
+						.travelContent(overview)
+                        .travelStatus("N")
+                        .count(0)
 						.regionNo(getRegionNoFromApiCode(String.valueOf(item.get("areacode")))).build();
 
 				adminTravelMapper.insertTravel(vo);
 
-				// 2. 테마 정보 추출 및 매핑 테이블 저장
 				String cat1 = String.valueOf(item.get("cat1"));
 				String cat2 = String.valueOf(item.get("cat2"));
 				String cat3 = String.valueOf(item.get("cat3"));
@@ -209,38 +217,20 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 					themeMap.put("themeNo", themeNo);
 					adminTravelMapper.insertTravelTheme(themeMap);
 				}
-
-				savedCount++;
 			}
-			log.info("해당 거점 신규 데이터 {}건 저장, {}건 업데이트 완료", savedCount, updatedCount);
-			log.info("해당 거점 신규 데이터 {}건 저장 완료", savedCount);
 			Thread.sleep(300);
 		} catch (Exception e) {
 			log.error("동기화 중 오류: {}", e.getMessage());
 		}
 	}
 
-	/** 관광공사 API cat1/cat2 → TB_THEME 시드(THEME_NO 1~10) 매핑 */
 	private Long themeMappingString(String cat1, String cat2, String cat3) {
-		// 3. 액티비티 (A03: 레포츠)
-		if ("A03".equals(cat1))
-			return 3L;
-		// 9. 식도락/맛집 (A05: 음식)
-		if ("A05".equals(cat1))
-			return 9L;
-		// 5. 바다/해변 (A0101: 해수욕장/섬 등)
-		if ("A0101".equals(cat2))
-			return 5L;
-		// 2. 전통 문화 (A0201: 역사/문화유적)
-		if ("A0201".equals(cat2))
-			return 2L;
-		// 7. 전시/공연 (A0206: 문화시설)
-		if ("A0206".equals(cat2))
-			return 7L;
-		// 4. 자연/풍경 (A01: 자연)
-		if ("A01".equals(cat1))
-			return 4L;
-		// 10. 기타
+		if ("A03".equals(cat1)) return 3L;
+		if ("A05".equals(cat1)) return 9L;
+		if ("A0101".equals(cat2)) return 5L;
+		if ("A0201".equals(cat2)) return 2L;
+		if ("A0206".equals(cat2)) return 7L;
+		if ("A01".equals(cat1)) return 4L;
 		return 10L;
 	}
 
@@ -284,30 +274,28 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 		}
 	}
 
-	/** 관광공사 API 지역코드 → TB_REGION 시드(REGION_NO 1~12) 매핑 */
 	private Long getRegionNoFromApiCode(String areaCode) {
-		if (areaCode == null || "null".equals(areaCode))
-			return 1L;
+		if (areaCode == null || "null".equals(areaCode)) return 1L;
 		String code = areaCode.contains(".") ? areaCode.split("\\.")[0] : areaCode;
 		return switch (code) {
-		case "1" -> 1L;   // 서울
-		case "2" -> 2L;   // 인천
-		case "3" -> 4L;   // 대전 → 세종 인근
-		case "4" -> 12L;  // 대구 → 경상북도
-		case "5" -> 9L;   // 광주 → 전라남도
-		case "6" -> 11L;  // 부산 → 경상남도
-		case "7" -> 11L;  // 울산 → 경상남도
-		case "8" -> 4L;   // 세종
-		case "31" -> 3L;  // 경기
-		case "32" -> 5L;  // 강원도
-		case "33" -> 8L;  // 충청북도
-		case "34" -> 7L;  // 충청남도
-		case "35" -> 12L; // 경상북도
-		case "36" -> 11L; // 경상남도
-		case "37" -> 10L; // 전라북도
-		case "38" -> 9L;  // 전라남도
-		case "39" -> 6L;  // 제주도
-		default -> 1L;
+    		case "1" -> 1L;
+    		case "2" -> 2L;
+    		case "3" -> 4L;
+    		case "4" -> 12L;
+    		case "5" -> 9L;
+    		case "6" -> 11L;
+    		case "7" -> 11L;
+    		case "8" -> 4L;
+    		case "31" -> 3L;
+    		case "32" -> 5L;
+    		case "33" -> 8L;
+    		case "34" -> 7L;
+    		case "35" -> 12L;
+    		case "36" -> 11L;
+    		case "37" -> 10L;
+    		case "38" -> 9L;
+    		case "39" -> 6L;
+    		default -> 1L;
 		};
 	}
 

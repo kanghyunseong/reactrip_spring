@@ -120,11 +120,10 @@ public class DiaryServiceImpl implements DiaryService {
 	@Transactional
 	@Override
 	public int insertDiary(DiaryDTO diary) {
-				
-		int diaryNo = diaryMapper.selectSeqNo();
-		diary.setDiaryNo(diaryNo);
-		
+
 		diaryMapper.insertDiary(diary);
+		int diaryNo = diary.getDiaryNo();
+		
 		
 		
 		// 이미지 파일

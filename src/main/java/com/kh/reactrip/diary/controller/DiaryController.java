@@ -78,39 +78,15 @@ public class DiaryController {
 	@PostMapping("/insert")
 	public ResponseEntity<?> insertDiary(@RequestBody DiaryDTO diary) { 
 		log.info("게시글 작성 컨트롤 호출!~!");
-		//log.info("login : " + user);
+		
 		log.info("diary = {}", diary);    
+		
 		int diaryNo = diaryService.insertDiary(diary);
 	    
 		return ResponseEntity.ok(diaryNo);
 	}
 	
 	
-	// 이미지 업로드
-//	@PostMapping(value = "/api/diarys/upload/diary-image",
-//			  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-//			//consumes = MediaType.APPLICATION_JSON_VALUE
-//	)
-//	public ResponseEntity<List<String>> uploadDiaryImages(@RequestParam("file") List<MultipartFile> images) {
-//		log.info("이미지 업로드 컨트롤러 호출 !!");
-//	    List<String> imageUrls = s3Service.upload(images);
-//	    log.info("결과  : " + imageUrls);
-//	    return ResponseEntity.ok(imageUrls);
-//	}
 	
-//	@PostMapping("/upload/diary-image")
-//	public ResponseEntity<List<String>> insertDiaryImages(@RequestParam("images") List<MultipartFile> images) {
-//	
-//		// diaryService.insertDiaryImages(imgDTO);
-//		
-//		return ResponseEntity.ok(s3Service.upload(images);
-//	}
-	
-	
-//  S3 테스트용
-//	@PostMapping("/test/s3")
-//	public String testUpload(@RequestParam("file") MultipartFile file) {
-//	    return s3Service.fileSave(file);
-//	}
 
 }
