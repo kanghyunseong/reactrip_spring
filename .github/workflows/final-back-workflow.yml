@@ -54,5 +54,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /home/ubuntu/final
+            cd /home/ubuntu/back
             docker-compose restart api
