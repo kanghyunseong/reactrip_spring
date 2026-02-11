@@ -85,11 +85,10 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	public void updateNotice(Long noticeNo, MultipartFile file, AdminNoticeDTO adminNoticeDTO) {
 		
 		Validator.validateNo(noticeNo, "수정할 게시글 번호가 올바르지 않습니다.");
-		
+
 		AdminNoticeDTO origin = adminNoticeMapper.selectNoticeDetail(noticeNo);
-		
-		Validator.validateExist(origin.getNoticeNo(), "수정할 게시글을 찾을 수 없습니다.");
-		
+		Validator.validateExist(origin, "수정할 게시글을 찾을 수 없습니다.");
+
 		String finalImgUrl = fileService.updateFile(file, origin.getImage());
 		
 		adminNoticeDTO.setNoticeNo(noticeNo);
