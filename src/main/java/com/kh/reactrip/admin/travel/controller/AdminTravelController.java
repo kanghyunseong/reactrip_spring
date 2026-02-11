@@ -3,6 +3,7 @@ package com.kh.reactrip.admin.travel.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.reactrip.admin.travel.model.dto.AdminTravelDTO;
 import com.kh.reactrip.admin.travel.model.service.AdminTravelService;
-import com.kh.reactrip.admin.travel.runner.AdminTravelSyncRunner;
 import com.kh.reactrip.common.PageResponseDTO;
 import com.kh.reactrip.common.ResponseData;
 
@@ -27,9 +27,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin/travel")
 @RequiredArgsConstructor
 public class AdminTravelController {
-
+	
 	private final AdminTravelService adminTravelService;
-	private final AdminTravelSyncRunner adminTravelSyncRunner;
 	
 	@GetMapping
 	public ResponseEntity<ResponseData<PageResponseDTO<AdminTravelDTO>>> findAllTravel(@RequestParam(name = "page", defaultValue = "1")int page) {
@@ -73,8 +72,10 @@ public class AdminTravelController {
 	
 	@PostMapping("/api-sync")
 	public ResponseEntity<ResponseData<String>> syncApiData() {
-		adminTravelSyncRunner.runSync();
-		return ResponseData.accepted("동기화를 시작했습니다. 완료까지 수 분이 걸릴 수 있으니 잠시 후 목록을 새로고침 해주세요.");
+		
+		adminTravelService.fetchAndSaveApiData();
+		return ResponseData.ok("데이터 동기화 완료");
+		
 	}
 	
 	@GetMapping("/nearby")

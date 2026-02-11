@@ -44,8 +44,5 @@ public class ResponseData<T> {
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseData<>("생성되었습니다.", data, "요청 성공"));
 	}
 
-	// 5. 수락됨 (202 Accepted) - 비동기 작업 시작 시
-	public static <T> ResponseEntity<ResponseData<T>> accepted(String message) {
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseData<>(message, null, "요청 성공"));
-	}
+
 }
