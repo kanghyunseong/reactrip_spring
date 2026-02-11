@@ -171,7 +171,7 @@
  			)
 </insert>
 
-<!-- 게시글 작성 (REGION_NO, THEME_NO nullable) -->
+<!-- 게시글 작성 (NOT NULL 컬럼에 null 방지: SCHEDULE_NO/TRAVEL_NO/REGION_NO/THEME_NO는 0 허용) -->
 <insert id="insertDiary">
 	<selectKey keyProperty="diaryNo" order="BEFORE" resultType="java.lang.Integer">
 		SELECT SEQ_DIARY.NEXTVAL FROM DUAL
@@ -180,7 +180,7 @@
 	INSERT INTO TB_DIARY
 		(DIARY_NO, DIARY_TITLE, DIARY_CONTENT, DIARY_STATUS, CREATED_DATE, UPDATED_DATE, COUNT, MEMBER_NO, SCHEDULE_NO, TRAVEL_NO, REGION_NO, THEME_NO)
 	VALUES
-		(#{diaryNo}, #{diaryTitle}, #{diaryContent}, 'N', SYSDATE, SYSDATE, 0, #{memberNo}, NULL, #{travelNo}, #{regionNo}, #{themeNo})
+		(#{diaryNo}, #{diaryTitle}, #{diaryContent}, 'N', SYSDATE, SYSDATE, 0, #{memberNo}, NVL(#{scheduleNo}, 0), NVL(#{travelNo}, 0), NVL(#{regionNo}, 0), NVL(#{themeNo}, 0))
 </insert>
 		   
 </mapper>
