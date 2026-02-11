@@ -43,8 +43,28 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/deploy/back"
+          target: "/home/ubuntu/deploy/back/tmp"
           strip_components: 2
+
+      - name: Move jar to back.jar
+        if: github.event_name == 'push'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/ubuntu/deploy/back
+            mkdir -p tmp
+            # 가장 최근 jar 하나 선택
+            JAR_NAME=$(ls -t tmp/*.jar | head -n 1)
+            if [ -z "$JAR_NAME" ]; then
+              echo "No jar found in tmp"
+              exit 1
+            fi
+            rm -f back.jar
+            mv "$JAR_NAME" back.jar
+            rm -rf tmp
 
       - name: Restart container
         if: github.event_name == 'push'
@@ -54,5 +74,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /home/ubuntu/deploy/back
+            cd /home/ubuntu/deploy
             docker compose restart api
