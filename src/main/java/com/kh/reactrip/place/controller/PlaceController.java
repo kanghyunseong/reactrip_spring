@@ -45,6 +45,14 @@ public class PlaceController {
 		return ResponseEntity.ok(places);
 		
 	}
+	
+	@GetMapping("/{travelNo}")
+	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") @Validated @Pattern(regexp="^[0-9]+$", message="유효하지 않은 접근입니다.") String travelNo) {
+		 
+		PlaceDTO place = placeService.findByTravelNo(travelNo);
+		return ResponseEntity.ok(place);
+		
+	}
 
 	/** 구체 경로를 path variable보다 먼저 선언 → /regions, /themes가 /{travelNo}에 잡히지 않음 */
 	@GetMapping("/regions")
@@ -59,11 +67,5 @@ public class PlaceController {
 		return ResponseEntity.ok(themes);
 	}
 
-	@GetMapping("/{travelNo}")
-	public ResponseEntity<PlaceDTO> findByTravelNo(@PathVariable(name="travelNo") @Validated @Pattern(regexp="^[0-9]+$", message="유효하지 않은 접근입니다.") String travelNo) {
-		 
-		PlaceDTO place = placeService.findByTravelNo(travelNo);
-		return ResponseEntity.ok(place);
-		
-	}
+	
 }
