@@ -102,7 +102,7 @@
 	UPDATE
 	       TB_NOTICE
 	   SET
-	       NOTICE_STATUS = 'N'
+	       NOTICE_STATUS = 'Y'
      WHERE
            NOTICE_NO = #{noticeNo}
 </update>
