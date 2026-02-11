@@ -58,6 +58,8 @@
        LEFT
        JOIN 
             TB_MEMBER M ON (N.MEMBER_NO = M.MEMBER_NO)
+      WHERE
+            N.NOTICE_STATUS = 'N'
       ORDER
          BY 
             N.NOTICE_NO DESC
